@@ -1,0 +1,30 @@
+------------------------------Seance 1 - 0Decembre2016-------------------------------
+Presentation et choix de sujets
+------------------------------Seance 2 - 06Janvier2017-------------------------------
+
+objectif 1: choix et installation d'un logiciel de Base de données (BDD)
+objectif 2: reflexion et listing de quelques commandes utiles.
+Usage de SQLite : import sous python de SQlite3 (Ou telechargement via cmd, pip install sqlite).
+
+___________Pourquoi SQLite?_____________
++autonomie et independence externe, peut etre utilisé sans server.
++Deja configuré ne necessite pas d'installation ni de reglage d'admin.
++la base de donnée entiere sera stockée dans un fichier unique.
++légereté (400kib).
++les transactions sont securisées, compatibilite ACID (atomicité, cohérence, isolation et durabilité).
++disponible sous differents OS.
+
+
+_______Commandes python SQLite__________
+import sqlite3 (importer sqlite)
+sqlite3.databases	(liste les nom et fichiers lié à la BDD)
+sqlite3.exit (quitter rapidement sqlite)
+
+
+___________fonctions à creer_____________
+1.Creer une table dans la bdd (2 table, une pour les livres)
+2.Ajouter une table 
+
+
+
+------------------------------Seance 3 - Janvier2017-------------------------------
