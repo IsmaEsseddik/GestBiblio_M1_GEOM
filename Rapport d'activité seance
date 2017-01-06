@@ -17,7 +17,7 @@ ___________Pourquoi SQLite?_____________
 
 _______Commandes python SQLite__________
 import sqlite3 (importer sqlite)
-sqlite3.databases	(liste les nom et fichiers lié à la BDD)
+sqlite3.databases (liste les nom et fichiers lié à la BDD)
 sqlite3.exit (quitter rapidement sqlite)
 
 
