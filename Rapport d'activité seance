@@ -26,7 +26,7 @@ sqlite3.databases (liste les nom et fichiers lié à la BDD)
 sqlite3.exit (quitter rapidement sqlite)
 
 
-------------------------------Seance 3 - Janvier2017-------------------------------
+------------------------------Seance 3 - 13Janvier2017-------------------------------
 
 ___________Commandes SQLite3_____________
 pour se connecter a une base de donnée : a=sqlite3.connect(lien) ;
