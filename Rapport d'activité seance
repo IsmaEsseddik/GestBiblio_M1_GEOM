@@ -1,8 +1,8 @@
 ------------------------------Seance 1 - 16Decembre2016-------------------------------
-Presentation et choix de sujets
+Presentation et choix de sujets.
 ------------------------------Seance 2 - 06Janvier2017-------------------------------
 
-objectif 1: choix et installation d'un logiciel de Base de données (BDD)
+objectif 1: choix et installation d'un logiciel de Base de données (BDD).
 objectif 2: reflexion et listing de quelques commandes utiles.
 Usage de SQLite : import sous python de SQlite3 (Ou telechargement via cmd, pip install sqlite).
 
@@ -34,4 +34,16 @@ pour placer le curseur sur la base de donnée b=a.cursor() ;
 pour executer des requete sql b.execute("""requête en SQL """) ;
 pour se deconnecter de la base de donnée: a.close() ;
 
-creation de tables avec clés primaires & secondaire
+creation de tables avec clés primaires & etrangeres.
+
+
+------------------------------Seance 4 - 20Janvier2017------------------------------------
+-Les tables de la base de données ont été crée et peuvent être remplies.
+-Pour remplir la base de données avec des codes isbn : inscrption faite sur http://isbnplus.com/data/
+(en attente d'approbation pour les services), il s'agit d'une API qui permettra pour chaque nouvelle aquisition d'obtenir 
+des informations et de les rentrer dans la base de donnée (table infos_doc).
+Installation de PyCurl (pip install PyCurl) pour effectuer des requete Curl sous python.
+Documentation ici : http://pycurl.io/docs/latest/quickstart.html
+ 
+
+
