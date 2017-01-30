@@ -46,4 +46,7 @@ Installation de PyCurl (pip install PyCurl) pour effectuer des requete Curl sous
 Documentation ici : http://pycurl.io/docs/latest/quickstart.html
  
 
-
+------------------------------Seance 5 (1/2) - Lundi30Janvier2017------------------------------------
+-Les classes d'objet relatif a la Base de données ont été crées.
+-creation de fonction sqlite pour interreagir avec la base de données
+-
