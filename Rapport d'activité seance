@@ -49,4 +49,10 @@ Documentation ici : http://pycurl.io/docs/latest/quickstart.html
 ------------------------------Seance 5 (1/2) - Lundi30Janvier2017------------------------------------
 -Les classes d'objet relatif a la Base de données ont été crées.
 -creation de fonction sqlite pour interreagir avec la base de données
--
+
+
+------------------------------Seance 6 - Mercredi08Fevrier2017---------------------------------------
+-le site web pour le catalogue a été entammée (PHP,CSS,JS)
+-redefinition des classes
+-creation de premieres fonction via sqlite3 (recherche d'un isbn, ajout d'un isbn)
+
