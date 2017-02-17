@@ -56,3 +56,13 @@ Documentation ici : http://pycurl.io/docs/latest/quickstart.html
 -redefinition des classes
 -creation de premieres fonction via sqlite3 (recherche d'un isbn, ajout d'un isbn)
 
+------------------------------Seance 7 - Vendredi17Fevrier2017---------------------------------------
+-modification de ces premieres fonctions pour qu'elle puissent etre fonctionnelle sur des objets,
+-creation de nouvelles fonction sur le meme principe en respectant les conditons imposé par l'enoncé
+-restructuration des classes pour un meilleure interaction entre objets/fonction. En effet il est plus
+pratique de mettre un objet en argument d’une fonction car, en sachant qu’on impose aux objet des atributs
+(dont un relatif a la table de reference dans la base de donnée), il sera donc impossible par exemple de 
+rechercher dans une table « lecteur » via l’attribut « référence » d’un objet « exemplaire » puisque ce dernier
+possède comme valeur statique de l’attributs « référence » la chaine de caractère «exemplaire» .
+Dans la fonction on fera donc appel aux attributs d’un objet passé en argument. 
+Les fonctions seront implémenté dans les classes d'objet une fois toutes créées.
