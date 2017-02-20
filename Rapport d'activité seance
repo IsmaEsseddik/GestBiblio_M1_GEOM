@@ -66,3 +66,8 @@ rechercher dans une table « lecteur » via l’attribut « référence » d’u
 possède comme valeur statique de l’attributs « référence » la chaine de caractère «exemplaire» .
 Dans la fonction on fera donc appel aux attributs d’un objet passé en argument. 
 Les fonctions seront implémenté dans les classes d'objet une fois toutes créées.
+
+
+------------------------------Seance 8 (1/2) - LundiéàFevrier2017---------------------------------------
+les fonction de requetes sont beaucoup trop longue: raccourcicement de ces dernieres par la mise en fonction du 
+code redondant.  
