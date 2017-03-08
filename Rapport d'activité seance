@@ -74,3 +74,24 @@ code redondant.
 
 ------------------------------Seance 9 (1/2) - Mardi21Fevrier2017---------------------------------------
 débogage ...
+
+-----------------------------Seance 10 - Mercredi08Mars2017---------------------------------------
+De nombreuses fonction d'interactions avec la base de données(requetes de verifications et de modifications) ont été ecrites lors des congées de mars,(en plus d'une petite progression dans l'elaboration de l'interface graphique).
+
+1)recherche sur le pattern MVC Modele vue contrôleur
+Faut t-il faire usage de differentes class pour gerer le controle
+et les modifications de la base de données ou alors simplement rendre les objet eux même autonome avec des methodes
+
+1ere possibilité:
+Par exemple en plus des classes d'objets info_documents exemplaire lecteurs... 
+- on cree une class "modele" specialement pour executer les requetes sur la base de donnée(sans controle)
+- on cree une autre classe "controleur" contenant uniquement les requetes contrôles qui va autoriser les methodes de la classe "modele".
+
+2ieme possibilité:
+on regroupe le contenu des deux classes precedentes dans une super classe.
+
+3ieme possibilité:
+les classes d'objets info_documents exemplaire lecteurs etc. possede ces methode leur permettant d'enregistrer
+leurs propres attributs dans la base de donnée en controlant eux même si cela est possible
+
+2) Recherche sur le framework Django
