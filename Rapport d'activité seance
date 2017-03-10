@@ -92,6 +92,9 @@ on regroupe le contenu des deux classes precedentes dans une super classe.
 
 3ieme possibilité:
 les classes d'objets info_documents exemplaire lecteurs etc. possede ces methode leur permettant d'enregistrer
-leurs propres attributs dans la base de donnée en controlant eux même si cela est possible
+leurs propres attributs dans la base de donnée en controlant eux même si cela est possible.
 
 2) Recherche sur le framework Django
+
+-----------------------------Seance 11 - Vendredi10Mars2017---------------------------------------
+Integration des fonctions dans les classes en tant que methodes.
