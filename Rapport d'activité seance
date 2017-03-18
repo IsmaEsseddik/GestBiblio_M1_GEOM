@@ -104,7 +104,8 @@ Integration des fonctions dans les classes en tant que methodes.
 Recherche sur le fonctionnement d'une api/rest
 Recheche d'un moyen pour integrer les métadonné d'un ISBN dans un objet infoDoc
 un package python qui peut etre tres utile : isbnlib 3.6.7. En plus de recuperer les metadonnées d'un livre, il permet  aussi de valider
-l'existence de l'isbn et de faire des coversion sur le format de serie de chifre(EAN 13 <=> 10)
+l'existence de l'isbn et de faire des conversion sur le format de serie de chifre(EAN 13 <=> 10), il utilise par default le service gratuit
+offert par google GoogleBooks.
 
 
 
