@@ -109,4 +109,8 @@ l'existence de l'isbn et de faire des conversion sur le format de serie de chifr
 offert par google GoogleBooks.
 
 
+-----------------------------Seance 13 - Mercredi22Mars2017---------------------------------------
+installation de la librairie isbn_lib
+test des fonctions et integration dans la class info_document
+ecriture de l'algorithme de gestion de la tableinfo document
 
