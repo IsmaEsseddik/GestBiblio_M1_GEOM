@@ -216,19 +216,19 @@ class Relation:
         self.date_emprunt = date_emprunt
         self.date_retour = date_retour
 
-def Validation_Lecteur(self):
-    """fonction qui ajoute une entrée dans la table relation (si toutes condition d'emprunt respecté) en remplissant tout les champs.
-    :objet_relat: objet instancé d'un attribut pour chaque champs de sa table.
-    """
-    # A FINIR, ______________________________
-    if(Exist_Lect(self.obj_lect)== None):#si le num_etudiant n'existe pas dans sa table
-        print("Lecteur inexistant")
-    elif(lect_checkSuspension(objet_relat.obj_lect)):#si le lecteur est suspendu
-        print("Lecteur suspendu")
-    #elif(nbemprunt >= limiteautorisé):#si le lecteur a atteit sa limite d'emprunt
-        #print("Limite d’emprunt atteinte!")
-    else:
-        self.objet_Lect
+    def Validation_Lecteur(self):
+        """fonction qui ajoute une entrée dans la table relation (si toutes condition d'emprunt respecté) en remplissant tout les champs.
+        :objet_relat: objet instancé d'un attribut pour chaque champs de sa table.
+        """
+        # A FINIR, ______________________________
+        if(Exist_Lect(self.obj_lect)== None):#si le num_etudiant n'existe pas dans sa table
+            print("Lecteur inexistant")
+        elif(lect_checkSuspension(objet_relat.obj_lect)):#si le lecteur est suspendu
+            print("Lecteur suspendu")
+        #elif(nbemprunt >= limiteautorisé):#si le lecteur a atteit sa limite d'emprunt
+            #print("Limite d’emprunt atteinte!")
+        else:
+            self.objet_Lect
 
 
 class Gestionnaire:
