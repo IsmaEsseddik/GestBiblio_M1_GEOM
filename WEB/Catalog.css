@@ -1,0 +1,20 @@
+header {
+  display: flex ;
+  flex-direction: row;
+  justify-content: center;
+  font-family: 'Gentium Book Basic', serif;
+}
+
+header p{
+  text-shadow: 1px 1px grey;
+
+}
+
+header h1{
+  margin-left: 20px;
+}
+
+footer {
+  display: flex;
+  
+}
