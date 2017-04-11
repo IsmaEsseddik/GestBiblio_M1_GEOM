@@ -126,4 +126,5 @@ Test de fonctionalités, documentation de code, planification d'une interface po
 -----------------------------Seance 16 - Mardi11avril2017---------------------------------------
  Redefinition des objectif du projet en fonction du temps restant: un mois de fonctionnalité 1 mois sur l'interface graphique 
  Assignement des exceptions SQlite3.
- 
+ installation du logiciel DBBrowser Sqlite pour visualiser le contenu de la base de données.
+ poursuite des tests des methodes
