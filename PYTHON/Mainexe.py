@@ -38,7 +38,8 @@ if __name__ == '__main__':
     while i < len(tableauIsbns)-3:
         tab[i].enregistrer_infodoc()
         i += 1
-    
+
+    print(a.get_infodoc("optique", "titre"))
     # exemp_essai = Exemplaire("0123456789", False, "ceci est une nouvelle aquisition du 08/02/2017",a)
     # lecteur_essai = Lecteur(11100422, "Esseddik", "Ismael", "15/12/1991", "M1", "0695306360", False, "c'est moi")
     # relation_essai = Relation(lecteur_essai, exemp_essai, "09/02/2017","02/04/2017")

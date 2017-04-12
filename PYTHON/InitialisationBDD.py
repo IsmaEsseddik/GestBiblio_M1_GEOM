@@ -73,7 +73,7 @@ def creation_bdd():
 
 
 def regexp(expr, item):  # fonctionalité d'expression reguliere pour les requetes sql
-    reg = re.compile(expr)
+    reg = re.IGNORECASE(expr)
     return reg.search(item) is not None
 
 
