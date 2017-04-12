@@ -58,7 +58,7 @@ class InfoDocument:
         en remplissant tout les champs.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_infodoc() == None and is_isbn13(self.isbn) == True):
+        if (self.Exist_infodoc() is None and is_isbn13(self.isbn) is True):
             # Si l'isbn est valide et n'existe pas dans sa table
                 requetesql = """INSERT INTO infos_documents(isbn, titre, auteur, editeur, date_edition, cote, description) VALUES(?,?,?,?,?,?,?)"""
                 param = self.isbn, self.titre, self.auteur, self.editeur, self.date_edition, self.cote, self.description
@@ -71,8 +71,8 @@ class InfoDocument:
         associé à aucun exemplaire.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_infodoc() != None):  # si l'isbn existe dans sa table
-            if (self.Exist_isbn_exemp() == None):  # si l'isbn n'existe pas dans la table exemplaires
+        if (self.Exist_infodoc() is not None):  # si l'isbn existe dans sa table
+            if (self.Exist_isbn_exemp() is None):  # si l'isbn n'existe pas dans la table exemplaires
                 requetesql = """DELETE FROM infos_documents WHERE isbn = ?"""
                 param = self.isbn,
                 Ecriture(requetesql, param)
@@ -98,7 +98,7 @@ class InfoDocument:
         """recupere des meta-donnée valide grace a l'API google a partir de l'isbn et les integre aux attributs de l'objet,
         ou renvoie un erreur"""
         metadonnees = meta(numIsbn)
-        if metadonnees != None:
+        if metadonnees is not None:
             self.isbn = metadonnees['ISBN-13']
             self.titre = metadonnees['Title']
             self.auteur = ", ".join(metadonnees['Authors'])
@@ -155,8 +155,8 @@ class Exemplaire:
          champs, à condition que l'isbn soit repertorié dans la table info_documents.
         :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_exemp() == None): # Si le codebar n'existe pas dans sa table
-            if (self.obj_infodoc.Exist_infodoc() != None): #si l'isbn de l'objet infodoc associé existe dans sa table
+        if (self.Exist_exemp() is None): # Si le codebar n'existe pas dans sa table
+            if (self.obj_infodoc.Exist_infodoc() is not None): #si l'isbn de l'objet infodoc associé existe dans sa table
                 requetesql = """INSERT INTO exemplaires(codebar, statut, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
                 param = self.codebar, self.statut, self.exemp_commentaire, self.obj_infodoc.isbn,
                 Ecriture(requetesql, param)
@@ -170,8 +170,8 @@ class Exemplaire:
          pas emprunté.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_exemp() != None):  # si le codebar existe dans sa table
-            if (exemp_checkStatut(self) == False):  # si l'exemplaire n'est pas emprunté
+        if (self.Exist_exemp() is not None):  # si le codebar existe dans sa table
+            if (exemp_checkStatut(self) is False):  # si l'exemplaire n'est pas emprunté
                 requetesql = """DELETE FROM exemplaires WHERE codebar = ?"""
                 param = self.codebar,
                 Ecriture(requetesql, param)
@@ -249,7 +249,7 @@ class Lecteur:
          champs.
         :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_Lect() == None): # si le num_etudiant n'existe pas dans sa table
+        if (self.Exist_Lect() is None): # si le num_etudiant n'existe pas dans sa table
             requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
             param = self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, self.suspension, self.commentaire,
             Ecriture(requetesql, param)
@@ -261,8 +261,8 @@ class Lecteur:
          d'emprunt.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_Lect() != None):  # si le lecteur existe dans sa table
-            if (self.Lect_checkemprunt() == None):  # si le lecteur n'a pas d'emprunt(s) en cours
+        if (self.Exist_Lect() is not None):  # si le lecteur existe dans sa table
+            if (self.Lect_checkemprunt() is None):  # si le lecteur n'a pas d'emprunt(s) en cours
                 requetesql = """DELETE FROM lecteurs WHERE num_etudiant = ?"""
                 param = self.num_etudiant,
                 Ecriture(requetesql, param)
@@ -298,7 +298,7 @@ class Relation:
         :objet_relat: objet instancé d'un attribut pour chaque champs de sa table.
         """
         # A FINIR, ______________________________
-        if(Exist_Lect(self.obj_lect)== None):  #si le num_etudiant n'existe pas dans sa table
+        if(Exist_Lect(self.obj_lect)is None):  #si le num_etudiant n'existe pas dans sa table
             print("Lecteur inexistant")
         elif(lect_checkSuspension(objet_relat.obj_lect)): # si le lecteur est suspendu
             print("Lecteur suspendu")
