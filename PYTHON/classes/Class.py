@@ -1,5 +1,5 @@
 import sqlite3  # importation de la librairie SQLite3
-import re # expression regulieres
+import re  # expression regulieres
 from isbnlib import *  # importation du package pour les metadonnées et de formatage du numero isbn
 from InitialisationBDD import *
 
@@ -28,73 +28,73 @@ class InfoDocument:
         self.description = None
 
 # --------------------Methode requête de contrôle dans la base de données ----------------------------
-    def Exist_infodoc(self):
-        """fonction qui Recherche un isbn dans la table infos_documents, retourne une liste de tuple de contenant les valeurs de chaque champ
-        ou NONE si non trouvé.
+    def exist_infodoc(self):
+        """fonction qui Recherche un isbn dans la table infos_documents, retourne une liste de tuple de contenant 
+        les valeurs de chaque champou NONE si non trouvé.
         :objet_infodoc: objet dont l'attribut isbn sera recherhé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
         param = self.isbn,
-        if (Lecture(requetesql, param) == []):
+        if (lecture(requetesql, param) == []):
             return None
         else:
-            return Lecture(requetesql, param)
+            return lecture(requetesql, param)
 
-    def Exist_isbn_exemp(self):
-        """fonction qui Recherche un isbn dans la table des exemplaires et retourne une liste de tuple de contenant les valeurs de chaque champ
-        ou NONE si non trouvé.
+    def exist_isbn_exemp(self):
+        """fonction qui Recherche un isbn dans la table des exemplaires et retourne une liste de tuple de contenant 
+        les valeurs de chaque champ ou NONE si non trouvé.
         :objet_exemp: objet dont l'attribut isbn sera recherhé.
         """
         requetesql = """SELECT * FROM exemplaires WHERE exemp_isbn = ? """
         param = self.isbn,
-        if (Lecture(requetesql, param) == []):
+        if (lecture(requetesql, param) == []):
             return None
         else:
-            return Lecture(requetesql, param)
+            return lecture(requetesql, param)
 
 # -----------Ajout/suppression dans une base de données.---------
-    def Enregistrer_infodoc(self):
+    def enregistrer_infodoc(self):
         """fonction qui ajoute une entrée valide dans la table info_documents (si elle n'existe pas deja) 
         en remplissant tout les champs.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_infodoc() is None and is_isbn13(self.isbn) is True):
+        if (self.exist_infodoc() is None and is_isbn13(self.isbn) is True):
             # Si l'isbn est valide et n'existe pas dans sa table
                 requetesql = """INSERT INTO infos_documents(isbn, titre, auteur, editeur, date_edition, cote, description) VALUES(?,?,?,?,?,?,?)"""
                 param = self.isbn, self.titre, self.auteur, self.editeur, self.date_edition, self.cote, self.description
-                Ecriture(requetesql, param)
+                ecriture(requetesql, param)
         else:
             print("L'isbn existe deja dans la base de données ou est invalide ")
 
-    def Supprimer_infodoc(self):
+    def supprimer_infodoc(self):
         """fonction qui supprime une entrée (si elle existe) de la table info_documents a condition que l'isbn ne soit 
         associé à aucun exemplaire.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_infodoc() is not None):  # si l'isbn existe dans sa table
-            if (self.Exist_isbn_exemp() is None):  # si l'isbn n'existe pas dans la table exemplaires
+        if (self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
+            if (self.exist_isbn_exemp() is None):  # si l'isbn n'existe pas dans la table exemplaires
                 requetesql = """DELETE FROM infos_documents WHERE isbn = ?"""
                 param = self.isbn,
-                Ecriture(requetesql, param)
+                ecriture(requetesql, param)
             else:
                 print("isbn associé à un ou plusieurs exemplaire(s)")
         else:
             print("isbn inexistant")
 
 # -----------recherche & Modification---------
-    def Get_infodoc(self, valeur, champwhere = "isbn"):
+    def get_infodoc(self, valeur, champwhere = "isbn"):
         """ fonction qui, selon le champ de recherche specifié en argument(isbn par defaut), recherchera
         dans la table de reference a l'objet la valeur specifié en argument et.
         """
         requetesql = """SELECT * FROM infos_documents WHERE """ + champwhere + """ REGEXP ? """
         param = valeur,
-        if (Lecture(requetesql, param) == [] ):
+        if (lecture(requetesql, param) == [] ):
             return None
         else :
-            return Lecture(requetesql, param)
+            return lecture(requetesql, param)
 
 # -----------Methode API .---------
-    def Get_meta(self,numIsbn):
+    def get_meta(self,numIsbn):
         """recupere des meta-donnée valide grace a l'API google a partir de l'isbn et les integre aux attributs de l'objet,
         ou renvoie un erreur"""
         metadonnees = meta(numIsbn)
@@ -119,26 +119,26 @@ class Exemplaire:
     table_ref = 'exemplaires'
     clef_primaire = 'codebar'
 
-    def __init__(self, codebar, statut, exemp_commentaire, obj_infodoc): # méthode constructeur
+    def __init__(self, codebar, statut, exemp_commentaire, obj_infodoc):  # méthode constructeur
         """Constructeur de la classe. Chaque attribut va être instancié
         d'une valeur passé en argument."""
         self.codebar = codebar
         self.statut = statut
         self.exemp_commentaire = exemp_commentaire
-        self.obj_infodoc = obj_infodoc #objet de la class infosDocument.
+        self.obj_infodoc = obj_infodoc  # objet de la class infosDocument.
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
-    def Exist_exemp(self):
+    def exist_exemp(self):
         """fonction qui Recherche un codebar dans la base de donnee et retourne une liste de tuple de contenant 
         les valeurs de chaque champ ou NONE si non trouvé.
         :objet_exemp: objet dont l'attribut codebar sera recherhé.
         """
         requetesql = """SELECT * FROM exemplaires WHERE codebar = ? """
         param = self.codebar,
-        if (Lecture(requetesql, param) == [] ):
+        if (lecture(requetesql, param) == []):
             return None
-        else :
-            return Lecture(requetesql, param)
+        else:
+            return lecture(requetesql, param)
 
     def exemp_checkStatut(self):
         """fonction qui renvoie l'etat d'emprunt du livre.
@@ -146,35 +146,36 @@ class Exemplaire:
         """
         requetesql = """SELECT statut FROM exemplaires WHERE codebar = ? """
         param = self.codebar,
-        statut = Lecture(requetesql, param)
-        return statut[0] #retourne la valeur precise du champ
+        statut = lecture(requetesql, param)
+        return statut[0]  # retourne la valeur precise du champ
 
 # -----------Ajout/suppression dans une base de données.---------
-    def Enregistrer_exemp(self):
+    def enregistrer_exemp(self):
         """fonction qui ajoute une entrée dans la table exemplaires (si elle n'existe pas deja) en remplissant tout les
          champs, à condition que l'isbn soit repertorié dans la table info_documents.
         :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_exemp() is None): # Si le codebar n'existe pas dans sa table
-            if (self.obj_infodoc.Exist_infodoc() is not None): #si l'isbn de l'objet infodoc associé existe dans sa table
+        if (self.exist_exemp() is None):  # Si le codebar n'existe pas dans sa table
+            if (self.obj_infodoc.exist_infodoc() is not None):
+                # si l'isbn de l'objet infodoc associé existe dans sa table
                 requetesql = """INSERT INTO exemplaires(codebar, statut, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
                 param = self.codebar, self.statut, self.exemp_commentaire, self.obj_infodoc.isbn,
-                Ecriture(requetesql, param)
+                ecriture(requetesql, param)
             else:
                 print("isbn non trouvé")
         else:
             print("L'exemplaire existe deja dans la base de données ou est invalide")
 
-    def Supprimer_exemp(self):
+    def supprimer_exemp(self):
         """fonction qui supprime une entrée (si elle existe) de la table exemplaires a condition que ce dernier ne soit
          pas emprunté.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_exemp() is not None):  # si le codebar existe dans sa table
+        if (self.exist_exemp() is not None):  # si le codebar existe dans sa table
             if (exemp_checkStatut(self) is False):  # si l'exemplaire n'est pas emprunté
                 requetesql = """DELETE FROM exemplaires WHERE codebar = ?"""
                 param = self.codebar,
-                Ecriture(requetesql, param)
+                ecriture(requetesql, param)
             else:
                 print("exemplaire non rendu")
         else:
@@ -209,7 +210,7 @@ class Lecteur:
         self.commentaire = commentaire
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
-    def Exist_Lect(self):
+    def exist_Lect(self):
         """fonction qui Recherche un num_etudiant dans la base de donnee et retourne une liste de tuple de contenant 
         les valeurs de chaque champ
         ou NONE si non trouvé.
@@ -217,10 +218,10 @@ class Lecteur:
         """
         requetesql = """SELECT * FROM lecteurs WHERE num_etudiant = ? """
         param = self.num_etudiant,
-        if (Lecture(requetesql, param) == []):
+        if (lecture(requetesql, param) == []):
             return None
         else:
-            return Lecture(requetesql, param)
+            return lecture(requetesql, param)
 
     def lect_checkSuspension(self):
         """fonction qui retourne la valeur de la suspension d'un lecteur.
@@ -228,44 +229,44 @@ class Lecteur:
         """
         requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
         param = self.num_etudiant,
-        suspension = Lecture(requetesql, param)
+        suspension = lecture(requetesql, param)
         return suspension[0]  # retourne la valeur precise du champ
 
-    def Lect_checkemprunt(self):
+    def lect_checkemprunt(self):
         """fonction qui verifie la presence d'un num_etudiant dans la table relation
             :objet_Lect: objet dont l'attribut num_etudiant sera recherhé.
         """
         requetesql = """SELECT * FROM relation WHERE id_lecteur = ? """
         param = self.num_etudiant,
-        if (Lecture(requetesql, param) == []):
+        if (lecture(requetesql, param) == []):
             return None
         else:
-            return Lecture(requetesql, param)
+            return lecture(requetesql, param)
 
 
 # -----------Ajout/suppression dans une base de données.---------
-    def Enregistrer_Lect(self):
+    def enregistrer_Lect(self):
         """fonction qui ajoute une entrée (si elle n'existe pas deja) dans la table exemplaires en remplissant tout les
          champs.
         :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_Lect() is None): # si le num_etudiant n'existe pas dans sa table
+        if (self.exist_Lect() is None):  # si le num_etudiant n'existe pas dans sa table
             requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
             param = self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, self.suspension, self.commentaire,
-            Ecriture(requetesql, param)
+            ecriture(requetesql, param)
         else:
             print("Lecteur déjà inscrit")
 
-    def Supprimer_lect(self):
+    def supprimer_lect(self):
         """fonction qui supprime une entrée (si elle existe) de la table lecteurs a condition que ce dernier n'ait pas
          d'emprunt.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.Exist_Lect() is not None):  # si le lecteur existe dans sa table
-            if (self.Lect_checkemprunt() is None):  # si le lecteur n'a pas d'emprunt(s) en cours
+        if (self.exist_Lect() is not None):  # si le lecteur existe dans sa table
+            if (self.lect_checkemprunt() is None):  # si le lecteur n'a pas d'emprunt(s) en cours
                 requetesql = """DELETE FROM lecteurs WHERE num_etudiant = ?"""
                 param = self.num_etudiant,
-                Ecriture(requetesql, param)
+                ecriture(requetesql, param)
             else:
                 print("un ou plusieurs exemplaire(s) non rendu(s)")
         else:
@@ -292,13 +293,13 @@ class Relation:
         self.date_emprunt = date_emprunt
         self.date_retour = date_retour
 
-    def Validation_Lecteur(self):
+    def validation_lecteur(self):
         """fonction qui ajoute une entrée dans la table relation (si toutes condition d'emprunt respecté) en remplissant
          tout les champs.
         :objet_relat: objet instancé d'un attribut pour chaque champs de sa table.
         """
         # A FINIR, ______________________________
-        if(Exist_Lect(self.obj_lect)is None):  #si le num_etudiant n'existe pas dans sa table
+        if(exist_Lect(self.obj_lect)is None):  #si le num_etudiant n'existe pas dans sa table
             print("Lecteur inexistant")
         elif(lect_checkSuspension(objet_relat.obj_lect)): # si le lecteur est suspendu
             print("Lecteur suspendu")

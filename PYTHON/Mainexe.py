@@ -12,7 +12,8 @@ if __name__ == '__main__':
     # Creation d'objets.
     
     print("----------Creation d'une liste d'identifiant ISBN----------")
-    tableauIsbns = ('ISBN 978-2-74603707-6', '978-2-7071-6574-9', 'num 978-2-10-071679-1', '9782100743674', '9782746712669', '9782091830513', '9782729821760')
+    tableauIsbns = ('ISBN 978-2-74603707-6', '978-2-7071-6574-9', 'num 978-2-10-071679-1', '9782100743674',
+                    '9782746712669', '9782091830513', '9782729821760')
     print(tableauIsbns)
     
     print("----------Creation de 7 objets InfoDoc----------")
@@ -28,14 +29,14 @@ if __name__ == '__main__':
     print("----------Attribution de leur metadonnées (API)----------")
     i = 0
     while i < len(tableauIsbns):
-        tab[i].Get_meta(tableauIsbns[i])
+        tab[i].get_meta(tableauIsbns[i])
         print(tab[i].isbn, tab[i].titre, tab[i].auteur, tab[i].editeur, tab[i].date_edition, tab[i].cote, tab[i].description)
         i += 1
 
     print("----------Enregistrement des 6 objets dans la base de donnée----------")
     i = 0
     while i < len(tableauIsbns)-3:
-        tab[i].Enregistrer_infodoc()
+        tab[i].enregistrer_infodoc()
         i += 1
     
     # exemp_essai = Exemplaire("0123456789", False, "ceci est une nouvelle aquisition du 08/02/2017",a)

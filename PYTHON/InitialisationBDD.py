@@ -77,7 +77,7 @@ def regexp(expr, item):  # fonctionalité d'expression reguliere pour les requet
     return reg.search(item) is not None
 
 
-def Lecture(req, param=None):
+def lecture(req, param=None):
     """  fonction executant une requete sql indiqué en parametre, ne modifie pas la base de données,
     retourne une liste de tuple de contenant les valeurs de chaque champ
     :req: chaine de caractere.
@@ -97,7 +97,7 @@ def Lecture(req, param=None):
         connexion.close()
 
 
-def Ecriture(req, param=None):
+def ecriture(req, param=None):
     """ fonction executant une requete sql indiqué en parametre, modifie le contenu de la base de donnée
     :req: chaine de caractere.
     :param: contenu a inserer dans la requete a la place des '?'
