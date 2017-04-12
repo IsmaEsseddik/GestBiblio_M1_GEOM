@@ -1,0 +1,22 @@
+
+     |  DataError
+     |  DatabaseError
+     |  Error
+     |  IntegrityError
+     |  InterfaceError
+     |  InternalError
+     |  NotSupportedError
+     |  OperationalError
+     |  ProgrammingError
+     |  
+     |  Warning
+     |  
+     |  in_transaction
+     |  
+     |  isolation_level
+     |  
+     |  row_factory
+     |  
+     |  text_factory
+     |  
+     |  total_changes
