@@ -1,3 +1,4 @@
+#essaipycharm
 import sqlite3 #importation de la librairie SQLite3
 from isbnlib import * # importation du package pour les metadonnées et de formatage du numero isbn
 from classes.Class import *
