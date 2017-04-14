@@ -1,4 +1,4 @@
-import sqlite3 # importation de la librairie SQLite3
+import sqlite3  # importation de la librairie SQLite3
 from isbnlib import *  # importation du package pour les metadonnées et de formatage du numero isbn
 from classes.Class import *
 from InitialisationBDD import *
@@ -17,19 +17,19 @@ if __name__ == '__main__':
     print(tableauIsbns)
 
     print("----------Creation d'objets ----------")
-    a = InfoDocument()
+    infodoc = InfoDocument()
 
     print("----------Attribution de metadonnées & Enregistrement d'objets dans la base de donnée ----------")
     i = 0
     while i < len(tableauIsbns):
-        a.get_meta(tableauIsbns[i])
-        print(a.isbn, a.titre, a.auteur, a.editeur, a.date_edition, a.cote, a.description)
-        a.enregistrer_infodoc()
+        infodoc.set_meta(tableauIsbns[i])
+        print(infodoc.isbn, infodoc.titre, infodoc.auteur, infodoc.editeur, infodoc.date_edition, infodoc.cote, infodoc.description)
+        infodoc.enregistrer_infodoc()
         print('----')
         i += 1
 
-    print("----------Lecture dans la Base de  données----------")
-    print(a.get_infodoc("socio", "titre"))
+    print("----------Recherche dans la Base de données et supression----------")
+    infodoc.get_infodoc("socio", "titre")    
 
     # exemp_essai = exemplaire("0123456789", False, "ceci est une nouvelle aquisition du 08/02/2017",a)
     # lecteur_essai = lecteur(11100422, "Esseddik", "Ismael", "15/12/1991", "M1", "0695306360", False, "c'est moi")
