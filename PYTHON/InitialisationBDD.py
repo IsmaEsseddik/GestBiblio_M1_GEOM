@@ -46,7 +46,7 @@ def creation_bdd():
         curseur.execute("""
         CREATE TABLE IF NOT EXISTS exemplaires(
         codebar INTEGER PRIMARY KEY,
-        statut BOOLEAN,
+        emprunt BOOLEAN,
         exemp_commentaire TEXT,
         exemp_isbn INTEGER(13),
         CONSTRAINT ce_isbn FOREIGN KEY (exemp_isbn) REFERENCES infos_documents(isbn)

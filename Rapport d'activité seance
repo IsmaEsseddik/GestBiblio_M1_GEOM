@@ -132,3 +132,8 @@ Test de fonctionalités, documentation de code, planification d'une interface po
 -----------------------------Seance 17 - Mercredi12avril2017---------------------------------------
 Installation et prise en main de pyCharm
 nouvelle methode de recherche dans la base de données get_meta avec usage d'expression reguliere.
+
+-----------------------------Seance 18 - Vendredi14avril2017---------------------------------------
+nouvelles methodes de recherche dans la base de données set et get,
+nouvelle methode mises a jour de champ
+reorganisation des premiers objet

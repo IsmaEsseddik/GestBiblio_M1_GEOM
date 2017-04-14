@@ -82,22 +82,29 @@ class InfoDocument:
         else:
             print("isbn inexistant")
 
-    def modifier_infodoc(self, champ="cote"):
-        """Methode qui modifie une entrée (si elle existe) sur le champ specifié de la table info_documents a condition que l'isbn ne soit
-        associé à aucun exemplaire.
+# -----------Modification dans une base de données.---------
+    def maj_infodoc(self):
+        """Methode qui met a jour tout les champ d'une entrée dans la base de donnée (si l'isbn y existe)
+        de la table info_documents.
+        :champ: champ dans lequel sera modifier la valeur
         """
         if (self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
-            requetesql = """UPDATE infos_documents SET """ + champ + """ = ? WHERE isbn = ?"""
-            param = self.cote, self.isbn,
+            requetesql = """UPDATE infos_documents SET cote = """ + self.cote + """ WHERE isbn = """ + self.isbn
+            param = self.cote,
             ecriture(requetesql, param)
+            requetesql = """UPDATE infos_documents SET description = """ + self.description + """ WHERE isbn = """ + self.isbn
+            param = self.cote,
+            ecriture(requetesql, param)
+
         else:
             print("isbn inexistant")
 
-
-# -----------recherche & Modification---------
-    def get_infodoc(self, valeur, champwhere="isbn", reponse="liste"):
+# -----------Recherche & conditionnement de l'objet---------
+    def get_liste_BDD(self, valeur, champwhere="isbn"):
         """ Methode qui, selon le champ de recherche specifié en argument(isbn par defaut), recherche
-        dans la table de reference a l'objet la valeur specifié en argument et stock la reponse sous forme une liste de tuple.
+        dans la table InfoDocument de l'objet la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple.
+        :valeur: la valeur a recherche dans le champ
+        :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ isbn par defaut)
         """
         requetesql = """SELECT * FROM infos_documents WHERE """ + champwhere + """ REGEXP ? """
         param = valeur,
@@ -106,9 +113,9 @@ class InfoDocument:
         else:
             self.liste_recherche = lecture(requetesql, param)
 
-    def set_infodoc(self, i=0):
-        """ Methode qui change les attributs de l'objet a partir d'un tuple de la derniere requete
-        :i: numero du tuple dans la liste de recherche
+    def set_from_liste(self, i=0):
+        """ Methode qui change qui conditionne l'objet a partir d'un tuple de la liste de la derniere recherche
+        :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
         """
         self.isbn = self.liste_recherche[i][0]
         self.titre = self.liste_recherche[i][1]
@@ -119,7 +126,7 @@ class InfoDocument:
         self.description = self.liste_recherche[i][6]
 
 # -----------Methode API .---------
-    def set_meta(self, numIsbn):
+    def recherche_api(self, numIsbn):
         """Recupere des meta-donnée grace a l'API google a partir de l'isbn et les integre aux attributs de l'objet,
         """
         metadonnees = meta(numIsbn)
@@ -137,26 +144,25 @@ class InfoDocument:
 class Exemplaire:
     """ classe definissant un exemplaire avec :
     - un codebar.
-    - un statut.
+    - un etat d'emprunt.
     - un commentaire.
-    - un isbn (objet de la class InfoDocument).
+    - l'isbn de l'exemplaire.
     """
     table_ref = 'exemplaires'
     clef_primaire = 'codebar'
 
-    def __init__(self, codebar, statut, exemp_commentaire, obj_infodoc):  # méthode constructeur
+    def __init__(self):  # méthode constructeur
         """Constructeur de la classe. Chaque attribut va être instancié
         d'une valeur passé en argument."""
-        self.codebar = codebar
-        self.statut = statut
-        self.exemp_commentaire = exemp_commentaire
-        self.obj_infodoc = obj_infodoc  # objet de la class infosDocument.
+        self.codebar = None
+        self.emprunt = False
+        self.exemp_commentaire = None
+        self.exemp_isbn = None
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_exemp(self):
         """Methode qui recherche un codebar dans la base de donnee et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
-        :objet_exemp: objet dont l'attribut codebar sera recherhé.
         """
         requetesql = """SELECT * FROM exemplaires WHERE codebar = ? """
         param = self.codebar,
@@ -165,26 +171,35 @@ class Exemplaire:
         else:
             return lecture(requetesql, param)
 
-    def exemp_checkStatut(self):
-        """Methode qui renvoie l'etat d'emprunt du livre.
-        :objet_exemp: objet dont l'attribut codebar sera recherhé.
+    def exist_exempisbn_infodoc(self):
+        """Methode qui recherche un l'isbn dans la table infosDocument et retourne une liste de tuple de contenant
+        les valeurs de chaque champ ou NONE si non trouvé.
         """
-        requetesql = """SELECT statut FROM exemplaires WHERE codebar = ? """
+        requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
+        param = self.exemp_isbn,
+        if (lecture(requetesql, param) == []):
+            return None
+        else:
+            return lecture(requetesql, param)
+
+    def exemp_checkemprunt(self):
+        """Methode qui renvoie l'etat d'emprunt du livre.
+        """
+        requetesql = """SELECT emprunt FROM exemplaires WHERE codebar = ? """
         param = self.codebar,
-        statut = lecture(requetesql, param)
-        return statut[0]  # retourne la valeur precise du champ
+        emprunt = lecture(requetesql, param)
+        return emprunt[0]  # retourne la valeur precise du champ
 
 # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_exemp(self):
         """Methode qui ajoute une entrée dans la table exemplaires (si elle n'existe pas deja) en remplissant tout les
          champs, à condition que l'isbn soit repertorié dans la table info_documents.
-        :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.exist_exemp() is None):  # Si le codebar n'existe pas dans sa table
-            if (self.obj_infodoc.exist_infodoc() is not None):
+        if (self.exist_exemp() is None):  # Si le codebar n'existe pas deja dans sa table
+            if (self.obj_infodoc.exist_exempisbn_infodoc() is not None):
                 # si l'isbn de l'objet infodoc associé existe dans sa table
-                requetesql = """INSERT INTO exemplaires(codebar, statut, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
-                param = self.codebar, self.statut, self.exemp_commentaire, self.obj_infodoc.isbn,
+                requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
+                param = self.codebar, self.emprunt, self.exemp_commentaire, self.obj_infodoc.isbn,
                 ecriture(requetesql, param)
             else:
                 print("isbn non trouvé")
@@ -197,7 +212,7 @@ class Exemplaire:
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
         if (self.exist_exemp() is not None):  # si le codebar existe dans sa table
-            if (exemp_checkStatut(self) is False):  # si l'exemplaire n'est pas emprunté
+            if (exemp_checkemprunt(self) is False):  # si l'exemplaire n'est pas emprunté
                 requetesql = """DELETE FROM exemplaires WHERE codebar = ?"""
                 param = self.codebar,
                 ecriture(requetesql, param)
