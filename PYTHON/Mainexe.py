@@ -10,39 +10,33 @@ if __name__ == '__main__':
     print("----------Initialisation de la base de données----------")
     creation_bdd()
     # Creation d'objets.
-    
+
     print("----------Creation d'une liste d'identifiant ISBN----------")
     tableauIsbns = ('ISBN 978-2-74603707-6', '978-2-7071-6574-9', 'num 978-2-10-071679-1', '9782100743674',
-                    '9782746712669', '9782091830513', '9782729821760')
+                    '9782746712669', '9782091830513', '9782729821760', '9782020350518', '9782707159342' )
     print(tableauIsbns)
-    
-    print("----------Creation de 7 objets InfoDoc----------")
-    a = InfoDocument()
-    b = InfoDocument()
-    c = InfoDocument()
-    d = InfoDocument()
-    e = InfoDocument()
-    f = InfoDocument()
-    g = InfoDocument()
-    tab = [a, b, c, d, e, f, g]
 
-    print("----------Attribution de leur metadonnées (API)----------")
+    print("----------Creation d'objets ----------")
+    a = InfoDocument()
+
+    print("----------Attribution de metadonnées & Enregistrement d'objets dans la base de donnée ----------")
     i = 0
     while i < len(tableauIsbns):
-        tab[i].get_meta(tableauIsbns[i])
-        print(tab[i].isbn, tab[i].titre, tab[i].auteur, tab[i].editeur, tab[i].date_edition, tab[i].cote, tab[i].description)
+        a.get_meta(tableauIsbns[i])
+        print(a.isbn, a.titre, a.auteur, a.editeur, a.date_edition, a.cote, a.description)
+        a.enregistrer_infodoc()
         i += 1
 
-    print("----------Enregistrement des 6 objets dans la base de donnée----------")
-    i = 0
-    while i < len(tableauIsbns)-3:
-        tab[i].enregistrer_infodoc()
-        i += 1
+    print("----------Lecture dans la Base de  données----------")
+    print(a.get_infodoc("Socio", "titre"))
 
-    print(a.get_infodoc("ptique", "titre"))
-    # exemp_essai = Exemplaire("0123456789", False, "ceci est une nouvelle aquisition du 08/02/2017",a)
-    # lecteur_essai = Lecteur(11100422, "Esseddik", "Ismael", "15/12/1991", "M1", "0695306360", False, "c'est moi")
-    # relation_essai = Relation(lecteur_essai, exemp_essai, "09/02/2017","02/04/2017")
+    
+    # exemp_essai = exemplaire("0123456789", False, "ceci est une nouvelle aquisition du 08/02/2017",a)
+    # lecteur_essai = lecteur(11100422, "Esseddik", "Ismael", "15/12/1991", "M1", "0695306360", False, "c'est moi")
+    # relation_essai = relation(lecteur_essai, exemp_essai, "09/02/2017","02/04/2017")
     # Affichage des attributs de ces objets.
 
     print("----------Affichage de leurs attributs---------")
+
+
+a.get_infodoc('socio', 'titre')
