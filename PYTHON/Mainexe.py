@@ -37,5 +37,3 @@ if __name__ == '__main__':
     # Affichage des attributs de ces objets.
 
     print("----------Affichage de leurs attributs---------")
-
-
