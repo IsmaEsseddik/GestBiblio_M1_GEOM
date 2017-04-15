@@ -33,13 +33,14 @@ if __name__ == '__main__':
 
     print("----------Recherche dans la Base de données et supression----------")
     infodoc.get_liste_BDD("socio", "titre")
-    print(infodoc.liste_recherche)
     infodoc.set_from_liste()
-    print(infodoc.isbn, infodoc.titre, infodoc.auteur, infodoc.editeur, infodoc.date_edition, infodoc.cote, infodoc.description)
     infodoc.supprimer_infodoc()
+    infodoc.set_from_liste(1)
+    infodoc.cote='PIJ 472'
+    infodoc.description = "pas d'information"
+    infodoc.maj_infodoc()
     # exemp_essai = exemplaire("0123456789", False, "ceci est une nouvelle aquisition du 08/02/2017",a)
     # lecteur_essai = lecteur(11100422, "Esseddik", "Ismael", "15/12/1991", "M1", "0695306360", False, "c'est moi")
     # relation_essai = relation(lecteur_essai, exemp_essai, "09/02/2017","02/04/2017")
     # Affichage des attributs de ces objets.
     
-    print("----------Affichage de leurs attributs---------")

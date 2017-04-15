@@ -20,7 +20,7 @@ def creation_bdd():
     try:
         curseur.execute("""
         CREATE TABLE IF NOT EXISTS lecteurs(
-        num_etudiant INTEGER(8) PRIMARY KEY,
+        num_etudiant VARCHAR(8) PRIMARY KEY,
         nom VARCHAR(25),
         prenom VARCHAR(25),
         date_naissance DATE,
@@ -33,7 +33,7 @@ def creation_bdd():
 
         curseur.execute("""
         CREATE TABLE IF NOT EXISTS infos_documents(
-        isbn INTEGER PRIMARY KEY,
+        isbn VARCHAR PRIMARY KEY,
         titre TEXT,
         auteur TEXT,
         editeur TEXT,
@@ -45,10 +45,10 @@ def creation_bdd():
 
         curseur.execute("""
         CREATE TABLE IF NOT EXISTS exemplaires(
-        codebar INTEGER PRIMARY KEY,
+        codebar VARCHAR PRIMARY KEY,
         emprunt BOOLEAN,
         exemp_commentaire TEXT,
-        exemp_isbn INTEGER(13),
+        exemp_isbn VARCHAR(13),
         CONSTRAINT ce_isbn FOREIGN KEY (exemp_isbn) REFERENCES infos_documents(isbn)
         );
         """)
@@ -57,8 +57,8 @@ def creation_bdd():
         CREATE TABLE IF NOT EXISTS relation(
         date_emprunt DATE,
         date_retour DATE,
-        id_lecteur INTEGER(8),
-        id_exemplaire INTEGER,
+        id_lecteur VARCHAR(8),
+        id_exemplaire VARCHAR,
         CONSTRAINT ce_lect FOREIGN KEY (id_lecteur) REFERENCES lecteurs(num_etudiant),
         CONSTRAINT ce_doc FOREIGN KEY (id_exemplaire) REFERENCES exemplaires(codebar)
         );
