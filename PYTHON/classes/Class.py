@@ -209,6 +209,8 @@ class Exemplaire(object):
                 requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
                 param = self.codebar, self.emprunt, self.exemp_commentaire, self.exemp_isbn,
                 ecriture(requetesql, param)
+                print("L'exemplaire a été ajouté dans la base de données")
+
             else:
                 print("isbn non trouvé")
         else:
@@ -224,6 +226,8 @@ class Exemplaire(object):
                 requetesql = """DELETE FROM exemplaires WHERE codebar = ?"""
                 param = self.codebar,
                 ecriture(requetesql, param)
+                print("L'exemplaire a été supprimée de la base de données")
+
             else:
                 print("exemplaire non rendu")
         else:
@@ -231,19 +235,15 @@ class Exemplaire(object):
 
 # -----------Modification dans la base de données.---------
     def maj_exemp(self):
-        """Methode qui met a jour tout les champ d'une entrée dans la base de donnée (si le codebar y existe)
+        """Methode qui met a jour certaints champs d'une entrée dans la base de donnée (si le codebar y existe)
         de la table exemplaire.
-        :champ: champ dans lequel sera modifier la valeur
+        :champ: champ dans lequel sera modifier la valeur.
         """
         if (self.exist_exemp() is not None):  # si le codebar existe dans sa table
-            requetesql = """UPDATE exemplaires SET emprunt = ? WHERE codebar = ? """
-            param = self.emprunt, self.codebar,
-            ecriture(requetesql, param)
             requetesql = """UPDATE exemplaires SET exemp_commentaire = ? WHERE codebar = ? """
             param = self.exemp_commentaire, self.codebar,
             ecriture(requetesql, param)
             print("Les informations isbn ont été mis a jour dans la base de données")
-
         else:
             print("codebar inexistant")
 
@@ -286,18 +286,18 @@ class Lecteur(object):
     """
     table_ref = "lecteurs"
     clef_primaire = 'num_etudiant'
+    liste_recherche = None
 
-    def __init__(self,):
+    def __init__(self):
         """Constructeur de la classe. Chaque attribut va être instancié
         avec une chaine de caractére par défaut."""
-
         self.num_etudiant = ""
         self.nom = ""
         self.prenom = ""
         self.date_naissance = ""
         self.niveau_etude = ""
         self.num_tel = ""
-        self.suspension = ""
+        self.suspension = False
         self.commentaire = ""
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
@@ -320,7 +320,7 @@ class Lecteur(object):
         requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
         param = self.num_etudiant,
         suspension = lecture(requetesql, param)
-        return suspension[0]  # retourne la valeur precise du champ
+        return bool(suspension[0][0]) # retourne la valeur precise du champ
 
     def lect_checkemprunt(self):
         """Methode qui verifie la presence d'un num_etudiant dans la table relation
@@ -335,7 +335,7 @@ class Lecteur(object):
 
 
 # -----------Ajout/suppression dans une base de données.---------
-    def enregistrer_Lect(self):
+    def enregistrer_lect(self):
         """Methode qui ajoute une entrée (si elle n'existe pas deja) dans la table exemplaires en remplissant tout les
          champs.
         :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
@@ -344,6 +344,7 @@ class Lecteur(object):
             requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
             param = self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, self.suspension, self.commentaire,
             ecriture(requetesql, param)
+            print("Le lecteur a été ajouté dans la base de données")
         else:
             print("Lecteur déjà inscrit")
 
@@ -357,10 +358,74 @@ class Lecteur(object):
                 requetesql = """DELETE FROM lecteurs WHERE num_etudiant = ?"""
                 param = self.num_etudiant,
                 ecriture(requetesql, param)
+                print("Le lecteur a été supprimée de la base de données")
             else:
                 print("un ou plusieurs exemplaire(s) non rendu(s)")
         else:
             print("Lecteur inexistant")
+
+# -----------Modification dans la base de données.---------
+    def maj_lect(self):
+        """Methode qui met a jour tout les champ d'une entrée dans la base de donnée (si le numero etudiant y existe)
+        de la table exemplaire.
+        :champ: champ dans lequel sera modifier la valeur
+        """
+        if (self.exist_Lect() is not None):  # si le numero etudiant existe dans sa table
+            requetesql = """UPDATE lecteurs SET nom = ? WHERE num_etudiant = ? """
+            param = self.nom, self.num_etudiant,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE lecteurs SET prenom = ? WHERE num_etudiant = ? """
+            param = self.prenom, self.num_etudiant,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE lecteurs SET date_naissance = ? WHERE num_etudiant = ? """
+            param = self.date_naissance, self.num_etudiant,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE lecteurs SET niveau_etude = ? WHERE num_etudiant = ? """
+            param = self.niveau_etude, self.num_etudiant,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE lecteurs SET num_tel = ? WHERE num_etudiant = ? """
+            param = self.num_tel, self.num_etudiant,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ? """
+            param = self.suspension, self.num_etudiant,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE lecteurs SET commentaire = ? WHERE num_etudiant = ? """
+            param = self.commentaire, self.num_etudiant,
+            ecriture(requetesql, param)
+            print("Les informations isbn ont été mis a jour dans la base de données")
+        else:
+            print("codebar inexistant")
+
+# -----------Recherche & conditionnement de l'objet---------
+    def get_liste_BDD(self, valeur, champwhere="num_etudiant"):
+        """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table lecteurs
+        la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut
+        static propre a la class.
+        :valeur: la valeur a recherche dans le champ
+        :champwhere: le champ a specifier dans lequelle la valeur sera recherché(num_etudiant  par defaut)
+        """
+        requetesql = """SELECT * FROM lecteurs WHERE """ + champwhere + """ REGEXP ? """
+        param = valeur,
+        if (lecture(requetesql, param) == []):
+            print("Aucun resultat(s)")
+        else:
+            self.liste_recherche = lecture(requetesql, param)
+            print(self.liste_recherche)
+
+    def set_from_liste(self, i=0):
+        """ Methode qui conditionne l'objet a partir d'un tuple de la liste de la derniere recherche
+        :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
+        """
+        self.num_etudiant = self.liste_recherche[i][0]
+        self.nom = self.liste_recherche[i][1]
+        self.prenom = self.liste_recherche[i][2]
+        self.date_naissance = self.liste_recherche[i][3]
+        self.niveau_etude = self.liste_recherche[i][4]
+        self.num_tel = self.liste_recherche[i][5]
+        self.suspension = self.liste_recherche[i][6]
+        self.commentaire = self.liste_recherche[i][7]
+        print(self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, self.suspension, self.commentaire)
+
 
 
 class Relation(object):

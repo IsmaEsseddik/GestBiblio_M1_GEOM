@@ -30,7 +30,6 @@ if __name__ == '__main__':
     exemp.set_from_liste()
     exemp.supprimer_exemp()
     exemp.set_from_liste(1)
-    exemp.emprunt = True
     exemp.exemp_commentaire = "ceci est une nouvelle aquisition du 08/02/2017"
     exemp.maj_exemp()
     # lecteur_essai = lecteur(11100422, "Esseddik", "Ismael", "15/12/1991", "M1", "0695306360", False, "c'est moi")
