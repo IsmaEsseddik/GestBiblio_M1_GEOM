@@ -14,7 +14,6 @@ if __name__ == '__main__':
                     '9782746712669', '9782091830513', '9782729821760', '9782020350518', '9782707159342')
     print(tableauIsbns)
     
-
     print("----------Creation d'objets ----------")
     infodoc = InfoDocument()
     exemp = Exemplaire()
