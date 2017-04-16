@@ -1,5 +1,6 @@
 import sqlite3  # importation de la librairie SQLite3
-import re  # expression regulieres
+import re  # pour les expression regulieres
+import datetime  #  pour les operation sur le temp
 from isbnlib import *  # importation du package pour les metadonnées et de formatage du numero isbn
 from InitialisationBDD import *
 
@@ -30,8 +31,8 @@ class InfoDocument(object):
 
 # --------------------Methode requête de contrôle dans la base de données ----------------------------
     def exist_infodoc(self):
-        """Methode qui Recherche un isbn dans la table infos_documents, retourne une liste de tuple de contenant
-        les valeurs de chaque champou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un isbn dans la table infos_documents, retourne une liste de tuple de contenant
+        les valeurs de chaque champ ou NONE si non trouvé.
         :objet_infodoc: objet dont l'attribut isbn sera recherhé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
@@ -42,7 +43,7 @@ class InfoDocument(object):
             return lecture(requetesql, param)
 
     def exist_isbn_exemp(self):
-        """Methode qui Recherche un isbn dans la table des exemplaires et retourne une liste de tuple de contenant
+        """Methode qui verifie l'existance d' un isbn dans la table des exemplaires et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
         :objet_exemp: objet dont l'attribut isbn sera recherhé.
         """
@@ -169,7 +170,7 @@ class Exemplaire(object):
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_exemp(self):
-        """Methode qui recherche un codebar dans la base de donnee et retourne une liste de tuple de contenant
+        """Methode qui verifie l'existance d' un codebar dans la base de donnee et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM exemplaires WHERE codebar = ? """
@@ -180,7 +181,7 @@ class Exemplaire(object):
             return lecture(requetesql, param)
 
     def exist_exempisbn_infodoc(self):
-        """Methode qui recherche un l'isbn dans la table infosDocument et retourne une liste de tuple de contenant
+        """Methode qui verifie l'existance d' un l'isbn dans la table infosDocument et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
@@ -302,7 +303,7 @@ class Lecteur(object):
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_Lect(self):
-        """Methode qui Recherche un num_etudiant dans la base de donnee et retourne une liste de tuple de contenant
+        """Methode qui verifie l'existance d' un num_etudiant dans la base de donnee et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
         :objet_Lect: objet dont l'attribut num_etudiant sera recherhé.
         """
@@ -312,15 +313,6 @@ class Lecteur(object):
             return None
         else:
             return lecture(requetesql, param)
-
-    def lect_checkSuspension(self):
-        """Methode qui retourne la valeur de la suspension d'un lecteur.
-        :objet_Lect: objet dont l'attribut codebar sera recherhé.
-        """
-        requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
-        param = self.num_etudiant,
-        suspension = lecture(requetesql, param)
-        return bool(suspension[0][0]) # retourne la valeur precise du champ
 
     def lect_checkemprunt(self):
         """Methode qui verifie la presence d'un num_etudiant dans la table relation
@@ -429,39 +421,122 @@ class Lecteur(object):
 
 
 class Relation(object):
-    """decrit par des attribut une relation entre un lecteur et le/les document(s) qu'il a empruntée(s),
-    contient les methodes pour l'emprunt et le retour des exemplaires,
-    caractérisée par :
-    - un exemplaire(objet).
-    - un lecteur.
+    """Classe definissant une relation entre un lecteur et un document qu'il a empruntée.
+    Contient les methodes pour l'emprunt et le retour des exemplaires. elle est caractérisée par :
+    - le codebar d'un exemplaire.
+    - le numero etudiant d'un lecteur.
     - une date d'emprunt.
-    - une date de retour.
-    - une methode qui effectue l'emprunt (definition des 2 dates+changement des statut).
-    - une methode qui effectue le retour (redefinition des 2 dates+changement des statut).
+    - une date limite de retour.
     """
     table_ref = 'relation'
     clef_primaire = 'id_exemplaire'
+    liste_d_emprunt = None
 
-    def __init__(self, obj_lect, obj_exemp, date_emprunt, date_retour):  # méthode constructeur
-        self.obj_lect = obj_lect  # objet de class Lecteur
-        self.obj_exemp = obj_exemp  # objet de class Exemplaire
-        self.date_emprunt = date_emprunt
-        self.date_retour = date_retour
+    def __init__(self):
+        self.id_lecteur = None
+        self.id_exemplaire = None
+        self.date_emprunt = None
+        self.date_retour = None
 
-    def validation_lecteur(self):
-        """Methode qui ajoute une entrée dans la table relation (si toutes condition d'emprunt respecté) en remplissant
-         tout les champs.
-        :objet_relat: objet instancé d'un attribut pour chaque champs de sa table.
+# --------------------Methodes requête de contrôle dans la base de données ----------------------------
+    def exist_idLect(self):
+        """Methode qui verifie l'existance d'un num_etudiant dans la table lecteurs et retourne une liste de tuple de contenant
+        les valeurs de chaque champ ou NONE si non trouvé.
         """
-        # A FINIR, ______________________________
-        if(exist_Lect(self.obj_lect)is None):  #si le num_etudiant n'existe pas dans sa table
-            print("Lecteur inexistant")
-        elif(lect_checkSuspension(objet_relat.obj_lect)): # si le lecteur est suspendu
-            print("Lecteur suspendu")
-        # elif(nbemprunt >= limiteautorisé):#si le lecteur a atteit sa limite d'emprunt
-            # print("Limite d’emprunt atteinte!")
-        # else:
-            # self.objet_Lect
+        requetesql = """SELECT * FROM lecteurs WHERE num_etudiant = ? """
+        param = self.id_lecteur,
+        return lecture(requetesql, param)
+
+    def idlect_checkSuspension(self):
+        """Methode qui retourne la valeur de la suspension d'un lecteur.
+        :objet_Lect: objet dont l'attribut codebar sera recherhé.
+        """
+        requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
+        param = self.id_lecteur,
+        suspension = lecture(requetesql, param)
+        return bool(suspension[0][0]) # retourne la valeur precise du champ
+
+    def idlect_checkemprunt(self):
+        """Methode qui recherche la liste de tout les emprunt du lecteur dans la table relation
+        :objet_Lect: objet dont l'attribut num_etudiant sera recherhé.
+        """
+        requetesql = """SELECT * FROM relation WHERE id_lecteur = ? """
+        param = self.id_lecteur,
+        return lecture(requetesql, param)
+
+    def exist_idexemp(self):
+        """Methode qui verifie l'existance d'un codebar dans la base de donnee et retourne une liste de tuple de contenant
+        les valeurs de chaque champ ou NONE si non trouvé."""
+        requetesql = """SELECT * FROM exemplaires WHERE codebar = ? """
+        param = self.id_exemplaire,
+        return lecture(requetesql, param)
+
+    def idexemp_checkemprunt(self):
+        """Methode qui renvoie l'etat d'emprunt du livre."""
+        requetesql = """SELECT emprunt FROM exemplaires WHERE codebar = ? """
+        param = self.id_exemplaire,
+        emprunt = lecture(requetesql, param)
+        return bool(emprunt[0][0])
+
+
+# -----------Methode pour effectuer un emprunt---------
+    def validation_lecteur(self, num_etudiant):
+        """Methode qui recherche dans la table lecteurs un num_etudiant, l'affecte a l'attribut "id_lecteur"
+        et affecte la liste des exemplaires qu'il a emprunté en affichant les informations,
+        a condition que le lecteur existe dans la base de donnée.
+        :num_etudiant: numero etudiant a rechercher.
+        """
+        self.id_lecteur = num_etudiant
+        if (self.exist_idLect() != []):
+            if (self.idlect_checkSuspension() is True):
+                print("Lecteur suspendu non autorisé a emprunter!")
+            if (len(self.idlect_checkemprunt()) >= 5 ):
+                print("Limite d'emprunt atteinte !")
+            liste_d_emprunt = self.idlect_checkemprunt()
+            print(liste_d_emprunt)
+        else:
+            print("Lecteur introuvable !")
+            self.id_lecteur=""
+
+    def enregistrer_emprunt(self, id_exemplaire):
+        """Methode qui recherche dans la table exemplaires un codebar et procede a l'emprunt, a condition que le
+        existe dans la base de donnée.
+        :num_etudiant: numero etudiant a rechercher
+        """
+        self.id_exemplaire = id_exemplaire
+        if (self.idlect_checkSuspension() is False):
+            if (len(self.idlect_checkemprunt()) < 5 ):
+                if (self.exist_idexemp() != []):  # si l'exemplaire existe
+                    if (self.idexemp_checkemprunt() is False):  # si l'exemplaire n'est pas emprunté
+                        requetesql = """UPDATE exemplaires SET emprunt = 1 WHERE codebar = ? """
+                        param = self.id_exemplaire,
+                        ecriture(requetesql, param)  # requetesql changement du statut du livre
+                        self.date_emprunt = datetime.date.today().strftime("%d/%m/%Y")  # attribution de la date du jour
+                        retour= datetime.date.today() + datetime.timedelta(6)  # calcul de la date de retour
+                        self.date_retour = retour.strftime("%d/%m/%Y") # attribution de la date de retour
+                        requetesql = """INSERT INTO relation(date_emprunt, date_retour, id_lecteur, id_exemplaire) VALUES(?,?,?,?)"""
+                        param = self.date_emprunt, self.date_retour ,self.id_lecteur ,self.id_exemplaire,
+                        ecriture(requetesql, param)  # requetesql ajout d'un champ
+                    else:
+                        print("exemplaire deja emprunté")
+                        self.id_exemplaire=""
+                else:
+                    print("Exemplaire introuvable !")
+                    self.id_exemplaire=""
+            else:
+                print("Limite d'emprunt atteinte !")
+                self.id_exemplaire=""
+        else:
+            print("Lecteur suspendu non autorisé a emprunter!")
+            self.id_exemplaire=""
+
+    #def get_datediff():
+        #requetesql = SELECT DATEDIFF('2011-12-25','2011-11-10')
+        #param = self.date_emprunt, self.date_retour ,self.id_lecteur ,self.id_exemplaire,
+        #ecriture(requetesql, param)
+
+# -----------Methode pour effectuer un retour---------
+# -----------Methode pour effectuer un prolongement---------
 
 
 class Gestionnaire(object):

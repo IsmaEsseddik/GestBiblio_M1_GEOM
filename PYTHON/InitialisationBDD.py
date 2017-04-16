@@ -113,20 +113,3 @@ def ecriture(req, param=None):
 
     finally:
         connexion.close()
-
-def Modification(req, param=None):
-    """ fonction executant une requete sql indiqué en parametre, modifie le contenu de la base de donnée
-    :req: chaine de caractere.
-    :param: contenu a inserer dans la requete a la place des '?'
-    """
-    connexion = sqlite3.connect(lien)
-    curseur = connexion.cursor()  # creer un objet curseur pour executer des requetes SQL sur cette base de donnée.
-    try:
-        curseur.execute(req, param)
-
-    except sqlite3.Error as e:
-        print("probleme dans la requete :")
-        print(e)
-
-    finally:
-        connexion.close()
