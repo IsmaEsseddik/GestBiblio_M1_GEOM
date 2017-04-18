@@ -511,9 +511,8 @@ class Relation(object):
                         requetesql = """UPDATE exemplaires SET emprunt = 1 WHERE codebar = ? """
                         param = self.id_exemplaire,
                         ecriture(requetesql, param)  # requetesql changement du statut du livre
-                        self.date_emprunt = datetime.date.today().strftime("%d/%m/%Y")  # attribution de la date du jour
-                        retour= datetime.date.today() + datetime.timedelta(6)  # calcul de la date de retour
-                        self.date_retour = retour.strftime("%d/%m/%Y") # attribution de la date de retour
+                        self.date_emprunt = datetime.date.today()  # attribution de la date du jour
+                        self.date_retour = datetime.date.today() + datetime.timedelta(6) #calcul attribution de la date de retour
                         requetesql = """INSERT INTO relation(date_emprunt, date_retour, id_lecteur, id_exemplaire) VALUES(?,?,?,?)"""
                         param = self.date_emprunt, self.date_retour ,self.id_lecteur ,self.id_exemplaire,
                         ecriture(requetesql, param)  # requetesql ajout d'un champ
@@ -529,11 +528,6 @@ class Relation(object):
         else:
             print("Lecteur suspendu non autorisé a emprunter!")
             self.id_exemplaire=""
-
-    #def get_datediff():
-        #requetesql = SELECT DATEDIFF('2011-12-25','2011-11-10')
-        #param = self.date_emprunt, self.date_retour ,self.id_lecteur ,self.id_exemplaire,
-        #ecriture(requetesql, param)
 
 # -----------Methode pour effectuer un retour---------
 # -----------Methode pour effectuer un prolongement---------

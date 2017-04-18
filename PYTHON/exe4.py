@@ -12,6 +12,8 @@ if __name__ == '__main__':
     relat = Relation()
 
     print("----------execution d'un emprunt----------")
-    
-
-    
+    relat.validation_lecteur(11100422)
+    relat.enregistrer_emprunt('0987654334')
+    relat.enregistrer_emprunt('3049586734')
+    relat.enregistrer_emprunt('1234567890')
+    relat.enregistrer_emprunt('0987654321')

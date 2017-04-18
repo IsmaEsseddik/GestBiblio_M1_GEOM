@@ -137,3 +137,8 @@ nouvelle methode de recherche dans la base de données get_meta avec usage d'exp
 nouvelles methodes de recherche dans la base de données set et get,
 nouvelle methode mises a jour de champ
 reorganisation des premiers objet
+
+-----------------------------Seance 19 - Mardi18avril2017---------------------------------------
+tous les objets peuvent interagir avec la base de donnée hormis l'objet relation
+integration de trigger avec sqlite pour calculer le retard sur un exemplaire emprunté
+(nouvelle colonne "retard" dans la table relation)

@@ -59,8 +59,10 @@ def creation_bdd():
         date_retour DATE,
         id_lecteur VARCHAR(8),
         id_exemplaire VARCHAR,
+        retard INT,
         CONSTRAINT ce_lect FOREIGN KEY (id_lecteur) REFERENCES lecteurs(num_etudiant),
         CONSTRAINT ce_doc FOREIGN KEY (id_exemplaire) REFERENCES exemplaires(codebar)
+        CHECK (retard<=15)
         );
         """)
         connexion.commit()
