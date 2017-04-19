@@ -3,21 +3,46 @@
     #param = self.date_emprunt, self.date_retour ,self.id_lecteur ,self.id_exemplaire,
     #ecriture(requetesql, param)
 CREATE TRIGGER update_suspension_lecteur UPDATE OF suspension ON lecteurs
-BEGIN
-UPDATE lecteurs SET suspension = 2*age(retard) + current_date
-WHERE current_date > suspension
-
-UPDATE lecteurs SET suspension = 2*age(retardmax) + current_date
-WHERE current_date > suspension
-END;
+  BEGIN
+    UPDATE lecteurs SET suspension = 2*age(retard) + current_date
+    WHERE current_date > suspension
+    UPDATE lecteurs SET suspension = 2*age(retardmax) + current_date
+    WHERE current_date > suspension
+  END;
 
 
 
 CREATE TRIGGER calcul_retard UPDATE OF retard ON relation
-BEGIN
+  BEGIN
+    UPDATE relation SET retard = julianday(DATE('now')) - julianday(date_retour)
+    WHERE date('now') > date_retour
+    AND (retard < 15 OR retard is NULL)
+  END;
 
-UPDATE relation SET retard = julianday(DATE('now')) - julianday(date_retour)
-WHERE date('now') > date_retour
-AND retard < 15
 
-END;
+CREATE TRIGGER maj_suspension UPDATE OF suspension ON lecteurs
+  BEGIN
+    Declare @retardMax as DATE
+    SET retardMax = julianday(DATE('now')) + MAX(retard)
+    IF @retardMax >
+    UPDATE lecteurs SET suspension = retardMax
+    WHERE date('now') > date_retour
+    AND retard < 15
+  END;
+
+Pour selectionner le max des delta retard
+Declare @retardmax as INT
+SET @retardmax =  SELECT MAX(retard)
+  FROM relation as r, lecteurs as l
+  WHERE r.id_lecteur =  l.num_etudiant
+
+
+
+date_suspension = lecture
+date_retour_min = lecture
+date_du_jour = datetime.date.today()
+if (date_du_jour < date_suspension):
+
+else
+
+if

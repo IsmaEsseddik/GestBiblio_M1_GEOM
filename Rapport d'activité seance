@@ -142,3 +142,6 @@ reorganisation des premiers objet
 tous les objets peuvent interagir avec la base de donnée hormis l'objet relation
 integration de trigger avec sqlite pour calculer le retard sur un exemplaire emprunté
 (nouvelle colonne "retard" dans la table relation)
+
+-----------------------------Seance 20 - Mercredi19avril2017---------------------------------------
+supression de la colone retard, nouvelle methode de retour d'exemplaire

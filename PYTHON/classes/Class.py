@@ -478,9 +478,15 @@ class Relation(object):
         emprunt = lecture(requetesql, param)
         return bool(emprunt[0][0])
 
+    def check_prolongement(self):
+        """Methode qui renvoie l'eat du prolongement du livre."""
+        requetesql = """SELECT prolongement FROM relation WHERE id_exemplaire = ? """
+        param = self.id_exemplaire,
+        emprunt = lecture(requetesql, param)
+        return bool(emprunt[0][0])
 
-# -----------Methode pour effectuer un emprunt---------
-    def validation_lecteur(self, num_etudiant):
+# -----------Methode pour selectionner un lecteur ---------
+    def get_lecteur(self, num_etudiant):
         """Methode qui recherche dans la table lecteurs un num_etudiant, l'affecte a l'attribut "id_lecteur"
         et affecte la liste des exemplaires qu'il a emprunté en affichant les informations,
         a condition que le lecteur existe dans la base de donnée.
@@ -498,6 +504,7 @@ class Relation(object):
             print("Lecteur introuvable !")
             self.id_lecteur=""
 
+# -----------Methode pour effectuer un emprunt ---------
     def enregistrer_emprunt(self, id_exemplaire):
         """Methode qui recherche dans la table exemplaires un codebar et procede a l'emprunt, a condition que le
         existe dans la base de donnée.
@@ -518,19 +525,66 @@ class Relation(object):
                         ecriture(requetesql, param)  # requetesql ajout d'un champ
                     else:
                         print("exemplaire deja emprunté")
-                        self.id_exemplaire=""
                 else:
                     print("Exemplaire introuvable !")
-                    self.id_exemplaire=""
             else:
                 print("Limite d'emprunt atteinte !")
-                self.id_exemplaire=""
         else:
             print("Lecteur suspendu non autorisé a emprunter!")
-            self.id_exemplaire=""
 
 # -----------Methode pour effectuer un retour---------
-# -----------Methode pour effectuer un prolongement---------
+    def supprimer_emprunt(self, id_exemplaire):
+        """Methode qui recherche dans la table exemplaires un codebar et procede au retour, a condition qu'il
+        existe dans la base de donnée et qu'il soit emprunté.
+        :num_etudiant: numero etudiant a rechercher
+        """
+        self.id_exemplaire = id_exemplaire
+        if (self.exist_idexemp() != []):  # si l'exemplaire existe
+            if (self.idexemp_checkemprunt() is True):  # si l'exemplaire est pas emprunté
+                requetesql = """UPDATE exemplaires SET emprunt = 0 WHERE codebar = ? """
+                param = self.id_exemplaire,
+                ecriture(requetesql, param)  # requetesql changement du statut du livre
+                requetesql = """DELETE FROM relation WHERE id_exemplaire = ?"""
+                param = self.id_exemplaire,
+                ecriture(requetesql, param)
+                print("La relation a été supprimée de la base de données")
+                self.id_exemplaire = ""
+            else:
+                print("exemplaire non emprunté")
+                self.id_exemplaire = ""
+        else:
+            print("Exemplaire introuvable !")
+            self.id_exemplaire = ""
+
+#-----------Methode pour effectuer un prolongement---------
+    def prolongement(self):
+        if (self.idlect_checkSuspension() is False):  # si le lecteur n'est pas suspendu
+            if (self.idexemp_checkemprunt() is False):  # si l'exemplaire est emprunté
+                if (self.check_prolongement() is False):
+                    requetesql = """UPDATE relation SET prolongement = 1 WHERE id_exemplaire = ? """
+                    param = self.id_exemplaire,
+                    ecriture(requetesql, param)  # requetesql changement du statut du prolongement
+                    self.date_retour += datetime.timedelta(6) # calcul & attribution de la date de retour
+                    requetesql = """UPDATE relation SET date_retour = ? WHERE id_exemplaire = ? """
+                    param = self.date_retour, self.id_exemplaire,
+                    ecriture(requetesql, param)  # requetesql ajout d'un champ
+                else:
+                    print("un seul prolongement par emprunt autorisé")
+            else:
+                print("exemplaire non emprunté")
+        else:
+            print("Lecteur suspendu non autorisé a prolonger!")
+
+
+    def set_from_liste(self, i=0):
+        """ Methode qui conditionne l'objet a partir d'un tuple de la liste d'emprunt
+        :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
+        """
+        self.date_emprunt = self.liste_d_emprunt[i][0]
+        self.date_retour = self.liste_d_emprunt[i][1]
+        self.id_lecteur = self.liste_d_emprunt[i][2]
+        self.id_exemplaire = self.liste_d_emprunt[i][3]
+        print(self.date_emprunt, self.date_retour, self.id_lecteur, self.id_exemplaire)
 
 
 class Gestionnaire(object):
