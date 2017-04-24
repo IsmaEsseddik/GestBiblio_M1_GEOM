@@ -2,10 +2,11 @@
 # jointure entre document et infodoc via champ ISBN .
 # creation d'une table de jointure "Relation" entre lecteur et documents.
 # type de requete sur la base de données
-
+import datetime  #  pour les operation sur le temp
 import sqlite3  # importation de la librairie SQLite3
 import re  # importation du package des expression regulieres
 lien = 'bdd/bdd_biblio.db'
+
 
 
 # -----------Creation d'une base de données.---------
@@ -26,7 +27,7 @@ def creation_bdd():
         date_naissance DATE,
         niveau_etude VARCHAR,
         num_tel TEXT,
-        suspension BOOLEAN,
+        suspension DATE,
         commentaire TEXT
         );
         """)
@@ -114,3 +115,42 @@ def ecriture(req, param=None):
 
     finally:
         connexion.close()
+
+def maj_suspension():
+    """fonction qui met a jour la date de levée de la suspension de chaque lecteurs"""
+    date_du_jour = datetime.datetime.today() #on utilisera la date du jour
+    requetesql = """SELECT DISTINCT num_etudiant FROM lecteurs"""
+    param = ''
+    all_lect = lecture(requetesql, param)
+    print(all_lect)
+    for i in all_lect:
+        requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
+        param = i[0],
+        reponse = lecture(requetesql, param)[0][0]
+        if (reponse != 0):  # formatage de la date de suspension si existante
+            suspension = datetime.datetime(int(reponse[0:4]), int(reponse[5:7]), int(reponse[8:10]))
+        else:
+            suspension = 0
+        #on a recupéré la valeur de la suspension(date ou 0) du lecteur i
+        requetesql = """SELECT MIN(date_retour) FROM relation WHERE id_lecteur = ? AND date('now') > date_retour  """
+        param = i[0],
+        date_retour_min = lecture(requetesql, param)[0][0]
+        #on a recupere la date de retour la plus anterieur possible a celle d'aujourd'hui (ou rien si aucun livre n'est en retard)
+        if (date_retour_min is not None ):  # si il y a une date anterieur
+            retardmax = date_du_jour - datetime.datetime(int(date_retour_min[0:4]), int(date_retour_min[5:7]), int(date_retour_min[8:10]))  # calcul et formattage de la date de retour
+            if (retardmax > datetime.timedelta(31)):  # si le retard  est superieur a un mois
+                retardmax = datetime.timedelta(31)  #on fixe le retard a un mois
+            date_suspension_r = date_du_jour + retardmax  # nouvelle date de suspension a remplacer
+        else:
+            date_suspension_r = 0
+            #si aucun livre est en retard la valeur a remplacer sera zero
+            #( a condition que la date de suspension initial soit passé et que la nouvelle soit a superieur a cette derniere)
+        if(date_du_jour < suspension < date_suspension_r or date_du_jour > suspension ):
+            # si [la date de suspension n'est pas encore passée ET qu'elle ne represente pas le retard le plus important] ou qu'elle soit passé(et/ou = 0)
+                requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ?"""
+                param = date_suspension_r, i[0],
+                ecriture(requetesql,param)
+        else :
+            pass
+
+        print(date_suspension_r)

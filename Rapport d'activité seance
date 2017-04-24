@@ -40,11 +40,11 @@ creation de tables avec clés primaires & etrangeres.
 ------------------------------Seance 4 - 20Janvier2017------------------------------------
 -Les tables de la base de données ont été crée et peuvent être remplies.
 -Pour remplir la base de données avec des codes isbn : inscrption faite sur http://isbnplus.com/data/
-(en attente d'approbation pour les services), il s'agit d'une API qui permettra pour chaque nouvelle aquisition d'obtenir 
+(en attente d'approbation pour les services), il s'agit d'une API qui permettra pour chaque nouvelle aquisition d'obtenir
 des informations et de les rentrer dans la base de donnée (table infos_doc).
 Installation de PyCurl (pip install PyCurl) pour effectuer des requete Curl sous python.
 Documentation ici : http://pycurl.io/docs/latest/quickstart.html
- 
+
 
 ------------------------------Seance 5 (1/2) - Lundi30Janvier2017------------------------------------
 -Les classes d'objet relatif a la Base de données ont été crées.
@@ -61,15 +61,15 @@ Documentation ici : http://pycurl.io/docs/latest/quickstart.html
 -creation de nouvelles fonction sur le meme principe en respectant les conditons imposé par l'enoncé
 -restructuration des classes pour un meilleure interaction entre objets/fonction. En effet il est plus
 pratique de mettre un objet en argument d’une fonction car, en sachant qu’on impose aux objet des atributs
-(dont un relatif a la table de reference dans la base de donnée), il sera donc impossible par exemple de 
+(dont un relatif a la table de reference dans la base de donnée), il sera donc impossible par exemple de
 rechercher dans une table « lecteur » via l’attribut « référence » d’un objet « exemplaire » puisque ce dernier
 possède comme valeur statique de l’attributs « référence » la chaine de caractère «exemplaire» .
-Dans la fonction on fera donc appel aux attributs d’un objet passé en argument. 
+Dans la fonction on fera donc appel aux attributs d’un objet passé en argument.
 Les fonctions seront implémenté dans les classes d'objet une fois toutes créées.
 
 
 ------------------------------Seance 8 (1/2) - Lundi20Fevrier2017---------------------------------------
-les fonction de requetes sont beaucoup trop longue: raccourcicement de ces dernieres par la mise en fonction du 
+les fonction de requetes sont beaucoup trop longue: raccourcicement de ces dernieres par la mise en fonction du
 code redondant.
 
 ------------------------------Seance 9 (1/2) - Mardi21Fevrier2017---------------------------------------
@@ -83,7 +83,7 @@ Faut t-il faire usage de differentes class pour gerer le controle
 et les modifications de la base de données ou alors simplement rendre les objet eux même autonome avec des methodes
 
 1ere possibilité:
-Par exemple en plus des classes d'objets info_documents exemplaire lecteurs... 
+Par exemple en plus des classes d'objets info_documents exemplaire lecteurs...
 - on cree une class "modele" specialement pour executer les requetes sur la base de donnée(sans controle)
 - on cree une autre classe "controleur" contenant uniquement les requetes contrôles qui va autoriser les methodes de la classe "modele".
 
@@ -124,7 +124,7 @@ debogage et reajustement des classes
 Test de fonctionalités, documentation de code, planification d'une interface pour l'usage de l'API
 
 -----------------------------Seance 16 - Mardi11avril2017---------------------------------------
- Redefinition des objectif du projet en fonction du temps restant: un mois de fonctionnalité 1 mois sur l'interface graphique 
+ Redefinition des objectif du projet en fonction du temps restant: un mois de fonctionnalité 1 mois sur l'interface graphique
  Assignement des exceptions SQlite3.
  installation du logiciel DBBrowser Sqlite pour visualiser le contenu de la base de données.
  poursuite des tests des methodes
@@ -145,3 +145,7 @@ integration de trigger avec sqlite pour calculer le retard sur un exemplaire emp
 
 -----------------------------Seance 20 - Mercredi19avril2017---------------------------------------
 supression de la colone retard, nouvelle methode de retour d'exemplaire
+
+-----------------------------Seance 21 - Vendredi21avril2017---------------------------------------
+Methode pour recuperer la liste d'emprunt
+Methode pour prolonger un emprunt

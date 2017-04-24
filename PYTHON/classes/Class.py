@@ -298,7 +298,7 @@ class Lecteur(object):
         self.date_naissance = ""
         self.niveau_etude = ""
         self.num_tel = ""
-        self.suspension = False
+        self.suspension = 0
         self.commentaire = ""
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
@@ -419,7 +419,6 @@ class Lecteur(object):
         print(self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, self.suspension, self.commentaire)
 
 
-
 class Relation(object):
     """Classe definissant une relation entre un lecteur et un document qu'il a empruntée.
     Contient les methodes pour l'emprunt et le retour des exemplaires. elle est caractérisée par :
@@ -430,14 +429,13 @@ class Relation(object):
     """
     table_ref = 'relation'
     clef_primaire = 'id_exemplaire'
-    liste_d_emprunt = None
 
     def __init__(self):
         self.id_lecteur = None
         self.id_exemplaire = None
         self.date_emprunt = None
         self.date_retour = None
-
+        self.liste_d_emprunt = None
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_idLect(self):
         """Methode qui verifie l'existance d'un num_etudiant dans la table lecteurs et retourne une liste de tuple de contenant
@@ -494,12 +492,12 @@ class Relation(object):
         """
         self.id_lecteur = num_etudiant
         if (self.exist_idLect() != []):
-            if (self.idlect_checkSuspension() is True):
+            if (self.idlect_checkSuspension() != 0):
                 print("Lecteur suspendu non autorisé a emprunter!")
             if (len(self.idlect_checkemprunt()) >= 5 ):
                 print("Limite d'emprunt atteinte !")
-            liste_d_emprunt = self.idlect_checkemprunt()
-            print(liste_d_emprunt)
+            self.liste_d_emprunt = self.idlect_checkemprunt()
+            print(self.liste_d_emprunt)
         else:
             print("Lecteur introuvable !")
             self.id_lecteur=""
@@ -511,7 +509,7 @@ class Relation(object):
         :num_etudiant: numero etudiant a rechercher
         """
         self.id_exemplaire = id_exemplaire
-        if (self.idlect_checkSuspension() is False):
+        if (self.idlect_checkSuspension() == 0):
             if (len(self.idlect_checkemprunt()) < 5 ):
                 if (self.exist_idexemp() != []):  # si l'exemplaire existe
                     if (self.idexemp_checkemprunt() is False):  # si l'exemplaire n'est pas emprunté
@@ -523,6 +521,9 @@ class Relation(object):
                         requetesql = """INSERT INTO relation(date_emprunt, date_retour, id_lecteur, id_exemplaire) VALUES(?,?,?,?)"""
                         param = self.date_emprunt, self.date_retour ,self.id_lecteur ,self.id_exemplaire,
                         ecriture(requetesql, param)  # requetesql ajout d'un champ
+                        self.liste_d_emprunt = self.idlect_checkemprunt()
+                        print('exemplaire emprunté')
+
                     else:
                         print("exemplaire deja emprunté")
                 else:
@@ -540,13 +541,13 @@ class Relation(object):
         """
         self.id_exemplaire = id_exemplaire
         if (self.exist_idexemp() != []):  # si l'exemplaire existe
-            if (self.idexemp_checkemprunt() is True):  # si l'exemplaire est pas emprunté
+            if (self.idexemp_checkemprunt() is True):  # si l'exemplaire n'est pas emprunté
                 requetesql = """UPDATE exemplaires SET emprunt = 0 WHERE codebar = ? """
                 param = self.id_exemplaire,
                 ecriture(requetesql, param)  # requetesql changement du statut du livre
                 requetesql = """DELETE FROM relation WHERE id_exemplaire = ?"""
                 param = self.id_exemplaire,
-                ecriture(requetesql, param)
+                ecriture(requetesql, param) # requetesql suppression de la relation dans la table
                 print("La relation a été supprimée de la base de données")
                 self.id_exemplaire = ""
             else:
@@ -558,13 +559,15 @@ class Relation(object):
 
 #-----------Methode pour effectuer un prolongement---------
     def prolongement(self):
-        if (self.idlect_checkSuspension() is False):  # si le lecteur n'est pas suspendu
-            if (self.idexemp_checkemprunt() is False):  # si l'exemplaire est emprunté
+        """Methode qui effectue un prolongement de six jour sur l'emprunt selectionné
+        """
+        if (self.idlect_checkSuspension() == 0):  # si le lecteur n'est pas suspendu
+            if (self.idexemp_checkemprunt() is True):  # si l'exemplaire est emprunté
                 if (self.check_prolongement() is False):
                     requetesql = """UPDATE relation SET prolongement = 1 WHERE id_exemplaire = ? """
                     param = self.id_exemplaire,
                     ecriture(requetesql, param)  # requetesql changement du statut du prolongement
-                    self.date_retour += datetime.timedelta(6) # calcul & attribution de la date de retour
+                    self.date_retour = datetime.datetime(int(self.date_retour[0:4]), int(self.date_retour[5:7]), int(self.date_retour[8:10])) + datetime.timedelta(6) # calcul & attribution de la date de retour
                     requetesql = """UPDATE relation SET date_retour = ? WHERE id_exemplaire = ? """
                     param = self.date_retour, self.id_exemplaire,
                     ecriture(requetesql, param)  # requetesql ajout d'un champ
@@ -575,7 +578,7 @@ class Relation(object):
         else:
             print("Lecteur suspendu non autorisé a prolonger!")
 
-
+#-----------Methode pour selectionner un emprunt---------
     def set_from_liste(self, i=0):
         """ Methode qui conditionne l'objet a partir d'un tuple de la liste d'emprunt
         :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
@@ -588,7 +591,7 @@ class Relation(object):
 
 
 class Gestionnaire(object):
-    """classe definissant un administrateur avec differentes methodes pour gestion
+    """classe definissant une interface graphique avec differentes methodes pour gestion
     de la base de donnée, caractérisée par :
     -un identifiant administrateur.
     -un mot de passe.
