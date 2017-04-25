@@ -127,10 +127,10 @@ def maj_suspension():
         requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
         param = i[0],
         reponse = lecture(requetesql, param)[0][0]
-        if (reponse != 0):  # formatage de la date de suspension si existante
+        if (reponse != None):  # formatage de la date de suspension si existante
             suspension = datetime.datetime(int(reponse[0:4]), int(reponse[5:7]), int(reponse[8:10]))
         else:
-            suspension = 0
+            suspension = None
         #on a recupéré la valeur de la suspension(date ou 0) du lecteur i
         requetesql = """SELECT MIN(date_retour) FROM relation WHERE id_lecteur = ? AND date('now') > date_retour  """
         param = i[0],
@@ -142,15 +142,18 @@ def maj_suspension():
                 retardmax = datetime.timedelta(31)  #on fixe le retard a un mois
             date_suspension_r = date_du_jour + retardmax  # nouvelle date de suspension a remplacer
         else:
-            date_suspension_r = 0
+            date_suspension_r = None
             #si aucun livre est en retard la valeur a remplacer sera zero
             #( a condition que la date de suspension initial soit passé et que la nouvelle soit a superieur a cette derniere)
-        if(date_du_jour < suspension < date_suspension_r or date_du_jour > suspension ):
-            # si [la date de suspension n'est pas encore passée ET qu'elle ne represente pas le retard le plus important] ou qu'elle soit passé(et/ou = 0)
-                requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ?"""
-                param = date_suspension_r, i[0],
-                ecriture(requetesql,param)
-        else :
-            pass
 
-        print(date_suspension_r)
+        requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ?"""
+        param = date_suspension_r, i[0],
+        if (suspension is None or suspension <date_du_jour or date_suspension_r > suspension):
+            # si la date de suspension initial est passé ou nul ou inferieur a celle a remplacer
+            ecriture(requetesql, param)
+        elif (date_du_jour < suspension):  # si la date de suspension n'est pas encore passée...
+            if(date_suspension_r > suspension or date_suspension_r is None):  # ...ET qu'elle ne represente pas le retard le plus important
+                ecriture(requetesql, param)
+        else :
+             pass
+    #fin de la boucle

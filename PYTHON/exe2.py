@@ -23,5 +23,5 @@ if __name__ == '__main__':
     emprunt.get_lecteur('11200232')
     emprunt.enregistrer_emprunt('0987654321')
     
-    maj_suspension()
+    
     

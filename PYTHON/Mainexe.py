@@ -138,6 +138,6 @@ if __name__ == '__main__':
     lecteur.set_from_liste()
     lecteur.supprimer_lect()
     lecteur.set_from_liste(1)
-    lecteur.suspension = datetime.date(2017, 04, 20)
+    lecteur.suspension = datetime.date(2017, 4, 20)
     lecteur.commentaire = "n'a pas rendu ses livre a temps"
     lecteur.maj_lect()

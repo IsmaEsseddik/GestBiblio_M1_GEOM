@@ -298,7 +298,7 @@ class Lecteur(object):
         self.date_naissance = ""
         self.niveau_etude = ""
         self.num_tel = ""
-        self.suspension = 0
+        self.suspension = None
         self.commentaire = ""
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
@@ -452,7 +452,7 @@ class Relation(object):
         requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
         param = self.id_lecteur,
         suspension = lecture(requetesql, param)
-        return bool(suspension[0][0]) # retourne la valeur precise du champ
+        return suspension[0][0] # retourne la valeur precise du champ
 
     def idlect_checkemprunt(self):
         """Methode qui recherche la liste de tout les emprunt du lecteur dans la table relation
@@ -492,7 +492,7 @@ class Relation(object):
         """
         self.id_lecteur = num_etudiant
         if (self.exist_idLect() != []):
-            if (self.idlect_checkSuspension() != 0):
+            if (self.idlect_checkSuspension() != None):
                 print("Lecteur suspendu non autorisé a emprunter!")
             if (len(self.idlect_checkemprunt()) >= 5 ):
                 print("Limite d'emprunt atteinte !")
@@ -509,7 +509,7 @@ class Relation(object):
         :num_etudiant: numero etudiant a rechercher
         """
         self.id_exemplaire = id_exemplaire
-        if (self.idlect_checkSuspension() == 0):
+        if (self.idlect_checkSuspension() == None):
             if (len(self.idlect_checkemprunt()) < 5 ):
                 if (self.exist_idexemp() != []):  # si l'exemplaire existe
                     if (self.idexemp_checkemprunt() is False):  # si l'exemplaire n'est pas emprunté
@@ -523,7 +523,6 @@ class Relation(object):
                         ecriture(requetesql, param)  # requetesql ajout d'un champ
                         self.liste_d_emprunt = self.idlect_checkemprunt()
                         print('exemplaire emprunté')
-
                     else:
                         print("exemplaire deja emprunté")
                 else:
@@ -561,7 +560,7 @@ class Relation(object):
     def prolongement(self):
         """Methode qui effectue un prolongement de six jour sur l'emprunt selectionné
         """
-        if (self.idlect_checkSuspension() == 0):  # si le lecteur n'est pas suspendu
+        if (self.idlect_checkSuspension() == None):  # si le lecteur n'est pas suspendu
             if (self.idexemp_checkemprunt() is True):  # si l'exemplaire est emprunté
                 if (self.check_prolongement() is False):
                     requetesql = """UPDATE relation SET prolongement = 1 WHERE id_exemplaire = ? """
