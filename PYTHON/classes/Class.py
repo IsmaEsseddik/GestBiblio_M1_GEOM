@@ -13,9 +13,9 @@ class InfoDocument(object):
     - son editeur.
     - son année d'édition
     - sa cote.
+    table de reference : infos_documents
+    clef primaire : isbn
     """
-    table_ref = 'infos_documents'
-    clef_primaire = 'isbn'
     liste_recherche = None
 
     def __init__(self):  # méthode constructeur
@@ -155,9 +155,10 @@ class Exemplaire(object):
     - un etat d'emprunt.
     - un commentaire.
     - l'isbn de l'exemplaire.
+    table de reference : exemplaires
+    clef primaire : codebar
     """
-    table_ref = 'exemplaires'
-    clef_primaire = 'codebar'
+
     liste_recherche = None
 
     def __init__(self):  # méthode constructeur
@@ -165,8 +166,8 @@ class Exemplaire(object):
         d'une valeur passé en argument."""
         self.codebar = None
         self.emprunt = False
-        self.exemp_commentaire = None
         self.exemp_isbn = None
+        self.exemp_commentaire = None
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_exemp(self):
@@ -284,9 +285,10 @@ class Lecteur(object):
     - un numero de telephone.
     - une suspension.
     - un commentaire.
+    table de reference : lecteurs
+    clef primaire : num_etudiant
     """
-    table_ref = "lecteurs"
-    clef_primaire = 'num_etudiant'
+
     liste_recherche = None
 
     def __init__(self):
@@ -426,9 +428,10 @@ class Relation(object):
     - le numero etudiant d'un lecteur.
     - une date d'emprunt.
     - une date limite de retour.
+    table de reference : relation
+    clef primaire : id_exemplaire
     """
-    table_ref = 'relation'
-    clef_primaire = 'id_exemplaire'
+
 
     def __init__(self):
         self.id_lecteur = None

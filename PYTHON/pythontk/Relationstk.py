@@ -11,11 +11,6 @@ from classes.Class import *
 class Infodoc(object):
     """classe pour la creation d'une fenetre """
     obj = InfoDocument()
-    def Log_invite():#Commande pour se logger en tant qu'invité
-        showinfo('Mode invité', "Vous etes connecté en tant qu'invité")
-
-    def searchapi():
-        showinfo(isbn)
 
     #creation d'une simple fenêtre.
     gest_window_m = Tk()
@@ -35,8 +30,14 @@ class Infodoc(object):
 
     cadreapi = Frame(cadre_corp,bg='#d8d8d8')
     isbn_label = Label(cadreapi,text="ISBN : ", bg='#d8d8d8')#creation de libellés.
-    isbn_champ=Entry(cadreapi, textvariable = obj.isbn, width=50, justify='center')
-    bouton_api = Button(cadreapi, text="recherche API ", command= searchapi)#creation d'un bouton recherche api
+    isbn = StringVar()
+    isbn.set('test')
+    isbn_champ=Entry(cadreapi, textvariable = isbn , width=50, justify='center')
+
+    def searchapi(self):
+        self.isbn.get()
+
+    bouton_api = Button(cadreapi, text="recherche API ", command= searchapi)  # creation d'un bouton recherche api
 
     #creation d'un cadre libellée
     cadrelib = LabelFrame(cadre_corp, text="Informations sur l'edition", labelanchor="n", padx=20, pady=20, borderwidth=3, relief=SUNKEN, bg='#d8d8d8')
