@@ -5,6 +5,8 @@ from InitialisationBDD import *
 import re
 import datetime
 import tkinter as tk
+import tkinter.messagebox as msg
+
 
 
 class Main:
@@ -32,7 +34,7 @@ class Main:
         self.login_champ = tk.Entry(self.cadrelib, textvariable='login', width=50)
         self.mdp_champ = tk.Entry(self.cadrelib, textvariable='mdp', show='*', width=50)
         # creation boutons
-        self.bouton_login = tk.Button(self.cadrelib, text="S'identifier", command=None)
+        self.bouton_login = tk.Button(self.cadrelib, text="S'identifier", state='disabled', command=None)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         self.boutoninvite = tk.Button(self.cadre_corp, text='Mode Invité', width=25, command=self.new_window)
         # affichage
@@ -108,6 +110,7 @@ class Menu:
 
 class Infodoc:
     def __init__(self, master):
+
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
         self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
@@ -137,16 +140,15 @@ class Infodoc:
         self.description_label = tk.Label(self.cadredesc, text="Description : ", bg='#d8d8d8')
         self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
         # creation de champs
-        self.isbn_champ = tk.Entry(self.cadreapi, textvariable='', width=50, justify='center')
-        self.mdp_champ = tk.Entry(self.cadrelib, textvariable='mdp', show='*', width=50)
-        self.titre_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
-        self.auteur_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
-        self.editeur_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
-        self.date_edition_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
-        self.cote_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
-        self.description_champ = tk.Text(self.cadredesc, height=10, width=70, wrap="word", state='disabled')
+        self.isbn_champ = tk.Entry(self.cadreapi, width=50, textvariable='ISBN 978-2-74603707-6', justify='center')
+        self.titre_champ = tk.Entry(self.cadreinfoR, width=50, state='normal', disabledbackground='bisque')
+        self.auteur_champ = tk.Entry(self.cadreinfoR, width=50, state='normal', disabledbackground='bisque')
+        self.editeur_champ = tk.Entry(self.cadreinfoR, width=50, state='normal', disabledbackground='bisque')
+        self.date_edition_champ = tk.Entry(self.cadreinfoR, width=50, state='normal', disabledbackground='bisque')
+        self.cote_champ = tk.Entry(self.cadreinfoR, width=50, state='normal')
+        self.description_champ = tk.Text(self.cadredesc, height=10, width=70, wrap="word", state='normal')
         # creation boutons
-        self.bouton_api = tk.Button(self.cadreapi, text="recherche API ", command='')  # creation d'un bouton recherche api
+        self.bouton_api = tk.Button(self.cadreapi, text="Recherche API ", command=self.api )  # creation d'un bouton recherche api
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
@@ -178,6 +180,26 @@ class Infodoc:
 
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
+
+    def api(self):
+        obj = InfoDocument()
+        try:
+            obj.recherche_api(self.isbn_champ.get())
+            self.isbn_champ.delete(0, len(self.isbn_champ.get()))
+            self.isbn_champ.insert(0, obj.isbn)
+            self.titre_champ.delete(0, len(self.titre_champ.get()))
+            self.titre_champ.insert(0, obj.titre)
+            self.auteur_champ.delete(0, len(self.auteur_champ.get()))
+            self.auteur_champ.insert(0, obj.auteur)
+            self.editeur_champ.delete(0, len(self.editeur_champ.get()))
+            self.editeur_champ.insert(0, obj.editeur)
+            self.date_edition_champ.delete(0, len(self.date_edition_champ.get()))
+            self.date_edition_champ.insert(0, obj.date_edition)
+            self.description_champ.delete(1.0,)
+            self.description_champ.insert(0,obj.description)
+        except IOError as e:
+            msg.showerror("Erreur",e)
+
 
 
 class Lect:
@@ -214,13 +236,13 @@ class Lect:
         self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
         # creation de champs
         self.numetu_champ = tk.Entry(self.cadrenumetu, textvariable='', width=50, justify='center')
-        self.nom_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
-        self.prenom_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
-        self.date_naissance_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
-        self.niveau_etude_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
+        self.nom_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
+        self.prenom_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
+        self.date_naissance_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
+        self.niveau_etude_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
         self.num_tel_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
         self.suspension_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
-        self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='disabled')
+        self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='normal')
         # creation boutons
         self.bouton_recherche = tk.Button(self.cadrenumetu, text="Rechercher un lecteur", command='')  # creation d'un bouton recherche api
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
@@ -290,9 +312,9 @@ class Exemp():
         self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
         # creation de champs
         self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable='', width=50, justify='center')
-        self.isbn_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='disabled')
+        self.isbn_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
         self.emprunt_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
-        self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='disabled')
+        self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='normal')
         # creation boutons
         self.bouton_recherche = tk.Button(self.cadrecodebar, text="Rechercher un exemplaire", command='')  # creation d'un bouton recherche api
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)

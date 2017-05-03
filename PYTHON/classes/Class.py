@@ -29,7 +29,7 @@ class InfoDocument(object):
         self.cote = None
         self.description = None
 
-# --------------------Methode requête de contrôle dans la base de données ----------------------------
+# --------------------Methodes pour requête de contrôle dans la base de données ----------------------------
     def exist_infodoc(self):
         """Methode qui verifie l'existance d' un isbn dans la table infos_documents, retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
@@ -56,7 +56,7 @@ class InfoDocument(object):
 
 # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_infodoc(self):
-        """Methode qui ajoute une entrée valide dans la table info_documents (si elle n'existe pas deja)
+        """Methode qui ajoute une entrée valide dans la table info_documents (si elle n'existe pas déja)
         en remplissant tout les champs.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
@@ -89,7 +89,7 @@ class InfoDocument(object):
 
 # -----------Modification dans la base de données.---------
     def maj_infodoc(self):
-        """Methode qui met a jour tout les champ d'une entrée dans la base de donnée (si l'isbn y existe)
+        """Methode qui met a jour tout les champ d'une entrée dans la base de données (si l'isbn y existe)
         de la table info_documents.
         :champ: champ dans lequel sera modifier la valeur
         """
