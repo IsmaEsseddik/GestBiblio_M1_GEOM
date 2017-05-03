@@ -1,6 +1,6 @@
 import sqlite3  # importation de la librairie SQLite3
 import re  # pour les expression regulieres
-import datetime  #  pour les operation sur le temp
+import datetime  # pour les operation sur le temp
 from isbnlib import *  # importation du package pour les metadonnées et de formatage du numero isbn
 from InitialisationBDD import *
 
@@ -275,6 +275,7 @@ class Exemplaire(object):
         self.exemp_isbn = self.liste_recherche[i][3]
         print(self.codebar, self.emprunt, self.exemp_commentaire, self.exemp_isbn)
 
+
 class Lecteur(object):
     """Classe définissant un lecteur, caractérisée par :
     - un numero étudiant.
@@ -432,7 +433,6 @@ class Relation(object):
     clef primaire : id_exemplaire
     """
 
-
     def __init__(self):
         self.id_lecteur = None
         self.id_exemplaire = None
@@ -440,6 +440,7 @@ class Relation(object):
         self.date_retour = None
         self.liste_d_emprunt = None
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
+
     def exist_idLect(self):
         """Methode qui verifie l'existance d'un num_etudiant dans la table lecteurs et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
@@ -455,7 +456,7 @@ class Relation(object):
         requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
         param = self.id_lecteur,
         suspension = lecture(requetesql, param)
-        return suspension[0][0] # retourne la valeur precise du champ
+        return suspension[0][0]  # retourne la valeur precise du champ
 
     def idlect_checkemprunt(self):
         """Methode qui recherche la liste de tout les emprunt du lecteur dans la table relation
@@ -495,15 +496,15 @@ class Relation(object):
         """
         self.id_lecteur = num_etudiant
         if (self.exist_idLect() != []):
-            if (self.idlect_checkSuspension() != None):
+            if (self.idlect_checkSuspension() is not None):
                 print("Lecteur suspendu non autorisé a emprunter!")
-            if (len(self.idlect_checkemprunt()) >= 5 ):
+            if (len(self.idlect_checkemprunt()) >= 5):
                 print("Limite d'emprunt atteinte !")
             self.liste_d_emprunt = self.idlect_checkemprunt()
             print(self.liste_d_emprunt)
         else:
             print("Lecteur introuvable !")
-            self.id_lecteur=""
+            self.id_lecteur = ""
 
 # -----------Methode pour effectuer un emprunt ---------
     def enregistrer_emprunt(self, id_exemplaire):
@@ -512,17 +513,17 @@ class Relation(object):
         :num_etudiant: numero etudiant a rechercher
         """
         self.id_exemplaire = id_exemplaire
-        if (self.idlect_checkSuspension() == None):
-            if (len(self.idlect_checkemprunt()) < 5 ):
+        if (self.idlect_checkSuspension() is None):
+            if (len(self.idlect_checkemprunt()) < 5):
                 if (self.exist_idexemp() != []):  # si l'exemplaire existe
                     if (self.idexemp_checkemprunt() is False):  # si l'exemplaire n'est pas emprunté
                         requetesql = """UPDATE exemplaires SET emprunt = 1 WHERE codebar = ? """
                         param = self.id_exemplaire,
                         ecriture(requetesql, param)  # requetesql changement du statut du livre
                         self.date_emprunt = datetime.date.today()  # attribution de la date du jour
-                        self.date_retour = datetime.date.today() + datetime.timedelta(6) #calcul attribution de la date de retour
+                        self.date_retour = datetime.date.today() + datetime.timedelta(6)  # calcul attribution de la date de retour
                         requetesql = """INSERT INTO relation(date_emprunt, date_retour, id_lecteur, id_exemplaire) VALUES(?,?,?,?)"""
-                        param = self.date_emprunt, self.date_retour ,self.id_lecteur ,self.id_exemplaire,
+                        param = self.date_emprunt, self.date_retour, self.id_lecteur, self.id_exemplaire,
                         ecriture(requetesql, param)  # requetesql ajout d'un champ
                         self.liste_d_emprunt = self.idlect_checkemprunt()
                         print('exemplaire emprunté')
@@ -549,7 +550,7 @@ class Relation(object):
                 ecriture(requetesql, param)  # requetesql changement du statut du livre
                 requetesql = """DELETE FROM relation WHERE id_exemplaire = ?"""
                 param = self.id_exemplaire,
-                ecriture(requetesql, param) # requetesql suppression de la relation dans la table
+                ecriture(requetesql, param)  # requetesql suppression de la relation dans la table
                 print("La relation a été supprimée de la base de données")
                 self.id_exemplaire = ""
             else:
@@ -559,17 +560,17 @@ class Relation(object):
             print("Exemplaire introuvable !")
             self.id_exemplaire = ""
 
-#-----------Methode pour effectuer un prolongement---------
+# -----------Methode pour effectuer un prolongement---------
     def prolongement(self):
         """Methode qui effectue un prolongement de six jour sur l'emprunt selectionné
         """
-        if (self.idlect_checkSuspension() == None):  # si le lecteur n'est pas suspendu
+        if (self.idlect_checkSuspension() is None):  # si le lecteur n'est pas suspendu
             if (self.idexemp_checkemprunt() is True):  # si l'exemplaire est emprunté
                 if (self.check_prolongement() is False):
                     requetesql = """UPDATE relation SET prolongement = 1 WHERE id_exemplaire = ? """
                     param = self.id_exemplaire,
                     ecriture(requetesql, param)  # requetesql changement du statut du prolongement
-                    self.date_retour = datetime.datetime(int(self.date_retour[0:4]), int(self.date_retour[5:7]), int(self.date_retour[8:10])) + datetime.timedelta(6) # calcul & attribution de la date de retour
+                    self.date_retour = datetime.datetime(int(self.date_retour[0:4]), int(self.date_retour[5:7]), int(self.date_retour[8:10])) + datetime.timedelta(6)  # calcul & attribution de la date de retour
                     requetesql = """UPDATE relation SET date_retour = ? WHERE id_exemplaire = ? """
                     param = self.date_retour, self.id_exemplaire,
                     ecriture(requetesql, param)  # requetesql ajout d'un champ
@@ -580,7 +581,7 @@ class Relation(object):
         else:
             print("Lecteur suspendu non autorisé a prolonger!")
 
-#-----------Methode pour selectionner un emprunt---------
+# -----------Methode pour selectionner un emprunt---------
     def set_from_liste(self, i=0):
         """ Methode qui conditionne l'objet a partir d'un tuple de la liste d'emprunt
         :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
