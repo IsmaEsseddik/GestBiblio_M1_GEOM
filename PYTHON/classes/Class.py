@@ -115,7 +115,7 @@ class InfoDocument(object):
         requetesql = """SELECT * FROM infos_documents WHERE """ + champwhere + """ REGEXP ? """
         param = valeur,
         if (lecture(requetesql, param) == []):
-            print("Aucun resultat(s)")
+            raise NameError("Aucun resultat(s)")
         else:
             self.liste_recherche = lecture(requetesql, param)
             print(self.liste_recherche)
@@ -146,7 +146,7 @@ class InfoDocument(object):
             self.date_edition = metadonnees['Year']
             self.description = desc(numIsbn)
         else:
-            print("ISBN introuvable!")
+            raise NameError("ISBN introuvable ! Verfier votre connexion)")
 
 
 class Exemplaire(object):

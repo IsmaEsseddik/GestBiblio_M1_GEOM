@@ -62,7 +62,7 @@ class Menu:
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
-        self.master.geometry('200x350+0+0')  # pour la taille et le positionnement initiale.
+        self.master.geometry('300x350+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'black'  # pour le background en couleur gris.
         self.master.title("Gest_Biblio - Menu")  # pour donner un titre a l'application (title bar).
@@ -71,11 +71,11 @@ class Menu:
         # creation des cadres
         self.cadrelib = tk.LabelFrame(self.contenu, text="Fonctionnalités", padx=20, pady=20, borderwidth=3, relief="sunken", bg='#d8d8d8')
         # creation boutons
-        self.bouton_infodoc = tk.Button(self.cadrelib, text="InfoDocument", width=25, command=self.infodoc)
-        self.bouton_exemplaire = tk.Button(self.cadrelib, text="Exemplaire", width=25, command=self.exemp)
-        self.bouton_lecteur = tk.Button(self.cadrelib, text='Lecteur', width=25, command=self.lect)
-        self.bouton_Emprunt = tk.Button(self.cadrelib, text='Emprunt', width=25, command=self.emprunt)
-        self.bouton_Retour = tk.Button(self.cadrelib, text='Retour', width=25, command=self.retour)
+        self.bouton_infodoc = tk.Button(self.cadrelib, text="Gestionnaire d'editions", width=25, command=self.infodoc)
+        self.bouton_exemplaire = tk.Button(self.cadrelib, text="Gestionnaire d'exemplaire", width=25, command=self.exemp)
+        self.bouton_lecteur = tk.Button(self.cadrelib, text='Gestionnaire de lecteur', width=25, command=self.lect)
+        self.bouton_Emprunt = tk.Button(self.cadrelib, text='Faire un emprunt', width=25, command=self.emprunt)
+        self.bouton_Retour = tk.Button(self.cadrelib, text='Faire un retour', width=25, command=self.retour)
         self.bouton_quitter = tk.Button(self.contenu, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
@@ -114,7 +114,7 @@ class Infodoc:
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
         self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
-        self.master.state('normal')  # pour maximiser la fenetre.
+        self.master.state('zoomed')  # pour maximiser la fenetre.
         self.master['bg'] = 'bisque'  # pour le background en couleur gris.
         self.master.title("Gest_Biblio - Gestionnaire d'edition")  # pour donner un titre a l'application (title bar).
         # creation du conteneur principale
@@ -140,15 +140,18 @@ class Infodoc:
         self.description_label = tk.Label(self.cadredesc, text="Description : ", bg='#d8d8d8')
         self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
         # creation de champs
+
         self.isbn_champ = tk.Entry(self.cadreapi, width=50, textvariable='ISBN 978-2-74603707-6', justify='center')
         self.titre_champ = tk.Entry(self.cadreinfoR, width=50, state='normal', disabledbackground='bisque')
         self.auteur_champ = tk.Entry(self.cadreinfoR, width=50, state='normal', disabledbackground='bisque')
         self.editeur_champ = tk.Entry(self.cadreinfoR, width=50, state='normal', disabledbackground='bisque')
         self.date_edition_champ = tk.Entry(self.cadreinfoR, width=50, state='normal', disabledbackground='bisque')
         self.cote_champ = tk.Entry(self.cadreinfoR, width=50, state='normal')
-        self.description_champ = tk.Text(self.cadredesc, height=10, width=70, wrap="word", state='normal')
+        self.description_champ = tk.Text(self.cadredesc, height=30, width=70, wrap="word", state='normal')
         # creation boutons
-        self.bouton_api = tk.Button(self.cadreapi, text="Recherche API ", command=self.api )  # creation d'un bouton recherche api
+        self.bouton_api = tk.Button(self.cadreapi, text="Recherche API ", command=self.api )
+        self.bouton_rechercher = tk.Button(self.cadreapi, text="Rechercher interne", command=self.listing)
+        self.bouton_ajout = tk.Button(self.cadreinfoL, text="Enregistrer ", command='')
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
@@ -160,6 +163,7 @@ class Infodoc:
         self.isbn_label.pack(side='left')
         self.isbn_champ.pack(side='left')
         self.bouton_api.pack(side='right')
+        self.bouton_rechercher.pack(side='right')
         self.cadrelib.pack(fill="both", expand="yes")
         self.cadreinfo.pack(side="left", fill="both", expand="yes", pady=20)
         self.cadreinfoL.pack(side="left", fill="both", expand="yes")
@@ -177,6 +181,7 @@ class Infodoc:
         self.cote_champ.pack(pady=1)
         self.description_label.pack()
         self.description_champ.pack()
+        self.bouton_ajout.pack(side='bottom')
 
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
@@ -186,20 +191,33 @@ class Infodoc:
         try:
             obj.recherche_api(self.isbn_champ.get())
             self.isbn_champ.delete(0, len(self.isbn_champ.get()))
-            self.isbn_champ.insert(0, obj.isbn)
+            self.isbn_champ.insert(0, str(obj.isbn))
             self.titre_champ.delete(0, len(self.titre_champ.get()))
-            self.titre_champ.insert(0, obj.titre)
+            self.titre_champ.insert(0, str(obj.titre))
             self.auteur_champ.delete(0, len(self.auteur_champ.get()))
-            self.auteur_champ.insert(0, obj.auteur)
+            self.auteur_champ.insert(0, str(obj.auteur))
             self.editeur_champ.delete(0, len(self.editeur_champ.get()))
-            self.editeur_champ.insert(0, obj.editeur)
+            self.editeur_champ.insert(0, str(obj.editeur))
             self.date_edition_champ.delete(0, len(self.date_edition_champ.get()))
-            self.date_edition_champ.insert(0, obj.date_edition)
-            self.description_champ.delete(1.0,)
-            self.description_champ.insert(0,obj.description)
-        except IOError as e:
-            msg.showerror("Erreur",e)
+            self.date_edition_champ.insert(0, str(obj.date_edition))
+            self.description_champ.delete(1.0, tk.END)
+            self.description_champ.insert(1.0, str(obj.description))
+        except NotValidISBNError as e:
+            msg.showerror("ERREUR ! ", "ISBN invalide, Veuillez entrer un EAN à 10 ou 13 chiffres  \n\nLOG : "+str(e))
+        except NameError as e2:
+            msg.showerror("ERREUR !", "LOG : "+str(e2) )
+        except ISBNLibURLError as e3:
+            msg.showerror("ERREUR !", "Delai d'attente dépassé \n\nLOG : "+str(e2))
 
+    def listing(self):
+        """methode pour lister toute """
+        obj = InfoDocument()
+        try:
+            obj.get_liste_BDD(self.isbn_champ.get())
+            for i in obj.liste_recherche:
+                print(i)
+        except:
+            pass
 
 
 class Lect:
