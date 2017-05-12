@@ -1,7 +1,11 @@
 import tkinter as tk
 from Infodoc import *
+from Exemp import *
+from Emprunt import *
+from Retour import *
 
-class Menu(object):
+
+class Menu:
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.

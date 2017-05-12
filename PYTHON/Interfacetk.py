@@ -1,12 +1,5 @@
-import sqlite3  # importation de la librairie SQLite3
 from isbnlib import *  # importation du package pour les metadonnées et de formatage du numero isbn
 from fenetres.Menu import *
-from fenetres.InfoDoc import *
-from fenetres.Exemp import *
-from fenetres.Emprunt import *
-from fenetres.Retour import *
-
-
 from InitialisationBDD import *
 import re
 import datetime
