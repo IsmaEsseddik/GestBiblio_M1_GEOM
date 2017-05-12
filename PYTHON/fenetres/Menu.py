@@ -1,8 +1,10 @@
 import tkinter as tk
+import isbnlib as lib
 from fenetres.Infodoc import *
 from fenetres.Exemp import *
 from fenetres.Emprunt import *
 from fenetres.Retour import *
+
 
 class Menu:
     def __init__(self, master):
@@ -15,10 +17,12 @@ class Menu:
         # creation du conteneur principale
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
         # creation des cadres
-        self.cadrelib = tk.LabelFrame(self.contenu, text="Fonctionnalités", padx=20, pady=20, borderwidth=3, relief="sunken", bg='#d8d8d8')
+        self.cadrelib = tk.LabelFrame(self.contenu, text="Fonctionnalités", padx=20, pady=20, borderwidth=3,
+                                      relief="sunken", bg='#d8d8d8')
         # creation boutons
         self.bouton_infodoc = tk.Button(self.cadrelib, text="Gestionnaire d'editions", width=25, command=self.infodoc)
-        self.bouton_exemplaire = tk.Button(self.cadrelib, text="Gestionnaire d'exemplaire", width=25, command=self.exemp)
+        self.bouton_exemplaire = tk.Button(self.cadrelib, text="Gestionnaire d'exemplaire", width=25,
+                                           command=self.exemp)
         self.bouton_lecteur = tk.Button(self.cadrelib, text='Gestionnaire de lecteur', width=25, command=self.lect)
         self.bouton_Emprunt = tk.Button(self.cadrelib, text='Faire un emprunt', width=25, command=self.emprunt)
         self.bouton_Retour = tk.Button(self.cadrelib, text='Faire un retour', width=25, command=self.retour)

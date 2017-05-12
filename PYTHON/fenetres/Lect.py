@@ -1,3 +1,9 @@
+import tkinter as tk
+import isbnlib
+import sqlite3
+import re
+import tkinter.messagebox as msg
+
 class Lect:
     """ """
     def __init__(self, master):
@@ -14,13 +20,15 @@ class Lect:
         self.cadre_corp = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadrenumetu = tk.Frame(self.cadre_corp, bg='#d8d8d8')
-        self.cadrelib = tk.LabelFrame(self.cadre_corp, text="Informations sur le lecteur", labelanchor="n", padx=20, pady=20, borderwidth=3, relief="sunken", bg='#d8d8d8')
+        self.cadrelib = tk.LabelFrame(self.cadre_corp, text="Informations sur le lecteur", labelanchor="n", padx=20,
+                                      pady=20, borderwidth=3, relief="sunken", bg='#d8d8d8')
         self.cadreinfo = tk.Frame(self.cadrelib, bg='#d8d8d8')
         self.cadreinfoL = tk.Frame(self.cadreinfo, bg='#d8d8d8')
         self.cadreinfoR = tk.Frame(self.cadreinfo, bg='#d8d8d8')
         self.cadrecom = tk.Frame(self.cadrelib, bg='#d8d8d8')
         # creation de libellés
-        self.welcome_label = tk.Label(self.cadre_entete, text="Gestionnaire de lecteur : Ici vous pouvez rechercher un lecteur dans la base de données", bg='blue')
+        self.welcome_label = tk.Label(self.cadre_entete, text="Gestionnaire de lecteur : Ici vous pouvez rechercher "
+                                                              "un lecteur dans la base de données", bg='blue')
         self.numetu_label = tk.Label(self.cadrenumetu, text="Numero étudiant : ", bg='#d8d8d8')  # creation de libellés.
         self.nom_label = tk.Label(self.cadreinfoL, text="Nom : ", bg='#d8d8d8')
         self.prenom_label = tk.Label(self.cadreinfoL, text="Prenom : ", bg='#d8d8d8')
@@ -29,7 +37,8 @@ class Lect:
         self.num_tel_label = tk.Label(self.cadreinfoL, text="Numero de telephone : ", bg='#d8d8d8')
         self.suspension_label = tk.Label(self.cadreinfoL, text="Date de suspenion", bg='#d8d8d8')
         self.commentaire_label = tk.Label(self.cadrecom, text="Commentaire : ", bg='#d8d8d8')
-        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
+        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+                                  fg='blue', bg='#d8d8d8')
         # creation de champs
         self.numetu_champ = tk.Entry(self.cadrenumetu, textvariable='', width=50, justify='center')
         self.nom_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
@@ -40,7 +49,7 @@ class Lect:
         self.suspension_champ = tk.Entry(self.cadreinfoR, textvariable='', width=50, state='normal')
         self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='normal')
         # creation boutons
-        self.bouton_recherche = tk.Button(self.cadrenumetu, text="Rechercher un lecteur", command='')  # creation d'un bouton recherche api
+        self.bouton_recherche = tk.Button(self.cadrenumetu, text="Rechercher un lecteur", command='')
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)

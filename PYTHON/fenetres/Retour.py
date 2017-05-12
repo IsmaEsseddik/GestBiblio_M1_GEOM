@@ -1,3 +1,9 @@
+import tkinter as tk
+import isbnlib
+import sqlite3
+import re
+import tkinter.messagebox as msg
+
 class Retour():
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
@@ -16,7 +22,8 @@ class Retour():
         # creation de libellés
         self.welcome_label = tk.Label(self.cadre_entete, text="Retour d'exemplaire", bg='#16eff4')
         self.codebar_label = tk.Label(self.cadrecodebar, text=" Codebar: ", bg='#d8d8d8')  # creation de libellés.
-        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
+        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+                                  fg='blue', bg='#d8d8d8')
         # creation de champs
         self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable='', width=50, justify='center')
         # creation boutons

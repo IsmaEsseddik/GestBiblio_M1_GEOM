@@ -4,8 +4,6 @@ from InitialisationBDD import *
 import re
 import datetime
 import tkinter as tk
-import tkinter.messagebox as msg
-
 
 class Main:
     def __init__(self, master):
@@ -22,12 +20,16 @@ class Main:
         self.cadre_corp = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')
         # creation d'un cadre libellée
-        self.cadrelib = tk.LabelFrame(self.cadre_corp, text="Login", padx=20, pady=20, borderwidth=3, relief="sunken", bg='#d8d8d8')
+        self.cadrelib = tk.LabelFrame(self.cadre_corp, text="Login", padx=20, pady=20, borderwidth=3, relief="sunken",
+                                      bg='#d8d8d8')
         # creation de libellés
-        self.welcome_label = tk.Label(self.cadre_entete, text="Bienvenue sur le gestionnaire de bibliotheque (en construction)", bg='bisque')
+        self.welcome_label = tk.Label(self.cadre_entete,
+                                      text="Bienvenue sur le gestionnaire de bibliotheque (en construction)",
+                                      bg='bisque')
         self.login_label = tk.Label(self.cadrelib, text="Identifiant", bg='#d8d8d8')
         self.mdp_label = tk.Label(self.cadrelib, text="Mot de passe", bg='#d8d8d8')
-        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
+        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+                                  fg='blue', bg='#d8d8d8')
         # creation de 2 champs pour le login et mot de passe
         self.login_champ = tk.Entry(self.cadrelib, textvariable='login', width=50)
         self.mdp_champ = tk.Entry(self.cadrelib, textvariable='mdp', show='*', width=50)

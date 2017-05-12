@@ -1,8 +1,13 @@
 import tkinter as tk
+import isbnlib as lib
+import sqlite3
+import re
+import tkinter.messagebox as msg
+
 
 
 class Infodoc :
-    """"""
+    """ """
     liste_recherche = None
     def __init__(self, master):
 
@@ -27,13 +32,16 @@ class Infodoc :
         self.cadre_corp = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadreapi = tk.Frame(self.cadre_corp, bg='#d8d8d8')
-        self.cadrelib = tk.LabelFrame(self.cadre_corp, text="Informations sur l'edition", labelanchor="n", padx=20, pady=20, borderwidth=3, relief="sunken", bg='#d8d8d8')
+        self.cadrelib = tk.LabelFrame(self.cadre_corp, text="Informations sur l'edition", labelanchor="n", padx=20,
+                                      pady=20, borderwidth=3, relief="sunken", bg='#d8d8d8')
         self.cadreinfo = tk.Frame(self.cadrelib, bg='#d8d8d8')
         self.cadreinfoL = tk.Frame(self.cadreinfo, bg='#d8d8d8')
         self.cadreinfoR = tk.Frame(self.cadreinfo, bg='#d8d8d8')
         self.cadredesc = tk.Frame(self.cadrelib, bg='#d8d8d8')
         # creation de libellés
-        self.welcome_label = tk.Label(self.cadre_entete, text="Gestionnaire d'editions : Ici vous pouvez rechercher un isbn via l'api google et enregistrer dans la base de données", bg='purple')
+        self.welcome_label = tk.Label(self.cadre_entete,
+                                      text="Gestionnaire d'editions : Ici vous pouvez rechercher un isbn"
+                                           " via l'api google et enregistrer dans la base de données", bg='purple')
         self.isbn_label = tk.Label(self.cadreapi, text="ISBN : ", bg='#d8d8d8')  # creation de libellés.
         self.titre_label = tk.Label(self.cadreinfoL, text="Titre : ", bg='#d8d8d8')
         self.auteur_label = tk.Label(self.cadreinfoL, text="Auteur : ", bg='#d8d8d8')
@@ -41,13 +49,18 @@ class Infodoc :
         self.date_edition_label = tk.Label(self.cadreinfoL, text="Date d'edition : ", bg='#d8d8d8')
         self.cote_label = tk.Label(self.cadreinfoL, text="Cote : ", bg='#d8d8d8')
         self.description_label = tk.Label(self.cadredesc, text="Description : ", bg='#d8d8d8')
-        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
+        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+                                  fg='blue', bg='#d8d8d8')
         # creation de champs
         self.isbn_champ = tk.Entry(self.cadreapi, width=50, textvariable=self.isbn, justify='center')
-        self.titre_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.titre, state='normal', disabledbackground='bisque')
-        self.auteur_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.auteur, state='normal', disabledbackground='bisque')
-        self.editeur_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.editeur, state='normal', disabledbackground='bisque')
-        self.date_edition_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.date_edition, state='normal', disabledbackground='bisque')
+        self.titre_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.titre, state='normal',
+                                    disabledbackground='bisque')
+        self.auteur_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.auteur, state='normal',
+                                     disabledbackground='bisque')
+        self.editeur_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.editeur, state='normal',
+                                      disabledbackground='bisque')
+        self.date_edition_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.date_edition, state='normal',
+                                           disabledbackground='bisque')
         self.cote_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.cote, state='normal')
         self.description_champ = tk.Text(self.cadredesc, height=30, width=70, wrap="word", state='normal')
         # creation boutons
@@ -87,28 +100,27 @@ class Infodoc :
 
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
-#____________________________________________________________________________________________________________________________
-
+#__________________________________________________________________________________________________
     # --------------------Methodes pour requête de contrôle dans la base de données ----------------------------
     def exist_infodoc(self):
-        """Methode qui verifie l'existance d' un isbn dans la table infos_documents, retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un isbn dans la table infos_documents,
+         retourne une liste de tuple de contenant les valeurs de chaque champ ou NONE si non trouvé.
         :objet_infodoc: objet dont l'attribut isbn sera recherhé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
-        param = EAN13(self.isbn_champ.get()),
+        param = lib.EAN13(self.isbn_champ.get()),
         if (lecture(requetesql, param) == []):
             return None
         else:
             return lecture(requetesql, param)
 
     def exist_isbn_exemp(self):
-        """Methode qui verifie l'existance d' un isbn dans la table des exemplaires et retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un isbn dans la table des exemplaires et retourne une liste de tuple
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         :objet_exemp: objet dont l'attribut isbn sera recherhé.
         """
         requetesql = """SELECT * FROM exemplaires WHERE exemp_isbn = ? """
-        param = EAN13(self.isbn_champ.get()),
+        param = lib.EAN13(self.isbn_champ.get()),
         if (lecture(requetesql, param) == []):
             return None
         else:
@@ -120,10 +132,10 @@ class Infodoc :
         en remplissant tout les champs.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.exist_infodoc() is None and is_isbn13(EAN13(self.isbn_champ.get())) is True):
+        if (self.exist_infodoc() is None and is_isbn13(lib.EAN13(self.isbn_champ.get())) is True):
             # Si l'isbn est valide et n'existe pas dans sa table
                 requetesql = """INSERT INTO infos_documents(isbn, titre, auteur, editeur, date_edition, cote, description) VALUES(?,?,?,?,?,?,?)"""
-                param = EAN13(self.isbn_champ.get()), self.titre_champ.get(), self.auteur_champ.get(), self.editeur_champ.get(), self.date_edition_champ.get(), self.cote_champ.get(), self.description_champ.get(1.0, tk.END),
+                param = lib.EAN13(self.isbn_champ.get()), self.titre_champ.get(), self.auteur_champ.get(), self.editeur_champ.get(), self.date_edition_champ.get(), self.cote_champ.get(), self.description_champ.get(1.0, tk.END),
                 ecriture(requetesql, param)
                 print("Les informations isbn ont été ajoutés dans la base de données")
         else:
@@ -137,7 +149,7 @@ class Infodoc :
         if (self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
             if (self.exist_isbn_exemp() is None):  # si l'isbn n'existe pas dans la table exemplaires
                 requetesql = """DELETE FROM infos_documents WHERE isbn = ?"""
-                param =EAN13( self.isbn_champ.get()),
+                param =lib.EAN13( self.isbn_champ.get()),
                 ecriture(requetesql, param)
                 print("Les informations isbn ont été supprimée de la base de données")
 
@@ -197,7 +209,7 @@ class Infodoc :
         """Recupere des meta-donnée grace a l'API google a partir de l'isbn et les integre aux attributs de l'objet,
         """
         try:
-            metadonnees = meta(EAN13(self.isbn_champ.get()))
+            metadonnees = lib.meta(lib.EAN13(self.isbn_champ.get()))
             if metadonnees is not None:
                 self.isbn.set(metadonnees['ISBN-13'])
                 self.titre.set(metadonnees['Title'])
@@ -205,16 +217,16 @@ class Infodoc :
                 self.editeur.set(metadonnees['Publisher'])
                 self.date_edition.set(metadonnees['Year'])
                 self.description_champ.delete(1.0, tk.END)
-                self.description_champ.insert(1.0, desc(str(EAN13(self.isbn_champ.get()))))
+                self.description_champ.insert(1.0, lib.desc(str(lib.EAN13(self.isbn_champ.get()))))
             else:
                 raise NameError("ISBN introuvable ! (Verfier votre connexion)")
-        except NotValidISBNError:
+        except lib.NotValidISBNError:
              msg.showinfo("ERREUR !", "ISBN invalide")
         except NameError as ne:
              msg.showinfo('ERREUR !', str(ne))
 
     def test(self):
-        print(EAN13(self.isbn_champ.get()))
+        print(lib.EAN13(self.isbn_champ.get()))
         print(self.titre_champ.get())
         print(self.auteur_champ.get())
         print(self.editeur_champ.get())
@@ -228,7 +240,7 @@ class Infodoc :
         """methode pour lister le contenu de la rechereche """
         obj = InfoDocument()
         try:
-            obj.get_liste_BDD(EAN13(self.isbn_champ.get()))
+            obj.get_liste_BDD(lib.EAN13(self.isbn_champ.get()))
             for i in obj.liste_recherche:
                 print(i)
         except:

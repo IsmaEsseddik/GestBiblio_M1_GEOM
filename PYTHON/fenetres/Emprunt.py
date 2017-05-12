@@ -1,3 +1,9 @@
+import tkinter as tk
+import isbnlib
+import sqlite3
+import re
+import tkinter.messagebox as msg
+
 class Emprunt:
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
@@ -5,7 +11,7 @@ class Emprunt:
         self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'bisque'  # pour le background en couleur gris.
-        self.master.title("Gest_Biblio - Gestionnaire de lecteurs")  # pour donner un titre a l'application (title bar).
+        self.master.title("Gest_Biblio - Gestionnaire de lecteurs")  # pour donner un titre a l'application.
         # creation du conteneur principale
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
         # creation des cadres
@@ -15,8 +21,9 @@ class Emprunt:
         self.cadrenumetu = tk.Frame(self.cadre_corp, bg='#d8d8d8')
         # creation de libellés
         self.welcome_label = tk.Label(self.cadre_entete, text="Emprunt d'exemplaire", bg='#16eff4')
-        self.numetu_label = tk.Label(self.cadrenumetu, text=" Numero Etudiant: ", bg='#d8d8d8')  # creation de libellés.
-        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017", fg='blue', bg='#d8d8d8')
+        self.numetu_label = tk.Label(self.cadrenumetu, text=" Numero Etudiant: ", bg='#d8d8d8')
+        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+                                  fg='blue', bg='#d8d8d8')
         # creation de champs
         self.numetu_champ = tk.Entry(self.cadrenumetu, textvariable='', width=50, justify='center')
         # creation boutons
