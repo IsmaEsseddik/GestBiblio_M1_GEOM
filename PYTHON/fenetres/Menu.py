@@ -1,9 +1,8 @@
 import tkinter as tk
-from Infodoc import *
-from Exemp import *
-from Emprunt import *
-from Retour import *
-
+from fenetres.Infodoc import *
+from fenetres.Exemp import *
+from fenetres.Emprunt import *
+from fenetres.Retour import *
 
 class Menu:
     def __init__(self, master):

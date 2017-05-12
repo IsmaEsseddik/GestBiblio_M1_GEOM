@@ -7,7 +7,6 @@ import tkinter as tk
 import tkinter.messagebox as msg
 
 
-
 class Main:
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
