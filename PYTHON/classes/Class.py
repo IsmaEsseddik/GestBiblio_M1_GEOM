@@ -94,6 +94,18 @@ class InfoDocument(object):
         :champ: champ dans lequel sera modifier la valeur
         """
         if (self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
+            requetesql = """UPDATE infos_documents SET titre =  ? WHERE isbn = ? """
+            param = self.titre, self.isbn,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE infos_documents SET auteur =  ? WHERE isbn = ? """
+            param = self.auteur, self.isbn,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE infos_documents SET editeur =  ? WHERE isbn = ? """
+            param = self.editeur, self.isbn,
+            ecriture(requetesql, param)
+            requetesql = """UPDATE infos_documents SET date_edition =  ? WHERE isbn = ? """
+            param = self.date_edition, self.isbn,
+            ecriture(requetesql, param)
             requetesql = """UPDATE infos_documents SET cote =  ? WHERE isbn = ? """
             param = self.cote, self.isbn,
             ecriture(requetesql, param)

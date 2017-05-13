@@ -1,16 +1,16 @@
 import tkinter as tk
 import isbnlib as lib
+from InitialisationBDD import *
 import sqlite3
 import re
 import tkinter.messagebox as msg
 
 
-
-class Infodoc :
-    """ """
+class Infodoc:
+    """ constructeur de l'interface graphique relative a la gestion de la la table Infodoc de la base de données, """
     liste_recherche = None
-    def __init__(self, master):
 
+    def __init__(self, master):
         self.isbn = tk.StringVar(master, value='ISBN 978-2-74603707-6')
         self.titre = tk.StringVar(master, value='')
         self.auteur = tk.StringVar(master, value='')
@@ -37,6 +37,8 @@ class Infodoc :
         self.cadreinfo = tk.Frame(self.cadrelib, bg='#d8d8d8')
         self.cadreinfoL = tk.Frame(self.cadreinfo, bg='#d8d8d8')
         self.cadreinfoR = tk.Frame(self.cadreinfo, bg='#d8d8d8')
+        self.cadraction = tk.Frame(self.cadreinfoR, bg='#d8d8d8')
+
         self.cadredesc = tk.Frame(self.cadrelib, bg='#d8d8d8')
         # creation de libellés
         self.welcome_label = tk.Label(self.cadre_entete,
@@ -65,8 +67,11 @@ class Infodoc :
         self.description_champ = tk.Text(self.cadredesc, height=30, width=70, wrap="word", state='normal')
         # creation boutons
         self.bouton_api = tk.Button(self.cadreapi, text="Recherche API ", command=self.recherche_api)
-        self.bouton_rechercher = tk.Button(self.cadreapi, text="Rechercher interne", command=self.listing)
-        self.bouton_ajout = tk.Button(self.cadreinfoL, text="Enregistrer ", command=self.enregistrer_infodoc)
+        self.bouton_rechercher = tk.Button(self.cadreapi, text="Rechercher interne", command=self.listing,
+                                           state='disabled')
+        self.bouton_ajout = tk.Button(self.cadraction, text="Ajouter ", command=self.enregistrer_infodoc)
+        self.bouton_suppr = tk.Button(self.cadraction, text="Supprimer ", command=self.supprimer_infodoc)
+        self.bouton_maj = tk.Button(self.cadraction, text="MiseAjour ", command=self.maj_infodoc)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
@@ -82,6 +87,7 @@ class Infodoc :
         self.cadrelib.pack(fill="both", expand="yes")
         self.cadreinfo.pack(side="left", fill="both", expand="yes", pady=20)
         self.cadreinfoL.pack(side="left", fill="both", expand="yes")
+        self.cadraction.pack(side="bottom", fill="both", expand="no")
         self.cadreinfoR.pack(side="right", fill="both", expand="yes")
         self.cadredesc.pack(side="right", fill="both", expand="yes")
         self.titre_label.pack()
@@ -96,12 +102,14 @@ class Infodoc :
         self.cote_champ.pack(pady=1)
         self.description_label.pack()
         self.description_champ.pack()
-        self.bouton_ajout.pack(side='bottom')
-
+        self.bouton_ajout.pack(side='left')
+        self.bouton_suppr.pack(side='left')
+        self.bouton_maj.pack(side='left')
         self.ver_label.pack(side='right')
-        self.bouton_quitter.pack(side="left")
-#__________________________________________________________________________________________________
+        self.bouton_quitter.pack(side='left')
+# ______________________________________________________________________________________________
     # --------------------Methodes pour requête de contrôle dans la base de données ----------------------------
+
     def exist_infodoc(self):
         """Methode qui verifie l'existance d' un isbn dans la table infos_documents,
          retourne une liste de tuple de contenant les valeurs de chaque champ ou NONE si non trouvé.
@@ -132,31 +140,39 @@ class Infodoc :
         en remplissant tout les champs.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.exist_infodoc() is None and is_isbn13(lib.EAN13(self.isbn_champ.get())) is True):
-            # Si l'isbn est valide et n'existe pas dans sa table
-                requetesql = """INSERT INTO infos_documents(isbn, titre, auteur, editeur, date_edition, cote, description) VALUES(?,?,?,?,?,?,?)"""
-                param = lib.EAN13(self.isbn_champ.get()), self.titre_champ.get(), self.auteur_champ.get(), self.editeur_champ.get(), self.date_edition_champ.get(), self.cote_champ.get(), self.description_champ.get(1.0, tk.END),
+        try:
+            if (self.exist_infodoc() is None and lib.is_isbn13(lib.EAN13(self.isbn_champ.get())) is True):
+                # Si l'isbn est valide et n'existe pas dans sa table
+                requetesql = """INSERT INTO infos_documents(isbn, titre, auteur, editeur, date_edition, cote, description) 
+                VALUES(?,?,?,?,?,?,?)"""
+                param = lib.EAN13(self.isbn_champ.get()), self.titre_champ.get(), self.auteur_champ.get(), \
+                        self.editeur_champ.get(), self.date_edition_champ.get(), self.cote_champ.get(), \
+                        self.description_champ.get(1.0, tk.END),
                 ecriture(requetesql, param)
                 print("Les informations isbn ont été ajoutés dans la base de données")
-        else:
-            print("L'isbn existe deja dans la base de données ou est invalide ")
+            else:
+                msg.showinfo('Impossible', "L'isbn existe deja dans la base de données ou est invalide ")
+        except TypeError:
+            msg.showerror('ERREUR', 'ISBN invalide !')
 
     def supprimer_infodoc(self):
         """Methode qui supprime une entrée (si elle existe) de la table info_documents a condition que l'isbn ne soit
         associé à aucun exemplaire.
         :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
-            if (self.exist_isbn_exemp() is None):  # si l'isbn n'existe pas dans la table exemplaires
-                requetesql = """DELETE FROM infos_documents WHERE isbn = ?"""
-                param =lib.EAN13( self.isbn_champ.get()),
-                ecriture(requetesql, param)
-                print("Les informations isbn ont été supprimée de la base de données")
-
+        try:
+            if (self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
+                if (self.exist_isbn_exemp() is None):  # si l'isbn n'existe pas dans la table exemplaires
+                    requetesql = """DELETE FROM infos_documents WHERE isbn = ?"""
+                    param = lib.EAN13(self.isbn_champ.get()),
+                    ecriture(requetesql, param)
+                    print("Les informations isbn ont été supprimée de la base de données")
+                else:
+                    msg.showinfo('Impossible', "isbn associé à un ou plusieurs exemplaire(s), supprimez d'abord les exemplaires")
             else:
-                print("isbn associé à un ou plusieurs exemplaire(s)")
-        else:
-            print("isbn inexistant")
+                msg.showinfo('Impossible', "isbn inexistant")
+        except TypeError :
+            msg.showerror('ERREUR', 'ISBN invalide !')
 
 # -----------Modification dans la base de données.---------
     def maj_infodoc(self):
@@ -164,17 +180,31 @@ class Infodoc :
         de la table info_documents.
         :champ: champ dans lequel sera modifier la valeur
         """
-        if(self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
-            requetesql = """UPDATE infos_documents SET cote =  ? WHERE isbn = ? """
-            param = self.cote, self.isbn,
-            ecriture(requetesql, param)
-            requetesql = """UPDATE infos_documents SET description = ? WHERE isbn = ? """
-            param = self.description, self.isbn,
-            ecriture(requetesql, param)
-            print("Les informations isbn ont été mis a jour dans la base de données")
-
-        else:
-            print("isbn inexistant")
+        try:
+            if(self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
+                requetesql = """UPDATE infos_documents SET titre =  ? WHERE isbn = ? """
+                param = self.titre_champ.get(), lib.EAN13(self.isbn_champ.get()),
+                ecriture(requetesql, param)
+                requetesql = """UPDATE infos_documents SET auteur =  ? WHERE isbn = ? """
+                param = self.auteur_champ.get(), lib.EAN13(self.isbn_champ.get()),
+                ecriture(requetesql, param)
+                requetesql = """UPDATE infos_documents SET editeur =  ? WHERE isbn = ? """
+                param = self.editeur_champ.get(), lib.EAN13(self.isbn_champ.get()),
+                ecriture(requetesql, param)
+                requetesql = """UPDATE infos_documents SET date_edition =  ? WHERE isbn = ? """
+                param = self.date_edition_champ.get(), lib.EAN13(self.isbn_champ.get()),
+                ecriture(requetesql, param)
+                requetesql = """UPDATE infos_documents SET cote =  ? WHERE isbn = ? """
+                param = self.cote_champ.get(), lib.EAN13(self.isbn_champ.get()),
+                ecriture(requetesql, param)
+                requetesql = """UPDATE infos_documents SET description = ? WHERE isbn = ? """
+                param = self.description_champ.get(1.0, tk.END), lib.EAN13(self.isbn_champ.get()),
+                ecriture(requetesql, param)
+                print("Les informations isbn ont été mis a jour dans la base de données")
+            else:
+                msg.showinfo('Impossible',"isbn inexistant")
+        except TypeError:
+            msg.showerror('ERREUR', 'ISBN invalide !')
 
 # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="isbn"):
@@ -217,13 +247,13 @@ class Infodoc :
                 self.editeur.set(metadonnees['Publisher'])
                 self.date_edition.set(metadonnees['Year'])
                 self.description_champ.delete(1.0, tk.END)
-                self.description_champ.insert(1.0, lib.desc(str(lib.EAN13(self.isbn_champ.get()))))
+                self.description_champ.insert(1.0, lib.desc(lib.EAN13(self.isbn_champ.get())))
             else:
                 raise NameError("ISBN introuvable ! (Verfier votre connexion)")
         except lib.NotValidISBNError:
-             msg.showinfo("ERREUR !", "ISBN invalide")
+            msg.showinfo("ERREUR !", "ISBN invalide")
         except NameError as ne:
-             msg.showinfo('ERREUR !', str(ne))
+            msg.showinfo('ERREUR !', str(ne))
 
     def test(self):
         print(lib.EAN13(self.isbn_champ.get()))
@@ -234,14 +264,12 @@ class Infodoc :
         print(self.cote_champ.get())
         print(self.description_champ.get(1.0, tk.END))
 
-
-
     def listing(self):
         """methode pour lister le contenu de la rechereche """
         obj = InfoDocument()
-        try:
+        """try:
             obj.get_liste_BDD(lib.EAN13(self.isbn_champ.get()))
             for i in obj.liste_recherche:
                 print(i)
         except:
-            pass
+            pass"""
