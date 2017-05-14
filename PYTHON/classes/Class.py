@@ -217,7 +217,8 @@ class Exemplaire(object):
         """Methode qui ajoute une entrée dans la table exemplaires (si elle n'existe pas deja) en remplissant tout les
          champs, à condition que l'isbn soit repertorié dans la table info_documents.
         """
-        if (self.exist_exemp() is None):  # Si le codebar n'existe pas deja dans sa table
+        if (self.exist_exemp() is None and re.match(r"(^[0-9])", self.codebar) is not None):
+            # Si le codebar n'existe pas deja dans sa table ou n'est pas une serie de chiffres
             if (self.exist_exempisbn_infodoc() is not None):
                 # si l'isbn de l'objet infodoc associé existe dans sa table
                 requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
@@ -249,7 +250,7 @@ class Exemplaire(object):
 
 # -----------Modification dans la base de données.---------
     def maj_exemp(self):
-        """Methode qui met a jour certaints champs d'une entrée dans la base de donnée (si le codebar y existe)
+        """Methode qui met a jour certains champs d'une entrée dans la base de donnée (si le codebar y existe)
         de la table exemplaire.
         :champ: champ dans lequel sera modifier la valeur.
         """
@@ -270,7 +271,7 @@ class Exemplaire(object):
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ  par defaut)
         """
         requetesql = """SELECT * FROM exemplaires WHERE """ + champwhere + """ REGEXP ? """
-        param = valeur,
+        param = valeur, champwhere,
         if (lecture(requetesql, param) == []):
             print("Aucun resultat(s)")
         else:

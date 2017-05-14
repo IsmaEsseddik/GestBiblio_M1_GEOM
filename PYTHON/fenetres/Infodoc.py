@@ -7,7 +7,7 @@ import tkinter.messagebox as msg
 
 
 class Infodoc:
-    """ constructeur de l'interface graphique relative a la gestion de la la table Infodoc de la base de données, """
+    """ constructeur de l'interface graphique relatif a la gestion de la la table Infodoc de la base de données, """
     liste_recherche = None
 
     def __init__(self, master):
@@ -38,7 +38,6 @@ class Infodoc:
         self.cadreinfoL = tk.Frame(self.cadreinfo, bg='#d8d8d8')
         self.cadreinfoR = tk.Frame(self.cadreinfo, bg='#d8d8d8')
         self.cadraction = tk.Frame(self.cadreinfoR, bg='#d8d8d8')
-
         self.cadredesc = tk.Frame(self.cadrelib, bg='#d8d8d8')
         # creation de libellés
         self.welcome_label = tk.Label(self.cadre_entete,
@@ -84,12 +83,14 @@ class Infodoc:
         self.isbn_champ.pack(side='left')
         self.bouton_api.pack(side='right')
         self.bouton_rechercher.pack(side='right')
+
         self.cadrelib.pack(fill="both", expand="yes")
         self.cadreinfo.pack(side="left", fill="both", expand="yes", pady=20)
         self.cadreinfoL.pack(side="left", fill="both", expand="yes")
-        self.cadraction.pack(side="bottom", fill="both", expand="no")
         self.cadreinfoR.pack(side="right", fill="both", expand="yes")
+        self.cadraction.pack(side="bottom", fill="both", expand="no")
         self.cadredesc.pack(side="right", fill="both", expand="yes")
+
         self.titre_label.pack()
         self.titre_champ.pack(pady=1)
         self.auteur_label.pack()
