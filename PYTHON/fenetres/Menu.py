@@ -2,9 +2,9 @@ import tkinter as tk
 import isbnlib as lib
 from fenetres.Infodoc import *
 from fenetres.Exemp import *
+from fenetres.Lect import *
 from fenetres.Emprunt import *
 from fenetres.Retour import *
-
 
 class Menu:
     def __init__(self, master):

@@ -52,7 +52,7 @@ class Exemp:
         self.bouton_recherche = tk.Button(self.cadrecodebar, text="Rechercher un exemplaire", command='', state='disabled')
         self.bouton_ajout = tk.Button(self.cadraction, text="Ajouter ", command=self.enregistrer_exemp)
         self.bouton_suppr = tk.Button(self.cadraction, text="Supprimer ", command=self.supprimer_exemp)
-        self.bouton_maj = tk.Button(self.cadraction, text="MiseAjour ", command=self.modif_com)
+        self.bouton_maj = tk.Button(self.cadrecom, text="MiseAjour ", command=self.modif_com)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
@@ -79,7 +79,7 @@ class Exemp:
 
         self.bouton_ajout.pack(side='left')
         self.bouton_suppr.pack(side='left')
-        self.bouton_maj.pack(side='left')
+        self.bouton_maj.pack()
 
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
