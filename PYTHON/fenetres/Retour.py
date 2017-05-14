@@ -1,11 +1,18 @@
 import tkinter as tk
-import isbnlib
+import isbnlib as lib
+import datetime as dt # pour les operation sur le temp
+from InitialisationBDD import *
 import sqlite3
 import re
 import tkinter.messagebox as msg
 
 class Retour():
+    """ constructeur de l'interface graphique relatif a la gestion de la table relation de la base de données
+    pour un retour d'exemplaire"""
+
     def __init__(self, master):
+        self.id_exemplaire = tk.StringVar(master, value=None)
+
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
         self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
@@ -25,8 +32,9 @@ class Retour():
         self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
                                   fg='blue', bg='#d8d8d8')
         # creation de champs
-        self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable='', width=50, justify='center')
+        self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.id_exemplaire, width=50, justify='center')
         # creation boutons
+        self.bouton_retour = tk.Button(self.cadre_corp, text='retour', command=self.supprimer_emprunt)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
@@ -37,5 +45,42 @@ class Retour():
         self.welcome_label.pack(padx=10, pady=10)
         self.codebar_label.pack()
         self.codebar_champ.pack()
+        self.bouton_retour.pack()
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
+
+    def exist_idexemp(self):
+        """Methode qui verifie l'existance d'un codebar dans la base de donnee et retourne une liste de tuple de contenant
+        les valeurs de chaque champ ou NONE si non trouvé."""
+        requetesql = """SELECT * FROM exemplaires WHERE codebar = ? """
+        param = self.codebar_champ.get(),
+        return lecture(requetesql, param)
+
+    def idexemp_checkemprunt(self):
+        """Methode qui renvoie l'etat d'emprunt du livre."""
+        requetesql = """SELECT emprunt FROM exemplaires WHERE codebar = ? """
+        param = self.codebar_champ.get(),
+        emprunt = lecture(requetesql, param)
+        return bool(emprunt[0][0])
+
+    def supprimer_emprunt(self):
+        """Methode qui recherche dans la table exemplaires un codebar et procede au retour, a condition qu'il
+        existe dans la base de donnée et qu'il soit emprunté.
+        :num_etudiant: numero etudiant a rechercher
+        """
+        if (self.exist_idexemp() != []):  # si l'exemplaire existe
+            if (self.idexemp_checkemprunt() is True):  # si l'exemplaire n'est pas emprunté
+                requetesql = """UPDATE exemplaires SET emprunt = 0 WHERE codebar = ? """
+                param = self.codebar_champ.get(),
+                ecriture(requetesql, param)  # requetesql changement du statut du livre
+                requetesql = """DELETE FROM relation WHERE id_exemplaire = ?"""
+                param = self.codebar_champ.get(),
+                ecriture(requetesql, param)  # requetesql suppression de la relation dans la table
+                print("La relation a été supprimée de la base de données")
+                self.codebar_champ.delete(0, tk.END)
+            else:
+                msg.showinfo('Impossible',"exemplaire non emprunté")
+                self.codebar_champ.delete(0, tk.END)
+        else:
+            msg.showinfo('Impossible',"Exemplaire introuvable !")
+            self.codebar_champ.delete(0, tk.END)

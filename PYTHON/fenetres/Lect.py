@@ -17,7 +17,7 @@ class Lect:
         self.date_naissance = tk.StringVar(master, value='')
         self.niveau_etude = tk.StringVar(master, value='')
         self.num_tel = tk.StringVar(master, value='')
-        self.suspension = tk.StringVar(master, value=None)
+        self.suspension = None
         self.commentaire = None
 
         self.master = master  # creation d'une simple fenêtre.
@@ -59,8 +59,9 @@ class Lect:
         self.prenom_champ = tk.Entry(self.cadreinfoR, textvariable=self.prenom, width=50)
         self.date_naissance_champ = tk.Entry(self.cadreinfoR, textvariable=self.date_naissance, width=50)
         self.niveau_etude_champ = tk.Entry(self.cadreinfoR, textvariable=self.niveau_etude, width=50)
-        self.num_tel_champ = tk.Entry(self.cadreinfoR, textvariable=self.num_tel, width=50, state='normal')
-        self.suspension_champ = tk.Entry(self.cadreinfoR, textvariable=self.suspension, width=50, state='normal')
+        self.num_tel_champ = tk.Entry(self.cadreinfoR, textvariable=self.num_tel, width=50)
+        self.suspension_champ = tk.Entry(self.cadreinfoR, textvariable=self.suspension, width=50, state='disabled',
+                                         disabledbackground='bisque')
         self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='normal')
         # creation boutons
         self.bouton_recherche = tk.Button(self.cadrenumetu, text="Rechercher un lecteur", command='', state='disabled')
@@ -144,7 +145,7 @@ class Lect:
             requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
             param = self.numetu_champ.get(), self.nom_champ.get(), self.prenom_champ.get(),\
                     self.date_naissance_champ.get(), self.niveau_etude_champ.get(), self.num_tel_champ.get(),\
-                    self.suspension_champ.get(), self.commentaire_champ.get(1.0,tk.END),
+                    None, self.commentaire_champ.get(1.0,tk.END),
             ecriture(requetesql, param)
             print("Le lecteur a été ajouté dans la base de données")
         else:
@@ -188,9 +189,9 @@ class Lect:
             requetesql = """UPDATE lecteurs SET num_tel = ? WHERE num_etudiant = ? """
             param = self.num_tel_champ.get(), self.numetu_champ.get(),
             ecriture(requetesql, param)
-            requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ? """
-            param = self.suspension_champ.get(), self.numetu_champ.get(),
-            ecriture(requetesql, param)
+            # requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ? """
+            # param = self.suspension_champ.get(), self.numetu_champ.get(),
+            # ecriture(requetesql, param)
             requetesql = """UPDATE lecteurs SET commentaire = ? WHERE num_etudiant = ? """
             param = self.commentaire_champ.get(1.0, tk.END), self.numetu_champ.get(),
             ecriture(requetesql, param)
