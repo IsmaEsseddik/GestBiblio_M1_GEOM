@@ -5,8 +5,9 @@ import sqlite3
 import re
 import tkinter.messagebox as msg
 
+
 class Exemp:
-    """ constructeur de l'interface graphique relatif a la gestion de la la table Infodoc de la base de données, """
+    """ constructeur de l'interface graphique relatif a la gestion de la la table Exemplaire de la base de données, """
     liste_recherche = None
 
     def __init__(self, master):
@@ -101,7 +102,7 @@ class Exemp:
         les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
-        param = self.isbn_champ.get(),
+        param = lib.EAN13(self.isbn_champ.get()),
         if (lecture(requetesql, param) == []):
             return None
         else:
@@ -126,7 +127,7 @@ class Exemp:
                 # si l'isbn de l'objet infodoc associé existe dans sa table
                 requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
                 param = self.codebar_champ.get(), 0, self.commentaire_champ.get(1.0, tk.END),\
-                        self.isbn_champ.get(),
+                        lib.EAN13(self.isbn_champ.get()),
                 ecriture(requetesql, param)
                 print("L'exemplaire a été ajouté dans la base de données")
             else:
@@ -175,7 +176,7 @@ class Exemp:
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ  par defaut)
         """
         requetesql = """SELECT * FROM exemplaires WHERE """ + champwhere + """ REGEXP ? """
-        param = valeur, champwhere,
+        param = valeur,
         if (lecture(requetesql, param) == []):
             print("Aucun resultat(s)")
         else:

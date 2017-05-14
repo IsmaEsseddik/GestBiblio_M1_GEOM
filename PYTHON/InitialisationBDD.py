@@ -131,20 +131,21 @@ def maj_suspension():
             suspension = datetime.datetime(int(reponse[0:4]), int(reponse[5:7]), int(reponse[8:10]))
         else:
             suspension = None
-        #on a recupéré la valeur de la suspension(date ou 0) du lecteur i
+        # on a recupéré la valeur de la suspension(date ou None) du lecteur i
         requetesql = """SELECT MIN(date_retour) FROM relation WHERE id_lecteur = ? AND date('now') > date_retour  """
         param = i[0],
         date_retour_min = lecture(requetesql, param)[0][0]
-        #on a recupere la date de retour la plus anterieur possible a celle d'aujourd'hui (ou rien si aucun livre n'est en retard)
+        # on a recupere la date de retour la plus anterieur possible a celle d'aujourd'hui
+        # (ou rien si aucun livre n'est en retard)
         if (date_retour_min is not None ):  # si il y a une date anterieur
             retardmax = date_du_jour - datetime.datetime(int(date_retour_min[0:4]), int(date_retour_min[5:7]), int(date_retour_min[8:10]))  # calcul et formattage de la date de retour
             if (retardmax > datetime.timedelta(31)):  # si le retard  est superieur a un mois
-                retardmax = datetime.timedelta(31)  #on fixe le retard a un mois
+                retardmax = datetime.timedelta(31)  # on fixe le retard a un mois
             date_suspension_r = date_du_jour + retardmax  # nouvelle date de suspension a remplacer
         else:
             date_suspension_r = None
-            #si aucun livre est en retard la valeur a remplacer sera zero
-            #( a condition que la date de suspension initial soit passé et que la nouvelle soit a superieur a cette derniere)
+            # si aucun livre est en retard la valeur a remplacer sera zero(a condition que la date de suspension initial
+            # soit passée et que la nouvelle soit superieur a cette derniere)
 
         requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ?"""
         param = date_suspension_r, i[0],

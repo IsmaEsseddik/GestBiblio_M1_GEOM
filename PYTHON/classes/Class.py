@@ -225,7 +225,6 @@ class Exemplaire(object):
                 param = self.codebar, self.emprunt, self.exemp_commentaire, self.exemp_isbn,
                 ecriture(requetesql, param)
                 print("L'exemplaire a été ajouté dans la base de données")
-
             else:
                 print("isbn non trouvé")
         else:
@@ -271,7 +270,7 @@ class Exemplaire(object):
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ  par defaut)
         """
         requetesql = """SELECT * FROM exemplaires WHERE """ + champwhere + """ REGEXP ? """
-        param = valeur, champwhere,
+        param = valeur,
         if (lecture(requetesql, param) == []):
             print("Aucun resultat(s)")
         else:
@@ -302,7 +301,6 @@ class Lecteur(object):
     table de reference : lecteurs
     clef primaire : num_etudiant
     """
-
     liste_recherche = None
 
     def __init__(self):
@@ -402,7 +400,7 @@ class Lecteur(object):
             ecriture(requetesql, param)
             print("Les informations isbn ont été mis a jour dans la base de données")
         else:
-            print("codebar inexistant")
+            print("Numero étudiant inexistant")
 
 # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="num_etudiant"):
