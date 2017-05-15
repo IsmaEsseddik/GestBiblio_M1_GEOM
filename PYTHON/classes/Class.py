@@ -31,8 +31,8 @@ class InfoDocument(object):
 
 # --------------------Methodes pour requête de contrôle dans la base de données ----------------------------
     def exist_infodoc(self):
-        """Methode qui verifie l'existance d' un isbn dans la table infos_documents, retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un isbn dans la table infos_documents, retourne une liste de tuple
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         :objet_infodoc: objet dont l'attribut isbn sera recherhé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
@@ -43,8 +43,8 @@ class InfoDocument(object):
             return lecture(requetesql, param)
 
     def exist_isbn_exemp(self):
-        """Methode qui verifie l'existance d' un isbn dans la table des exemplaires et retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un isbn dans la table des exemplaires et retourne une liste de tuple
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         :objet_exemp: objet dont l'attribut isbn sera recherhé.
         """
         requetesql = """SELECT * FROM exemplaires WHERE exemp_isbn = ? """
@@ -62,7 +62,8 @@ class InfoDocument(object):
         """
         if (self.exist_infodoc() is None and is_isbn13(self.isbn) is True):
             # Si l'isbn est valide et n'existe pas dans sa table
-                requetesql = """INSERT INTO infos_documents(isbn, titre, auteur, editeur, date_edition, cote, description) VALUES(?,?,?,?,?,?,?)"""
+                requetesql = """INSERT INTO infos_documents(isbn, titre, auteur, editeur, date_edition, cote, 
+                description) VALUES(?,?,?,?,?,?,?)"""
                 param = self.isbn, self.titre, self.auteur, self.editeur, self.date_edition, self.cote, self.description
                 ecriture(requetesql, param)
                 print("Les informations isbn ont été ajoutés dans la base de données")
@@ -183,7 +184,7 @@ class Exemplaire(object):
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_exemp(self):
-        """Methode qui verifie l'existance d' un codebar dans la base de donnee et retourne une liste de tuple de contenant
+        """Methode qui verifie l'existance d'un codebar dans la base de donnee et retourne une liste de tuple contenant
         les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM exemplaires WHERE codebar = ? """
@@ -194,8 +195,8 @@ class Exemplaire(object):
             return lecture(requetesql, param)
 
     def exist_exempisbn_infodoc(self):
-        """Methode qui verifie l'existance d' un l'isbn dans la table infosDocument et retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un l'isbn dans la table infosDocument et retourne une liste de tuple
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
         param = self.exemp_isbn,
@@ -221,7 +222,8 @@ class Exemplaire(object):
             # Si le codebar n'existe pas deja dans sa table ou n'est pas une serie de chiffres
             if (self.exist_exempisbn_infodoc() is not None):
                 # si l'isbn de l'objet infodoc associé existe dans sa table
-                requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
+                requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) 
+                VALUES(?,?,?,?)"""
                 param = self.codebar, self.emprunt, self.exemp_commentaire, self.exemp_isbn,
                 ecriture(requetesql, param)
                 print("L'exemplaire a été ajouté dans la base de données")
@@ -317,8 +319,8 @@ class Lecteur(object):
 
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_Lect(self):
-        """Methode qui verifie l'existance d' un num_etudiant dans la base de donnee et retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un num_etudiant dans la base de donnee et retourne une liste de tuple 
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         :objet_Lect: objet dont l'attribut num_etudiant sera recherhé.
         """
         requetesql = """SELECT * FROM lecteurs WHERE num_etudiant = ? """
@@ -347,8 +349,10 @@ class Lecteur(object):
         :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
         if (self.exist_Lect() is None):  # si le num_etudiant n'existe pas dans sa table
-            requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
-            param = self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, self.suspension, self.commentaire,
+            requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, 
+            suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
+            param = self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, \
+                    self.suspension, self.commentaire,
             ecriture(requetesql, param)
             print("Le lecteur a été ajouté dans la base de données")
         else:
@@ -404,9 +408,9 @@ class Lecteur(object):
 
 # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="num_etudiant"):
-        """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table lecteurs
-        la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut
-        static propre a la class.
+        """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table lecteurs la valeur
+        specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut static propre a la
+        classe.
         :valeur: la valeur a recherche dans le champ
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(num_etudiant  par defaut)
         """
@@ -430,7 +434,8 @@ class Lecteur(object):
         self.num_tel = self.liste_recherche[i][5]
         self.suspension = self.liste_recherche[i][6]
         self.commentaire = self.liste_recherche[i][7]
-        print(self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, self.suspension, self.commentaire)
+        print(self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel,
+              self.suspension, self.commentaire)
 
 
 class Relation(object):
@@ -453,8 +458,8 @@ class Relation(object):
 # --------------------Methodes requête de contrôle dans la base de données ----------------------------
 
     def exist_idLect(self):
-        """Methode qui verifie l'existance d'un num_etudiant dans la table lecteurs et retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d'un num_etudiant dans la table lecteurs et retourne une liste de tuple 
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM lecteurs WHERE num_etudiant = ? """
         param = self.id_lecteur,
@@ -478,7 +483,7 @@ class Relation(object):
         return lecture(requetesql, param)
 
     def exist_idexemp(self):
-        """Methode qui verifie l'existance d'un codebar dans la base de donnee et retourne une liste de tuple de contenant
+        """Methode qui verifie l'existance d'un codebar dans la base de donnee et retourne une liste de tuple contenant
         les valeurs de chaque champ ou NONE si non trouvé."""
         requetesql = """SELECT * FROM exemplaires WHERE codebar = ? """
         param = self.id_exemplaire,
@@ -501,7 +506,7 @@ class Relation(object):
 # -----------Methode pour selectionner un lecteur ---------
     def get_lecteur(self, num_etudiant):
         """Methode qui recherche dans la table lecteurs un num_etudiant, l'affecte a l'attribut "id_lecteur"
-        et affecte la liste des exemplaires qu'il a emprunté en affichant les informations,
+        et affecte la liste des exemplaires qu'il a emprunté en affichant les ,
         a condition que le lecteur existe dans la base de donnée.
         :num_etudiant: numero etudiant a rechercher.
         """
@@ -532,8 +537,10 @@ class Relation(object):
                         param = self.id_exemplaire,
                         ecriture(requetesql, param)  # requetesql changement du statut du livre
                         self.date_emprunt = datetime.date.today()  # attribution de la date du jour
-                        self.date_retour = datetime.date.today() + datetime.timedelta(6)  # calcul attribution de la date de retour
-                        requetesql = """INSERT INTO relation(date_emprunt, date_retour, id_lecteur, id_exemplaire) VALUES(?,?,?,?)"""
+                        self.date_retour = datetime.date.today() + datetime.timedelta(6)
+                        # calcul attribution de la date de retour
+                        requetesql = """INSERT INTO relation(date_emprunt, date_retour, id_lecteur, id_exemplaire) 
+                        VALUES(?,?,?,?)"""
                         param = self.date_emprunt, self.date_retour, self.id_lecteur, self.id_exemplaire,
                         ecriture(requetesql, param)  # requetesql ajout d'un champ
                         self.liste_d_emprunt = self.idlect_checkemprunt()
@@ -581,7 +588,9 @@ class Relation(object):
                     requetesql = """UPDATE relation SET prolongement = 1 WHERE id_exemplaire = ? """
                     param = self.id_exemplaire,
                     ecriture(requetesql, param)  # requetesql changement du statut du prolongement
-                    self.date_retour = datetime.datetime(int(self.date_retour[0:4]), int(self.date_retour[5:7]), int(self.date_retour[8:10])) + datetime.timedelta(6)  # calcul & attribution de la date de retour
+                    self.date_retour = datetime.datetime(int(self.date_retour[0:4]), int(self.date_retour[5:7]),
+                                                         int(self.date_retour[8:10])) + datetime.timedelta(6)
+                    # calcul & attribution de la date de retour.
                     requetesql = """UPDATE relation SET date_retour = ? WHERE id_exemplaire = ? """
                     param = self.date_retour, self.id_exemplaire,
                     ecriture(requetesql, param)  # requetesql ajout d'un champ

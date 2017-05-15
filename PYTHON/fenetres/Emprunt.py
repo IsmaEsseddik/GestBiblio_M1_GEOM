@@ -1,8 +1,11 @@
 import tkinter as tk
-import isbnlib
+import isbnlib as lib
+import datetime as dt  # pour les operation sur le temp
+from InitialisationBDD import *
 import sqlite3
 import re
 import tkinter.messagebox as msg
+
 
 class Emprunt:
     def __init__(self, master):
@@ -16,7 +19,7 @@ class Emprunt:
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
         # creation des cadres
         self.cadre_entete = tk.Frame(self.contenu, borderwidth=3, relief="raised", bg='#16eff4')
-        self.cadre_corp = tk.Frame(self.contenu, bg='#d8d8d8')
+        self.cadre_corp = tk.Frame(self.contenu,  bg='#d8d8d8')
         self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadrenumetu = tk.Frame(self.cadre_corp, bg='#d8d8d8')
         # creation de libellés
@@ -27,13 +30,14 @@ class Emprunt:
         # creation de champs
         self.numetu_champ = tk.Entry(self.cadrenumetu, textvariable='', width=50, justify='center')
         # creation boutons
+        self.bouton_rechercher = tk.Button(self.cadrenumetu, text='recherche')
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
         self.cadre_entete.pack(side="top", fill="both", padx=60, pady=10)
         self.cadre_corp.pack(side="top", padx=3, pady=3)
-        self.cadre_ppage.pack(side="top", fill="x", padx=3, pady=10)
-        self.cadrenumetu.pack(fill="both", expand="yes")
+        self.cadre_ppage.pack(side="bottom", fill="x", padx=3, pady=10)
+        self.cadrenumetu.pack(side='top', fill="both", expand="yes")
 
         self.welcome_label.pack(padx=10, pady=10)
         self.numetu_label.pack()
