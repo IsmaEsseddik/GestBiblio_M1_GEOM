@@ -13,7 +13,8 @@ class Emprunt:
         pour un emprunt d'exemplaire"""
 
     def __init__(self, master):
-        self.id_lecteur = tk.StringVar(master, value=None)
+        v = msg2.askinteger('Integer', 'Entrer un nombre entier', parent=master)
+        self.id_lecteur = tk.StringVar(master, value=v)
         self.id_exemplaire = tk.StringVar(master, value=None)
         self.date_emprunt = None
         self.date_retour = None
@@ -114,14 +115,13 @@ class Emprunt:
         """
         if (self.exist_idLect() != []):
             if (self.idlect_checkSuspension() is not None):
-                msg.showinfo('Information', "Attention, le lecteur est suspendu ")
+                msg.showinfo('Information', "Attention, le lecteur est suspendu ", parent=self.master)
             if (len(self.idlect_checkemprunt()) >= 5):
-                msg.showinfo('Information', "Attention, Limite d'emprunt atteinte ")
+                msg.showinfo('Information', "Attention, Limite d'emprunt atteinte ", parent=self.master)
             self.liste_d_emprunt = self.idlect_checkemprunt()
             print(self.liste_d_emprunt)
-            msg2.askinteger('Integer', 'Entrer un nombre entier')
         else:
-            msg.showinfo('Information', "Lecteur introuvable !")
+            msg.showinfo('Information', "Lecteur introuvable !", parent=self.master)
             self.numetu_champ.delete(0, tk.END)
             self.id_lecteur.set('')
 
@@ -148,10 +148,10 @@ class Emprunt:
                         self.liste_d_emprunt = self.idlect_checkemprunt()
                         print('exemplaire emprunté')
                     else:
-                        msg.showerror('Impossible',"exemplaire deja emprunté")
+                        msg.showerror('Impossible',"exemplaire deja emprunté", parent=self.master)
                 else:
-                    msg.showerror('Impossible',"Exemplaire introuvable !")
+                    msg.showerror('Impossible',"Exemplaire introuvable !", parent=self.master)
             else:
-                msg.showerror('Impossible',"Limite d'emprunt atteinte !")
+                msg.showerror('Impossible',"Limite d'emprunt atteinte !", parent=self.master)
         else:
-            msg.showerror('Impossible',"Lecteur suspendu non autorisé a emprunter!")
+            msg.showerror('Impossible',"Lecteur suspendu non autorisé a emprunter!", parent=self.master)

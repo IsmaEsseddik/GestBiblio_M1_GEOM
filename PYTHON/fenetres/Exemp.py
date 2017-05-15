@@ -131,9 +131,9 @@ class Exemp:
                 ecriture(requetesql, param)
                 print("L'exemplaire a été ajouté dans la base de données")
             else:
-                msg.showinfo('Impossible', "isbn non trouvé")
+                msg.showinfo('Impossible', "isbn non trouvé", parent=self.master)
         else:
-            msg.showinfo('Impossible', "codebar deja attribué ou invalide")
+            msg.showinfo('Impossible', "codebar deja attribué ou invalide", parent=self.master)
 
 
     def supprimer_exemp(self):
@@ -149,9 +149,9 @@ class Exemp:
                 print("L'exemplaire a été supprimée de la base de données")
 
             else:
-                msg.showinfo('Impossible',"exemplaire non rendu")
+                msg.showinfo('Impossible',"exemplaire non rendu", parent=self.master)
         else:
-            msg.showinfo('Impossible',"exemplaire inexistant")
+            msg.showinfo('Impossible',"exemplaire inexistant", parent=self.master)
 
     # -----------Modification dans la base de données.---------
     def modif_com(self):
@@ -165,7 +165,7 @@ class Exemp:
             ecriture(requetesql, param)
             print("Le champ com isbn ont été mis a jour dans la base de données")
         else:
-            msg.showinfo('Impossible',"codebar inexistant")
+            msg.showinfo('Impossible',"codebar inexistant", parent=self.master)
 
     # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="codebar"):

@@ -81,8 +81,8 @@ class Retour():
                 print("La relation a été supprimée de la base de données")
                 self.codebar_champ.delete(0, tk.END)
             else:
-                msg.showinfo('Impossible',"exemplaire non emprunté")
+                msg.showinfo('Impossible',"exemplaire non emprunté", parent=self.master)
                 self.codebar_champ.delete(0, tk.END)
         else:
-            msg.showinfo('Impossible',"Exemplaire introuvable !")
+            msg.showinfo('Impossible',"Exemplaire introuvable !", parent=self.master)
             self.codebar_champ.delete(0, tk.END)

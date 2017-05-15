@@ -149,7 +149,7 @@ class Lect:
             ecriture(requetesql, param)
             print("Le lecteur a été ajouté dans la base de données")
         else:
-            msg.showinfo('Impossible',"Lecteur déjà inscrit")
+            msg.showinfo('Impossible',"Lecteur déjà inscrit", parent=self.master)
 
     def supprimer_lect(self):
         """Methode qui supprime une entrée (si elle existe) de la table lecteurs a condition que ce dernier n'ait pas
@@ -163,9 +163,9 @@ class Lect:
                 ecriture(requetesql, param)
                 print("Le lecteur a été supprimée de la base de données")
             else:
-                msg.showinfo('Impossible',"un ou plusieurs exemplaire(s) non rendu(s)")
+                msg.showinfo('Impossible',"un ou plusieurs exemplaire(s) non rendu(s)", parent=self.master)
         else:
-            msg.showinfo('Impossible',"Lecteur inexistant")
+            msg.showinfo('Impossible',"Lecteur inexistant", parent=self.master)
 
     # -----------Modification dans la base de données.---------
     def maj_lect(self):
@@ -197,7 +197,7 @@ class Lect:
             ecriture(requetesql, param)
             print("Les informations isbn ont été mis a jour dans la base de données")
         else:
-            msg.showinfo('Impossible',"Numero étudiant inexistant")
+            msg.showinfo('Impossible',"Numero étudiant inexistant", parent=self.master)
 
     # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="num_etudiant"):

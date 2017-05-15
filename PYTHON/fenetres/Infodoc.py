@@ -152,9 +152,9 @@ class Infodoc:
                 ecriture(requetesql, param)
                 print("Les informations isbn ont été ajoutés dans la base de données")
             else:
-                msg.showinfo('Impossible', "L'isbn existe deja dans la base de données ou est invalide ")
+                msg.showinfo('Impossible', "L'isbn existe deja dans la base de données ou est invalide ", parent=self.master)
         except TypeError:
-            msg.showerror('ERREUR', 'ISBN invalide !')
+            msg.showerror('ERREUR', 'ISBN invalide !', parent=self.master)
 
     def supprimer_infodoc(self):
         """Methode qui supprime une entrée (si elle existe) de la table info_documents a condition que l'isbn ne soit
@@ -169,11 +169,11 @@ class Infodoc:
                     ecriture(requetesql, param)
                     print("Les informations isbn ont été supprimée de la base de données")
                 else:
-                    msg.showinfo('Impossible', "isbn associé à un ou plusieurs exemplaire(s), supprimez d'abord les exemplaires")
+                    msg.showinfo('Impossible', "isbn associé à un ou plusieurs exemplaire(s), supprimez d'abord les exemplaires", parent=self.master)
             else:
-                msg.showinfo('Impossible', "isbn inexistant")
+                msg.showinfo('Impossible', "isbn inexistant", parent=self.master)
         except TypeError :
-            msg.showerror('ERREUR', 'ISBN invalide !')
+            msg.showerror('ERREUR', 'ISBN invalide !', parent=self.master)
 
 # -----------Modification dans la base de données.---------
     def maj_infodoc(self):
@@ -205,7 +205,7 @@ class Infodoc:
             else:
                 msg.showinfo('Impossible',"isbn inexistant")
         except TypeError:
-            msg.showerror('ERREUR', 'ISBN invalide !')
+            msg.showerror('ERREUR', 'ISBN invalide !', parent=self.master)
 
 # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="isbn"):
@@ -252,9 +252,9 @@ class Infodoc:
             else:
                 raise NameError("ISBN introuvable ! (Verfier votre connexion)")
         except lib.NotValidISBNError:
-            msg.showinfo("ERREUR !", "ISBN invalide")
+            msg.showinfo("ERREUR !", "ISBN invalide", parent=self.master)
         except NameError as ne:
-            msg.showinfo('ERREUR !', str(ne))
+            msg.showinfo('ERREUR !', str(ne), parent=self.master)
 
     def test(self):
         print(lib.EAN13(self.isbn_champ.get()))
