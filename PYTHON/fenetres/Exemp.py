@@ -85,7 +85,7 @@ class Exemp:
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
 
-# --------------------Methodes requête de contrôle dans la base de données ----------------------------
+    # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_exemp(self):
         """Methode qui verifie l'existance d' un codebar dans la base de donnee et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
@@ -116,7 +116,7 @@ class Exemp:
         emprunt = lecture(requetesql, param)
         return bool(emprunt[0][0])  # retourne la valeur precise du champ
 
-# -----------Ajout/suppression dans une base de données.---------
+    # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_exemp(self):
         """Methode qui ajoute une entrée dans la table exemplaires (si elle n'existe pas deja) en remplissant tout les
          champs, à condition que l'isbn soit repertorié dans la table info_documents.
@@ -153,7 +153,7 @@ class Exemp:
         else:
             msg.showinfo('Impossible',"exemplaire inexistant")
 
-# -----------Modification dans la base de données.---------
+    # -----------Modification dans la base de données.---------
     def modif_com(self):
         """Methode qui met a jour certains champs d'une entrée dans la base de donnée (si le codebar y existe)
         de la table exemplaire.
@@ -167,7 +167,7 @@ class Exemp:
         else:
             msg.showinfo('Impossible',"codebar inexistant")
 
-# -----------Recherche & conditionnement de l'objet---------
+    # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="codebar"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table exemplaires
         la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut

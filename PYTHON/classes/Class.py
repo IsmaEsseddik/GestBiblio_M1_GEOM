@@ -29,7 +29,7 @@ class InfoDocument(object):
         self.cote = None
         self.description = None
 
-# --------------------Methodes pour requête de contrôle dans la base de données ----------------------------
+    # --------------------Methodes pour requête de contrôle dans la base de données ----------------------------
     def exist_infodoc(self):
         """Methode qui verifie l'existance d' un isbn dans la table infos_documents, retourne une liste de tuple
         contenant les valeurs de chaque champ ou NONE si non trouvé.
@@ -54,7 +54,7 @@ class InfoDocument(object):
         else:
             return lecture(requetesql, param)
 
-# -----------Ajout/suppression dans une base de données.---------
+    # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_infodoc(self):
         """Methode qui ajoute une entrée valide dans la table info_documents (si elle n'existe pas déja)
         en remplissant tout les champs.
@@ -88,7 +88,7 @@ class InfoDocument(object):
         else:
             print("isbn inexistant")
 
-# -----------Modification dans la base de données.---------
+    # -----------Modification dans la base de données.---------
     def maj_infodoc(self):
         """Methode qui met a jour tout les champ d'une entrée dans la base de données (si l'isbn y existe)
         de la table info_documents.
@@ -118,7 +118,7 @@ class InfoDocument(object):
         else:
             print("isbn inexistant")
 
-# -----------Recherche & conditionnement de l'objet---------
+    # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="isbn"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table InfoDocument
         la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple.
@@ -146,7 +146,7 @@ class InfoDocument(object):
         self.description = self.liste_recherche[i][6]
         print(self.isbn, self.titre, self.auteur, self.editeur, self.date_edition, self.cote, self.description)
 
-# -----------Methode API .---------
+    # -----------Methode API .---------
     def recherche_api(self, numIsbn):
         """Recupere des meta-donnée grace a l'API google a partir de l'isbn et les integre aux attributs de l'objet,
         """
@@ -182,7 +182,7 @@ class Exemplaire(object):
         self.exemp_isbn = None
         self.exemp_commentaire = None
 
-# --------------------Methodes requête de contrôle dans la base de données ----------------------------
+    # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_exemp(self):
         """Methode qui verifie l'existance d'un codebar dans la base de donnee et retourne une liste de tuple contenant
         les valeurs de chaque champ ou NONE si non trouvé.
@@ -213,7 +213,7 @@ class Exemplaire(object):
         emprunt = lecture(requetesql, param)
         return bool(emprunt[0][0])  # retourne la valeur precise du champ
 
-# -----------Ajout/suppression dans une base de données.---------
+    # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_exemp(self):
         """Methode qui ajoute une entrée dans la table exemplaires (si elle n'existe pas deja) en remplissant tout les
          champs, à condition que l'isbn soit repertorié dans la table info_documents.
@@ -249,7 +249,7 @@ class Exemplaire(object):
         else:
             print("exemplaire inexistant")
 
-# -----------Modification dans la base de données.---------
+    # -----------Modification dans la base de données.---------
     def maj_exemp(self):
         """Methode qui met a jour certains champs d'une entrée dans la base de donnée (si le codebar y existe)
         de la table exemplaire.
@@ -263,7 +263,7 @@ class Exemplaire(object):
         else:
             print("codebar inexistant")
 
-# -----------Recherche & conditionnement de l'objet---------
+    # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="codebar"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table exemplaires
         la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut
@@ -317,7 +317,7 @@ class Lecteur(object):
         self.suspension = None
         self.commentaire = ""
 
-# --------------------Methodes requête de contrôle dans la base de données ----------------------------
+    # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_Lect(self):
         """Methode qui verifie l'existance d' un num_etudiant dans la base de donnee et retourne une liste de tuple 
         contenant les valeurs de chaque champ ou NONE si non trouvé.
@@ -342,7 +342,7 @@ class Lecteur(object):
             return lecture(requetesql, param)
 
 
-# -----------Ajout/suppression dans une base de données.---------
+    # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_lect(self):
         """Methode qui ajoute une entrée (si elle n'existe pas deja) dans la table exemplaires en remplissant tout les
          champs.
@@ -374,7 +374,7 @@ class Lecteur(object):
         else:
             print("Lecteur inexistant")
 
-# -----------Modification dans la base de données.---------
+    # -----------Modification dans la base de données.---------
     def maj_lect(self):
         """Methode qui met a jour tout les champ d'une entrée dans la base de donnée (si le numero etudiant y existe)
         de la table exemplaire.
@@ -406,7 +406,7 @@ class Lecteur(object):
         else:
             print("Numero étudiant inexistant")
 
-# -----------Recherche & conditionnement de l'objet---------
+    # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="num_etudiant"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table lecteurs la valeur
         specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut static propre a la
@@ -455,8 +455,8 @@ class Relation(object):
         self.date_emprunt = None
         self.date_retour = None
         self.liste_d_emprunt = None
-# --------------------Methodes requête de contrôle dans la base de données ----------------------------
 
+    # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_idLect(self):
         """Methode qui verifie l'existance d'un num_etudiant dans la table lecteurs et retourne une liste de tuple 
         contenant les valeurs de chaque champ ou NONE si non trouvé.
@@ -475,7 +475,7 @@ class Relation(object):
         return suspension[0][0]  # retourne la valeur precise du champ
 
     def idlect_checkemprunt(self):
-        """Methode qui recherche la liste de tout les emprunt du lecteur dans la table relation
+        """Methode qui recherche et renvoie la liste de tout les emprunt du lecteur depuis la table relation
         :objet_Lect: objet dont l'attribut num_etudiant sera recherhé.
         """
         requetesql = """SELECT * FROM relation WHERE id_lecteur = ? """
@@ -503,11 +503,11 @@ class Relation(object):
         emprunt = lecture(requetesql, param)
         return bool(emprunt[0][0])
 
-# -----------Methode pour selectionner un lecteur ---------
+    # -----------Methode pour selectionner un lecteur ---------
     def get_lecteur(self, num_etudiant):
         """Methode qui recherche dans la table lecteurs un num_etudiant, l'affecte a l'attribut "id_lecteur"
-        et affecte la liste des exemplaires qu'il a emprunté en affichant les ,
-        a condition que le lecteur existe dans la base de donnée.
+        et affecte la liste des exemplaires qu'il a emprunté en affichant les avertissements, a condition que 
+        le lecteur existe dans la base de donnée.
         :num_etudiant: numero etudiant a rechercher.
         """
         self.id_lecteur = num_etudiant
@@ -522,7 +522,7 @@ class Relation(object):
             print("Lecteur introuvable !")
             self.id_lecteur = ""
 
-# -----------Methode pour effectuer un emprunt ---------
+    # -----------Methode pour effectuer un emprunt ---------
     def enregistrer_emprunt(self, id_exemplaire):
         """Methode qui recherche dans la table exemplaires un codebar et procede a l'emprunt, a condition que le
         existe dans la base de donnée.
@@ -554,7 +554,7 @@ class Relation(object):
         else:
             print("Lecteur suspendu non autorisé a emprunter!")
 
-# -----------Methode pour effectuer un retour---------
+    # -----------Methode pour effectuer un retour---------
     def supprimer_emprunt(self, id_exemplaire):
         """Methode qui recherche dans la table exemplaires un codebar et procede au retour, a condition qu'il
         existe dans la base de donnée et qu'il soit emprunté.
@@ -578,7 +578,7 @@ class Relation(object):
             print("Exemplaire introuvable !")
             self.id_exemplaire = ""
 
-# -----------Methode pour effectuer un prolongement---------
+    # -----------Methode pour effectuer un prolongement---------
     def prolongement(self):
         """Methode qui effectue un prolongement de six jour sur l'emprunt selectionné
         """
@@ -601,7 +601,7 @@ class Relation(object):
         else:
             print("Lecteur suspendu non autorisé a prolonger!")
 
-# -----------Methode pour selectionner un emprunt---------
+    # -----------Methode pour selectionner un emprunt---------
     def set_from_liste(self, i=0):
         """ Methode qui conditionne l'objet a partir d'un tuple de la liste d'emprunt
         :i: numero du tuple dans la liste de recherche (1er occurence par defaut)

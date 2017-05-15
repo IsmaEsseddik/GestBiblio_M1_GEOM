@@ -110,7 +110,7 @@ class Lect:
         self.bouton_quitter.pack(side="left")
 
 
-# --------------------Methodes requête de contrôle dans la base de données ----------------------------
+    # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_Lect(self):
         """Methode qui verifie l'existance d' un num_etudiant dans la base de donnee et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé.
@@ -135,7 +135,7 @@ class Lect:
             return lecture(requetesql, param)
 
 
-# -----------Ajout/suppression dans une base de données.---------
+    # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_lect(self):
         """Methode qui ajoute une entrée (si elle n'existe pas deja) dans la table exemplaires en remplissant tout les
          champs.
@@ -167,7 +167,7 @@ class Lect:
         else:
             msg.showinfo('Impossible',"Lecteur inexistant")
 
-# -----------Modification dans la base de données.---------
+    # -----------Modification dans la base de données.---------
     def maj_lect(self):
         """Methode qui met a jour tout les champ d'une entrée dans la base de donnée (si le numero etudiant y existe)
         de la table exemplaire.
@@ -199,7 +199,7 @@ class Lect:
         else:
             msg.showinfo('Impossible',"Numero étudiant inexistant")
 
-# -----------Recherche & conditionnement de l'objet---------
+    # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, valeur, champwhere="num_etudiant"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table lecteurs
         la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut

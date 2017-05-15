@@ -50,6 +50,7 @@ class Retour():
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
 
+    # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_idexemp(self):
         """Methode qui verifie l'existance d'un codebar dans la base de donnee et retourne une liste de tuple de contenant
         les valeurs de chaque champ ou NONE si non trouvé."""
