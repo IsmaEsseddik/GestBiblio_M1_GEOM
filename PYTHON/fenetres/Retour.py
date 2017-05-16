@@ -23,12 +23,12 @@ class Retour():
         # creation du conteneur principale
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
         # creation des cadres
-        self.cadre_entete = tk.Frame(self.contenu, borderwidth=3, relief="raised", bg='#16eff4')
+        self.cadre_entete = tk.Frame(self.contenu, borderwidth=3, relief="raised", bg='red')
         self.cadre_corp = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadrecodebar = tk.Frame(self.cadre_corp, bg='#d8d8d8')
         # creation de libellés
-        self.welcome_label = tk.Label(self.cadre_entete, text="Retour d'exemplaire", bg='#16eff4')
+        self.welcome_label = tk.Label(self.cadre_entete, text="Retour d'exemplaire", bg='red')
         self.codebar_label = tk.Label(self.cadrecodebar, text=" Codebar: ", bg='#d8d8d8')  # creation de libellés.
         self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
                                   fg='blue', bg='#d8d8d8')

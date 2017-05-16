@@ -141,7 +141,8 @@ class Lect:
          champs.
         :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
-        if (self.exist_Lect() is None):  # si le num_etudiant n'existe pas dans sa table
+        if (self.exist_Lect() is None and re.match(r"(^[0-9])", self.numetu_champ.get()) is not None):
+        # si le num_etudiant n'existe pas dans sa table ou
             requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
             param = self.numetu_champ.get(), self.nom_champ.get(), self.prenom_champ.get(),\
                     self.date_naissance_champ.get(), self.niveau_etude_champ.get(), self.num_tel_champ.get(),\

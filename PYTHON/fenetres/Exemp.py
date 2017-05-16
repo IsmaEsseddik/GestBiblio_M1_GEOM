@@ -50,7 +50,8 @@ class Exemp:
         self.emprunt_label2 = tk.Label(self.cadreinfoR, textvariable=self.emprunt, width=50, state='normal')
         self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='normal')
         # creation boutons
-        self.bouton_recherche = tk.Button(self.cadrecodebar, text="Rechercher un exemplaire", command='', state='disabled')
+        self.bouton_recherche = tk.Button(self.cadrecodebar, text="Rechercher un exemplaire", command='',
+                                          state='disabled')
         self.bouton_ajout = tk.Button(self.cadraction, text="Ajouter ", command=self.enregistrer_exemp)
         self.bouton_suppr = tk.Button(self.cadraction, text="Supprimer ", command=self.supprimer_exemp)
         self.bouton_maj = tk.Button(self.cadrecom, text="MiseAjour ", command=self.modif_com)
@@ -122,7 +123,7 @@ class Exemp:
          champs, à condition que l'isbn soit repertorié dans la table info_documents.
         """
         if (self.exist_exemp() is None and re.match(r"(^[0-9])", self.codebar_champ.get()) is not None):
-            # Si le codebar n'existe pas deja dans sa table ou n'est pas une serie de chiffre
+            # Si le codebar est une serie de chiffre qui n'existe pas deja dans sa table.
             if (self.exist_exempisbn_infodoc() is not None):
                 # si l'isbn de l'objet infodoc associé existe dans sa table
                 requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""

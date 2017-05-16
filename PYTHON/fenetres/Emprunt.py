@@ -13,8 +13,9 @@ class Emprunt:
         pour un emprunt d'exemplaire"""
 
     def __init__(self, master):
-        v = msg2.askinteger('Integer', 'Entrer un nombre entier', parent=master)
-        self.id_lecteur = tk.StringVar(master, value=v)
+        self.id_lecteur = tk.StringVar(master, value=None)
+        self.nom = tk.StringVar(master, value=None)
+        self.prenom = tk.StringVar(master, value=None)
         self.id_exemplaire = tk.StringVar(master, value=None)
         self.date_emprunt = None
         self.date_retour = None
@@ -23,7 +24,7 @@ class Emprunt:
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
         self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
-        self.master.state('normal')  # pour maximiser la fenetre.
+        self.master.state('zoomed')  # pour maximiser la fenetre.
         self.master['bg'] = 'bisque'  # pour le background en couleur gris.
         self.master.title("Gest_Biblio - Gestionnaire de lecteurs")  # pour donner un titre a l'application.
         # creation du conteneur principale
@@ -32,19 +33,27 @@ class Emprunt:
         self.cadre_entete = tk.Frame(self.contenu, borderwidth=3, relief="raised", bg='#16eff4')
         self.cadre_corp = tk.Frame(self.contenu,  bg='#d8d8d8')
         self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')
-        self.cadrenumetu = tk.Frame(self.cadre_corp, bg='#d8d8d8')
-        self.cadrecodebar = tk.Frame(self.cadre_corp, bg='#d8d8d8')
+        self.cadrenumetu = tk.LabelFrame(self.cadre_corp, text="Etudiant", bg='#d8d8d8')
+        self.cadrecodebar = tk.LabelFrame(self.cadre_corp, text='Exemplaire', bg='#d8d8d8')
         # creation de libellés
         self.welcome_label = tk.Label(self.cadre_entete, text="Emprunt d'exemplaire", bg='#16eff4')
         self.numetu_label = tk.Label(self.cadrenumetu, text="Numero Etudiant: ", bg='#d8d8d8')
+        self.nom_label = tk.Label(self.cadrenumetu, text="Nom: ", bg='#d8d8d8')
+        self.prenom_label = tk.Label(self.cadrenumetu, text="Prenom: ", bg='#d8d8d8')
+
         self.codebar_label = tk.Label(self.cadrecodebar, text="Codebar", bg='#d8d8d8')
         self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
                                   fg='blue', bg='#d8d8d8')
         # creation de champs
-        self.numetu_champ = tk.Entry(self.cadrenumetu, textvariable=self.id_lecteur, width=50, justify='center')
-        self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.id_exemplaire, width=50, justify='center')
+        self.numetu_champ = tk.Entry(self.cadrenumetu, textvariable=self.id_lecteur, width=50, justify='center',
+                                     state='disabled')
+        self.nom_champ = tk.Entry(self.cadrenumetu, textvariable=self.nom, width=50, justify='center',
+                                  state='disabled')
+        self.prenom_champ = tk.Entry(self.cadrenumetu, textvariable=self.prenom, width=50, justify='center',
+                                  state='disabled')
+        self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.id_exemplaire, width=50, justify='center',
+                                      state = 'disabled')
         # creation boutons
-        self.bouton_numetu = tk.Button(self.cadrenumetu, text='recherche', command=self.get_lecteur)
         self.bouton_codebar = tk.Button(self.cadrecodebar, text='emprunt', command=self.enregistrer_emprunt)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
@@ -58,13 +67,19 @@ class Emprunt:
         self.welcome_label.pack(padx=10, pady=10)
         self.numetu_label.pack(side='left')
         self.numetu_champ.pack(side='left')
-        self.bouton_numetu.pack(side='right')
+        self.nom_label.pack(side='left')
+        self.nom_champ.pack(side='left')
+        self.prenom_label.pack(side='left')
+        self.prenom_champ.pack(side='left')
         self.codebar_label.pack(side='left')
         self.codebar_champ.pack(side='left')
         self.bouton_codebar.pack(side='right')
 
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
+        v = msg2.askinteger('Integer', 'Entrer un numero etudiant', parent=master)
+        self.id_lecteur.set(v)
+        self.get_lecteur()
 
     # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_idLect(self):
@@ -120,10 +135,16 @@ class Emprunt:
                 msg.showinfo('Information', "Attention, Limite d'emprunt atteinte ", parent=self.master)
             self.liste_d_emprunt = self.idlect_checkemprunt()
             print(self.liste_d_emprunt)
+            requetesql = """SELECT nom FROM lecteurs WHERE num_etudiant = ? """
+            param = self.numetu_champ.get(),
+            self.nom.set(lecture(requetesql, param)[0][0])
+            requetesql = """SELECT prenom FROM lecteurs WHERE num_etudiant = ? """
+            param = self.numetu_champ.get(),
+            self.prenom.set(lecture(requetesql,param)[0][0])
         else:
             msg.showinfo('Information', "Lecteur introuvable !", parent=self.master)
-            self.numetu_champ.delete(0, tk.END)
             self.id_lecteur.set('')
+            self.master.destroy()
 
     # -----------Methode pour effectuer un emprunt ---------
     def enregistrer_emprunt(self):
@@ -136,7 +157,7 @@ class Emprunt:
                 if (self.exist_idexemp() != []):  # si l'exemplaire existe
                     if (self.idexemp_checkemprunt() is False):  # si l'exemplaire n'est pas emprunté
                         requetesql = """UPDATE exemplaires SET emprunt = 1 WHERE codebar = ? """
-                        param = self.numetu_champ.get(),
+                        param = self.codebar_champ.get(),
                         ecriture(requetesql, param)  # requetesql changement du statut du livre
                         self.date_emprunt = datetime.date.today()  # attribution de la date du jour
                         self.date_retour = datetime.date.today() + datetime.timedelta(6)
@@ -148,10 +169,10 @@ class Emprunt:
                         self.liste_d_emprunt = self.idlect_checkemprunt()
                         print('exemplaire emprunté')
                     else:
-                        msg.showerror('Impossible',"exemplaire deja emprunté", parent=self.master)
+                        msg.showerror('Impossible', "Exemplaire deja emprunté", parent=self.master)
                 else:
-                    msg.showerror('Impossible',"Exemplaire introuvable !", parent=self.master)
+                    msg.showerror('Impossible', "Exemplaire introuvable !", parent=self.master)
             else:
-                msg.showerror('Impossible',"Limite d'emprunt atteinte !", parent=self.master)
+                msg.showerror('Impossible', "Limite d'emprunt atteinte !", parent=self.master)
         else:
-            msg.showerror('Impossible',"Lecteur suspendu non autorisé a emprunter!", parent=self.master)
+            msg.showerror('Impossible', "Lecteur suspendu non autorisé a emprunter!", parent=self.master)

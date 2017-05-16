@@ -6,6 +6,7 @@ from fenetres.Lect import *
 from fenetres.Emprunt import *
 from fenetres.Retour import *
 
+
 class Menu:
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
