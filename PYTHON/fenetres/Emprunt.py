@@ -13,10 +13,10 @@ class Emprunt:
         pour un emprunt d'exemplaire"""
 
     def __init__(self, master):
-        self.id_lecteur = tk.StringVar(master, value=None)
+        self.id_lecteur = tk.IntVar(master, value='')
         self.nom = tk.StringVar(master, value=None)
         self.prenom = tk.StringVar(master, value=None)
-        self.id_exemplaire = tk.StringVar(master, value=None)
+        self.id_exemplaire = tk.IntVar(master, value='')
         self.date_emprunt = None
         self.date_retour = None
         self.liste_d_emprunt = []
@@ -51,8 +51,7 @@ class Emprunt:
                                   state='disabled')
         self.prenom_champ = tk.Entry(self.cadrenumetu, textvariable=self.prenom, width=50, justify='center',
                                   state='disabled')
-        self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.id_exemplaire, width=50, justify='center',
-                                      state = 'disabled')
+        self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.id_exemplaire, width=50, justify='center')
         # creation boutons
         self.bouton_codebar = tk.Button(self.cadrecodebar, text='emprunt', command=self.enregistrer_emprunt)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
@@ -77,7 +76,7 @@ class Emprunt:
 
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
-        v = msg2.askinteger('Integer', 'Entrer un numero etudiant', parent=master)
+        v = msg2.askinteger('Saisie', 'Entrer un numero etudiant', parent=master)
         self.id_lecteur.set(v)
         self.get_lecteur()
 
@@ -172,6 +171,7 @@ class Emprunt:
                         msg.showerror('Impossible', "Exemplaire deja emprunté", parent=self.master)
                 else:
                     msg.showerror('Impossible', "Exemplaire introuvable !", parent=self.master)
+                    self.id_exemplaire.set('')
             else:
                 msg.showerror('Impossible', "Limite d'emprunt atteinte !", parent=self.master)
         else:
