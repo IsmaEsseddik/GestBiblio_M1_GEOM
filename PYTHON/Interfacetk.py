@@ -60,8 +60,8 @@ class Main:
 
 
 def main():
-    creation_bdd()
-    maj_suspension()
+    creation_bdd()  # creation d'une base de données (si elle n'existe pas déja).
+    maj_suspension() #
     root = tk.Tk()
     app = Main(root)
     root.mainloop()
