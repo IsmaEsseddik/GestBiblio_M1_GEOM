@@ -11,7 +11,7 @@ class Menu:
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
-        self.master.geometry('300x350+0+0')  # pour la taille et le positionnement initiale.
+        self.master.geometry('600x400+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'black'  # pour le background en couleur gris.
         self.master.title("Gest_Biblio - Menu")  # pour donner un titre a l'application (title bar).
@@ -20,6 +20,8 @@ class Menu:
         # creation des cadres
         self.cadrelib = tk.LabelFrame(self.contenu, text="Fonctionnalités", padx=20, pady=20, borderwidth=3,
                                       relief="sunken", bg='#d8d8d8')
+        self.modemploi = tk.LabelFrame(self.contenu, text="Mode d'emploi de l'application", borderwidth=5,
+                                       relief="sunken", bg="white")
         # creation boutons
         self.bouton_infodoc = tk.Button(self.cadrelib, text="Gestionnaire d'editions", width=25, command=self.infodoc)
         self.bouton_exemplaire = tk.Button(self.cadrelib, text="Gestionnaire d'exemplaire", width=25,
@@ -36,6 +38,7 @@ class Menu:
         self.bouton_lecteur.pack()
         self.bouton_Emprunt.pack()
         self.bouton_Retour.pack()
+
         self.bouton_quitter.pack()
 
     def infodoc(self):

@@ -140,7 +140,7 @@ def maj_suspension():
         if (date_retour_min is not None ):  # si il y a une date anterieur
             retardmax = date_du_jour - datetime.datetime(int(date_retour_min[0:4]), int(date_retour_min[5:7]), int(date_retour_min[8:10]))  # calcul et formattage de la date de retour
             if (retardmax > datetime.timedelta(31)):  # si le retard  est superieur a un mois
-                retardmax = datetime.timedelta(31)  # on fixe le retard a un mois
+                retardmax = datetime.timedelta(31)  # on fixe le retard MAX a un mois
             date_suspension_r = date_du_jour + retardmax  # nouvelle date de suspension a remplacer
         else:
             date_suspension_r = None
@@ -149,7 +149,7 @@ def maj_suspension():
 
         requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ?"""
         param = date_suspension_r, i[0],
-        if (suspension is None or suspension <date_du_jour or date_suspension_r > suspension):
+        if (suspension is None or suspension < date_du_jour or date_suspension_r > suspension):
             # si la date de suspension initial est passé ou nul ou inferieur a celle a remplacer
             ecriture(requetesql, param)
         elif (date_du_jour < suspension):  # si la date de suspension n'est pas encore passée...
