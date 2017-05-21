@@ -42,7 +42,7 @@ class Emprunt:
         self.prenom_label = tk.Label(self.cadrenumetu, text="Prenom: ", bg='#d8d8d8')
 
         self.codebar_label = tk.Label(self.cadrecodebar, text="Codebar", bg='#d8d8d8')
-        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+        self.ver_label = tk.Label(self.cadre_ppage, text="| Esseddik Ismael, M1 Geomatique ENSG, ©2017",
                                   fg='blue', bg='#d8d8d8')
         # creation de champs
         self.numetu_champ = tk.Entry(self.cadrenumetu, textvariable=self.id_lecteur, width=50, justify='center',

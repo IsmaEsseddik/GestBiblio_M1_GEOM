@@ -42,7 +42,7 @@ class Exemp:
         self.codebar_label = tk.Label(self.cadrecodebar, text=" Codebar: ", bg='#d8d8d8')  # creation de libellés.
         self.isbn_label = tk.Label(self.cadreinfoL, text="ISBN : ", bg='#d8d8d8')
         self.commentaire_label = tk.Label(self.cadrecom, text="Commentaire : ", bg='#d8d8d8')
-        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+        self.ver_label = tk.Label(self.cadre_ppage, text="Esseddik Ismael, M1 Geomatique ENSG, ©2017",
                                   fg='blue', bg='#d8d8d8')
         # creation de champs
         self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.codebar, width=50, justify='center')

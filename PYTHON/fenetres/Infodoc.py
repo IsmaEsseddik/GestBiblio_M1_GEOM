@@ -50,7 +50,7 @@ class Infodoc:
         self.date_edition_label = tk.Label(self.cadreinfoL, text="Date d'edition : ", bg='#d8d8d8')
         self.cote_label = tk.Label(self.cadreinfoL, text="Cote : ", bg='#d8d8d8')
         self.description_label = tk.Label(self.cadredesc, text="Description : ", bg='#d8d8d8')
-        self.ver_label = tk.Label(self.cadre_ppage, text="V.0.0 | Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+        self.ver_label = tk.Label(self.cadre_ppage, text="Esseddik Ismael, M1 Geomatique ENSG, ©2017",
                                   fg='blue', bg='#d8d8d8')
         # creation de champs
         self.isbn_champ = tk.Entry(self.cadreapi, width=50, textvariable=self.isbn, justify='center')

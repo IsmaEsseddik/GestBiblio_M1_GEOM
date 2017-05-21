@@ -20,8 +20,16 @@ class Menu:
         # creation des cadres
         self.cadrelib = tk.LabelFrame(self.contenu, text="Fonctionnalités", padx=20, pady=20, borderwidth=3,
                                       relief="sunken", bg='#d8d8d8')
-        self.modemploi = tk.LabelFrame(self.contenu, text="Mode d'emploi de l'application", borderwidth=5,
-                                       relief="sunken", bg="white")
+        self.cadre_me = tk.LabelFrame(self.contenu, text="Mode d'emploi de l'application", borderwidth=5,
+                                       relief="sunken", bg="#d8d8d8")
+        self.modemploi = tk.Text(self.cadre_me, bg="#d8d8d8")
+        self.modemploi.insert(1.0,"Version 1.0.\nLes gestionnaires permettent de gérer les informations concernant les"
+                                  " éditions, exemplaires de documents ou lecteurs.\nPour faire un emprunt, spécifier "
+                                  "d'abord un identifiant lecteur puis ensuite celui de l'exemplaire pour le(s)quel(s) "
+                                  "la relation sera établie.\nLa durée d'emprunt est fixée à 6 jours, tout retard sera "
+                                  "pénalisée par une suspension d'une durée proportionelle au retard plafonnée à un mois")
+
+        self.modemploi.config(state="disabled")
         # creation boutons
         self.bouton_infodoc = tk.Button(self.cadrelib, text="Gestionnaire d'editions", width=25, command=self.infodoc)
         self.bouton_exemplaire = tk.Button(self.cadrelib, text="Gestionnaire d'exemplaire", width=25,
@@ -33,6 +41,8 @@ class Menu:
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
         self.cadrelib.pack(fill="both", expand="yes")
+        self.cadre_me.pack(fill="both", expand="yes")
+        self.modemploi.pack()
         self.bouton_infodoc.pack()
         self.bouton_exemplaire.pack()
         self.bouton_lecteur.pack()
