@@ -256,15 +256,6 @@ class Infodoc:
         except NameError as ne:
             msg.showinfo('ERREUR !', str(ne), parent=self.master)
 
-    def test(self):
-        print(lib.EAN13(self.isbn_champ.get()))
-        print(self.titre_champ.get())
-        print(self.auteur_champ.get())
-        print(self.editeur_champ.get())
-        print(self.date_edition_champ.get())
-        print(self.cote_champ.get())
-        print(self.description_champ.get(1.0, tk.END))
-
     def listing(self):
         """methode pour lister le contenu de la rechereche """
         obj = InfoDocument()

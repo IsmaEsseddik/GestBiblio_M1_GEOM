@@ -10,7 +10,9 @@ class Main:
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
-        self.master.geometry('600x350+0+0')  # pour la taille et le positionnement initiale.
+        self.master.geometry('600x350+'+str(int(master.winfo_screenwidth()/4))+'+'
+                             +str(int(master.winfo_screenheight()/4)))
+        # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'black'  # pour le background en couleur gris.
         self.master.title("Gest_Biblio - Ecran d'acceuil")  # pour donner un titre a l'application (title bar).
@@ -63,6 +65,9 @@ def main():
     creation_bdd()  # creation d'une base de données (si elle n'existe pas déja).
     maj_suspension() #
     root = tk.Tk()
+    ecran_hauteur = root.winfo_screenwidth()/2
+    ecran_largeur = root.winfo_screenheight()/2
+
     app = Main(root)
     root.mainloop()
 

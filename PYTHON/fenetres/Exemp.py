@@ -18,8 +18,8 @@ class Exemp:
 
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
-        self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
-        self.master.state('zoomed')  # pour maximiser la fenetre.
+        self.master.geometry('650x450+0+0')  # pour la taille et le positionnement initiale.
+        self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'bisque'  # pour le background en couleur gris.
         self.master.title("Gest_Biblio - Gestionnaire de lecteurs")  # pour donner un titre a l'application (title bar).
         # creation du conteneur principale
@@ -37,7 +37,7 @@ class Exemp:
         self.cadraction = tk.Frame(self.cadreinfoR, bg='#d8d8d8')
         self.cadrecom = tk.Frame(self.cadrelib, bg='#d8d8d8')
         # creation de libellés
-        self.welcome_label = tk.Label(self.cadre_entete, text="Gestionnaire d'exemplaire : Ici vous pouvez rechercher "
+        self.welcome_label = tk.Label(self.cadre_entete, text="Gestionnaire d'exemplaires"
                                                               "un exemplaire dans la base de données", bg='orange')
         self.codebar_label = tk.Label(self.cadrecodebar, text=" Codebar: ", bg='#d8d8d8')  # creation de libellés.
         self.isbn_label = tk.Label(self.cadreinfoL, text="ISBN : ", bg='#d8d8d8')
@@ -48,7 +48,7 @@ class Exemp:
         self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.codebar, width=50, justify='center')
         self.isbn_champ = tk.Entry(self.cadreinfoR, textvariable=self.exemp_isbn, width=50, state='normal')
         self.emprunt_label2 = tk.Label(self.cadreinfoR, textvariable=self.emprunt, width=50, state='normal')
-        self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='normal')
+        self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=30, wrap="word", state='normal')
         # creation boutons
         self.bouton_recherche = tk.Button(self.cadrecodebar, text="Rechercher un exemplaire", command='',
                                           state='disabled')
