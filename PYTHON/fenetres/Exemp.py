@@ -7,21 +7,21 @@ import tkinter.messagebox as msg
 
 
 class Exemp:
-    """ constructeur de l'interface graphique relatif a la gestion de la la table Exemplaire de la base de données, """
-    liste_recherche = None
+    """ constructeur de l'interface graphique relatif a la gestion de la table Exemplaire de la base de données, """
 
     def __init__(self, master):
         self.codebar = tk.StringVar(master, value='')
         self.emprunt = tk.StringVar(master, value=bool(False))
         self.exemp_isbn = tk.StringVar(master, value='')
         self.exemp_commentaire = None
+        self.liste_recherche = None
 
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
         self.master.geometry('650x450+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'bisque'  # pour le background en couleur gris.
-        self.master.title("Gest_Biblio - Gestionnaire de lecteurs")  # pour donner un titre a l'application (title bar).
+        self.master.title("Gest_Biblio - Gestionnaire Exemplaires")  # pour donner un titre a l'application (title bar).
         # creation du conteneur principale
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
         # creation des cadres
@@ -37,8 +37,7 @@ class Exemp:
         self.cadraction = tk.Frame(self.cadreinfoR, bg='#d8d8d8')
         self.cadrecom = tk.Frame(self.cadrelib, bg='#d8d8d8')
         # creation de libellés
-        self.welcome_label = tk.Label(self.cadre_entete, text="Gestionnaire d'exemplaires"
-                                                              "un exemplaire dans la base de données", bg='orange')
+        self.welcome_label = tk.Label(self.cadre_entete, text="Gestionnaire d'exemplaires", bg='orange')
         self.codebar_label = tk.Label(self.cadrecodebar, text=" Codebar: ", bg='#d8d8d8')  # creation de libellés.
         self.isbn_label = tk.Label(self.cadreinfoL, text="ISBN : ", bg='#d8d8d8')
         self.commentaire_label = tk.Label(self.cadrecom, text="Commentaire : ", bg='#d8d8d8')
@@ -50,8 +49,7 @@ class Exemp:
         self.emprunt_label2 = tk.Label(self.cadreinfoR, textvariable=self.emprunt, width=50, state='normal')
         self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=30, wrap="word", state='normal')
         # creation boutons
-        self.bouton_recherche = tk.Button(self.cadrecodebar, text="Rechercher un exemplaire", command='',
-                                          state='disabled')
+        self.bouton_recherche = tk.Button(self.cadrecodebar, text="Rechercher un exemplaire", command=self.listing)
         self.bouton_ajout = tk.Button(self.cadraction, text="Ajouter ", command=self.enregistrer_exemp)
         self.bouton_suppr = tk.Button(self.cadraction, text="Supprimer ", command=self.supprimer_exemp)
         self.bouton_maj = tk.Button(self.cadrecom, text="MiseAjour ", command=self.modif_com)
@@ -126,16 +124,17 @@ class Exemp:
             # Si le codebar est une serie de chiffre qui n'existe pas deja dans sa table.
             if (self.exist_exempisbn_infodoc() is not None):
                 # si l'isbn de l'objet infodoc associé existe dans sa table
-                requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) VALUES(?,?,?,?)"""
+                requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) 
+                VALUES(?,?,?,?)"""
                 param = self.codebar_champ.get(), 0, self.commentaire_champ.get(1.0, tk.END),\
-                        lib.EAN13(self.isbn_champ.get()),
+                    lib.EAN13(self.isbn_champ.get()),  # 0 en emprunt car il est logiquement impossible
+                # que la nouveauté soit emprunté au moment de l'enregistrement
                 ecriture(requetesql, param)
                 print("L'exemplaire a été ajouté dans la base de données")
             else:
                 msg.showinfo('Impossible', "isbn non trouvé", parent=self.master)
         else:
             msg.showinfo('Impossible', "codebar deja attribué ou invalide", parent=self.master)
-
 
     def supprimer_exemp(self):
         """Methode qui supprime une entrée (si elle existe) de la table exemplaires a condition que ce dernier ne soit
@@ -150,9 +149,9 @@ class Exemp:
                 print("L'exemplaire a été supprimée de la base de données")
 
             else:
-                msg.showinfo('Impossible',"exemplaire non rendu", parent=self.master)
+                msg.showinfo('Impossible', "exemplaire non rendu", parent=self.master)
         else:
-            msg.showinfo('Impossible',"exemplaire inexistant", parent=self.master)
+            msg.showinfo('Impossible', "exemplaire inexistant", parent=self.master)
 
     # -----------Modification dans la base de données.---------
     def modif_com(self):
@@ -160,36 +159,46 @@ class Exemp:
         de la table exemplaire.
         :champ: champ dans lequel sera modifier la valeur.
         """
-        if (self.exist_exemp() is not None):  # si le codebar existe dans sa table
+        if(self.exist_exemp() is not None):  # si le codebar existe dans sa table
             requetesql = """UPDATE exemplaires SET exemp_commentaire = ? WHERE codebar = ? """
             param = self.commentaire_champ.get(1.0, tk.END), self.codebar_champ.get(),
             ecriture(requetesql, param)
             print("Le champ com isbn ont été mis a jour dans la base de données")
         else:
-            msg.showinfo('Impossible',"codebar inexistant", parent=self.master)
+            msg.showinfo('Impossible', "codebar inexistant", parent=self.master)
 
     # -----------Recherche & conditionnement de l'objet---------
-    def get_liste_BDD(self, valeur, champwhere="codebar"):
+    def get_liste_BDD(self, champwhere="codebar"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table exemplaires
         la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut
         static propre a la class.
-        :valeur: la valeur a recherche dans le champ
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ  par defaut)
         """
+        if (self.codebar_champ.get()==''):
+            msg.showinfo('Erreur', "Veuillez specifier un codebar ", parent=self.master)
+            return
         requetesql = """SELECT * FROM exemplaires WHERE """ + champwhere + """ REGEXP ? """
-        param = valeur,
-        if (lecture(requetesql, param) == []):
-            print("Aucun resultat(s)")
+        param = self.codebar_champ.get(),
+        fetch = lecture(requetesql, param)
+        if(fetch == [] or fetch is None):
+            msg.showinfo('Resultat', "Aucun resultat(s)", parent=self.master)
+            return
         else:
-            self.liste_recherche = lecture(requetesql, param)
+            self.liste_recherche = fetch
             print(self.liste_recherche)
 
     def set_from_liste(self, i=0):
         """ Methode qui conditionne l'objet a partir d'un tuple de la liste de la derniere recherche
         :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
         """
-        self.codebar = self.liste_recherche[i][0]
-        self.emprunt = self.liste_recherche[i][1]
-        self.exemp_commentaire = self.liste_recherche[i][2]
-        self.exemp_isbn = self.liste_recherche[i][3]
+        self.codebar.set(self.liste_recherche[i][0])
+        self.emprunt.set(self.liste_recherche[i][1])
+        self.commentaire_champ.delete(1.0, tk.END)
+        self.commentaire_champ.insert(1.0, self.liste_recherche[i][2])
+        self.exemp_isbn.set(self.liste_recherche[i][3])
         print(self.codebar, self.emprunt, self.exemp_commentaire, self.exemp_isbn)
+
+    def listing(self):
+        """methode pour afficher le contenu de la rechereche """
+        self.get_liste_BDD()
+        self.set_from_liste()

@@ -8,7 +8,6 @@ import tkinter.messagebox as msg
 
 class Lect:
     """ constructeur de l'interface graphique relatif a la gestion de la table Lecteur de la base de données """
-    liste_recherche = None
 
     def __init__(self, master):
         self.num_etudiant = tk.StringVar(master, value='')
@@ -19,6 +18,7 @@ class Lect:
         self.num_tel = tk.StringVar(master, value='')
         self.suspension = None
         self.commentaire = None
+        self.liste_recherche = None
 
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
@@ -64,7 +64,7 @@ class Lect:
                                          disabledbackground='bisque')
         self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='normal')
         # creation boutons
-        self.bouton_recherche = tk.Button(self.cadrenumetu, text="Rechercher un lecteur", command='', state='disabled')
+        self.bouton_recherche = tk.Button(self.cadrenumetu, text="Rechercher un lecteur", command=self.listing)
         self.bouton_ajout = tk.Button(self.cadraction, text="Ajouter ", command=self.enregistrer_lect)
         self.bouton_suppr = tk.Button(self.cadraction, text="Supprimer ", command=self.supprimer_lect)
         self.bouton_maj = tk.Button(self.cadraction, text="MiseAjour ", command=self.maj_lect)
@@ -109,7 +109,6 @@ class Lect:
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
 
-
     # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_Lect(self):
         """Methode qui verifie l'existance d' un num_etudiant dans la base de donnee et retourne une liste de tuple de contenant
@@ -134,7 +133,6 @@ class Lect:
         else:
             return lecture(requetesql, param)
 
-
     # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_lect(self):
         """Methode qui ajoute une entrée (si elle n'existe pas deja) dans la table exemplaires en remplissant tout les
@@ -142,11 +140,12 @@ class Lect:
         :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
         if (self.exist_Lect() is None and re.match(r"(^[0-9])", self.numetu_champ.get()) is not None):
-        # si le num_etudiant n'existe pas dans sa table ou
-            requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
+            # si le num_etudiant n'existe pas dans sa table ou
+            requetesql = """INSERT INTO lecteurs(num_etudiant, nom, prenom, date_naissance, niveau_etude, num_tel, 
+            suspension, commentaire) VALUES(?,?,?,?,?,?,?,?)"""
             param = self.numetu_champ.get(), self.nom_champ.get(), self.prenom_champ.get(),\
-                    self.date_naissance_champ.get(), self.niveau_etude_champ.get(), self.num_tel_champ.get(),\
-                    None, self.commentaire_champ.get(1.0,tk.END),
+                self.date_naissance_champ.get(), self.niveau_etude_champ.get(), self.num_tel_champ.get(),\
+                None, self.commentaire_champ.get(1.0, tk.END),
             ecriture(requetesql, param)
             print("Le lecteur a été ajouté dans la base de données")
         else:
@@ -198,20 +197,24 @@ class Lect:
             ecriture(requetesql, param)
             print("Les informations isbn ont été mis a jour dans la base de données")
         else:
-            msg.showinfo('Impossible',"Numero étudiant inexistant", parent=self.master)
+            msg.showinfo('Impossible', "Numero étudiant inexistant", parent=self.master)
 
     # -----------Recherche & conditionnement de l'objet---------
-    def get_liste_BDD(self, valeur, champwhere="num_etudiant"):
+    def get_liste_BDD(self, champwhere="num_etudiant"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table lecteurs
         la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut
         static propre a la class.
-        :valeur: la valeur a recherche dans le champ
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(num_etudiant  par defaut)
         """
+        if (self.numetu_champ.get()==''):
+            msg.showinfo('Erreur', "Veuillez specifier un numero etudiant. ", parent=self.master)
+            return
         requetesql = """SELECT * FROM lecteurs WHERE """ + champwhere + """ REGEXP ? """
-        param = valeur,
-        if (lecture(requetesql, param) == []):
-            print("Aucun resultat(s)")
+        param = self.numetu_champ.get(),
+        fetch = lecture(requetesql, param)
+        if (fetch == [] or fetch is None):
+            msg.showinfo('Resultat', "Aucun resultat(s)", parent=self.master)
+            return
         else:
             self.liste_recherche = lecture(requetesql, param)
             print(self.liste_recherche)
@@ -220,12 +223,20 @@ class Lect:
         """ Methode qui conditionne l'objet a partir d'un tuple de la liste de la derniere recherche
         :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
         """
-        self.num_etudiant = self.liste_recherche[i][0]
-        self.nom = self.liste_recherche[i][1]
-        self.prenom = self.liste_recherche[i][2]
-        self.date_naissance = self.liste_recherche[i][3]
-        self.niveau_etude = self.liste_recherche[i][4]
-        self.num_tel = self.liste_recherche[i][5]
-        self.suspension = self.liste_recherche[i][6]
-        self.commentaire = self.liste_recherche[i][7]
-        print(self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel, self.suspension, self.commentaire)
+        self.num_etudiant.set(self.liste_recherche[i][0])
+        self.nom.set(self.liste_recherche[i][1])
+        self.prenom.set(self.liste_recherche[i][2])
+        self.date_naissance.set(self.liste_recherche[i][3])
+        self.niveau_etude.set(self.liste_recherche[i][4])
+        self.num_tel.set(self.liste_recherche[i][5])
+        self.suspension.set(self.liste_recherche[i][6])
+        self.commentaire.delete(1.0, tk.END)
+        self.commentaire_champ.insert(1.0,self.liste_recherche[i][7])
+
+        print(self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel,
+              self.suspension, self.commentaire)
+
+    def listing(self):
+        """methode pour afficher le contenu de la rechereche """
+        self.get_liste_BDD()
+        self.set_from_liste()

@@ -8,7 +8,6 @@ import tkinter.messagebox as msg
 
 class Infodoc:
     """ constructeur de l'interface graphique relatif a la gestion de la la table Infodoc de la base de données, """
-    liste_recherche = None
 
     def __init__(self, master):
         self.isbn = tk.StringVar(master, value='ISBN 978-2-74603707-6')
@@ -18,6 +17,7 @@ class Infodoc:
         self.date_edition = tk.StringVar(master, value='')
         self.cote = tk.StringVar(master, value='')
         self.description = None
+        self.liste_recherche = None
 
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
@@ -54,20 +54,15 @@ class Infodoc:
                                   fg='blue', bg='#d8d8d8')
         # creation de champs
         self.isbn_champ = tk.Entry(self.cadreapi, width=50, textvariable=self.isbn, justify='center')
-        self.titre_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.titre, state='normal',
-                                    disabledbackground='bisque')
-        self.auteur_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.auteur, state='normal',
-                                     disabledbackground='bisque')
-        self.editeur_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.editeur, state='normal',
-                                      disabledbackground='bisque')
-        self.date_edition_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.date_edition, state='normal',
-                                           disabledbackground='bisque')
-        self.cote_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.cote, state='normal')
-        self.description_champ = tk.Text(self.cadredesc, height=30, width=70, wrap="word", state='normal')
+        self.titre_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.titre)
+        self.auteur_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.auteur)
+        self.editeur_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.editeur)
+        self.date_edition_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.date_edition)
+        self.cote_champ = tk.Entry(self.cadreinfoR, width=50, textvariable=self.cote)
+        self.description_champ = tk.Text(self.cadredesc, height=30, width=70, wrap="word")
         # creation boutons
         self.bouton_api = tk.Button(self.cadreapi, text="Recherche API ", command=self.recherche_api)
-        self.bouton_rechercher = tk.Button(self.cadreapi, text="Rechercher interne", command=self.listing,
-                                           state='disabled')
+        self.bouton_rechercher = tk.Button(self.cadreapi, text="Rechercher interne", command=self.listing)
         self.bouton_ajout = tk.Button(self.cadraction, text="Ajouter ", command=self.enregistrer_infodoc)
         self.bouton_suppr = tk.Button(self.cadraction, text="Supprimer ", command=self.supprimer_infodoc)
         self.bouton_maj = tk.Button(self.cadraction, text="MiseAjour ", command=self.maj_infodoc)
@@ -147,12 +142,13 @@ class Infodoc:
                 requetesql = """INSERT INTO infos_documents(isbn, titre, auteur, editeur, date_edition, cote, description) 
                 VALUES(?,?,?,?,?,?,?)"""
                 param = lib.EAN13(self.isbn_champ.get()), self.titre_champ.get(), self.auteur_champ.get(), \
-                        self.editeur_champ.get(), self.date_edition_champ.get(), self.cote_champ.get(), \
-                        self.description_champ.get(1.0, tk.END),
+                    self.editeur_champ.get(), self.date_edition_champ.get(), self.cote_champ.get(), \
+                    self.description_champ.get(1.0, tk.END),
                 ecriture(requetesql, param)
                 print("Les informations isbn ont été ajoutés dans la base de données")
             else:
-                msg.showinfo('Impossible', "L'isbn existe deja dans la base de données ou est invalide ", parent=self.master)
+                msg.showinfo('Impossible', "L'isbn existe deja dans la base de données ou est invalide ",
+                             parent=self.master)
         except TypeError:
             msg.showerror('ERREUR', 'ISBN invalide !', parent=self.master)
 
@@ -169,10 +165,11 @@ class Infodoc:
                     ecriture(requetesql, param)
                     print("Les informations isbn ont été supprimée de la base de données")
                 else:
-                    msg.showinfo('Impossible', "isbn associé à un ou plusieurs exemplaire(s), supprimez d'abord les exemplaires", parent=self.master)
+                    msg.showinfo('Impossible', "isbn associé à un ou plusieurs exemplaire(s), supprimez d'abord les "
+                                               "exemplaires", parent=self.master)
             else:
                 msg.showinfo('Impossible', "isbn inexistant", parent=self.master)
-        except TypeError :
+        except TypeError:
             msg.showerror('ERREUR', 'ISBN invalide !', parent=self.master)
 
 # -----------Modification dans la base de données.---------
@@ -203,37 +200,47 @@ class Infodoc:
                 ecriture(requetesql, param)
                 print("Les informations isbn ont été mis a jour dans la base de données")
             else:
-                msg.showinfo('Impossible',"isbn inexistant")
+                msg.showinfo('Impossible', "isbn inexistant")
         except TypeError:
             msg.showerror('ERREUR', 'ISBN invalide !', parent=self.master)
 
 # -----------Recherche & conditionnement de l'objet---------
-    def get_liste_BDD(self, valeur, champwhere="isbn"):
+    def get_liste_BDD(self, champwhere="isbn"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table InfoDocument
         la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple.
-        :valeur: la valeur a recherche dans le champ
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ isbn par defaut)
         """
+        if (self.isbn_champ.get() == ''):
+            msg.showinfo('Erreur', "Veuillez specifier un isbn ", parent=self.master)
+            return
         requetesql = """SELECT * FROM infos_documents WHERE """ + champwhere + """ REGEXP ? """
-        param = valeur,
-        if (lecture(requetesql, param) == []):
-            raise NameError("Aucun resultat(s)")
+        param = lib.EAN13(self.isbn_champ.get()),
+        fetch = lecture(requetesql, param)
+        if (fetch == [] or fetch is None ):
+            msg.showinfo('Resultat', "Aucun resultat(s)", parent=self.master)
+            return
         else:
-            self.liste_recherche = lecture(requetesql, param)
+            self.liste_recherche = fetch
             print(self.liste_recherche)
 
     def set_from_liste(self, i=0):
         """ Methode qui conditionne l'objet a partir de la liste de tuple obtenu a la derniere recherche.
         :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
         """
-        self.isbn = self.liste_recherche[i][0]
-        self.titre = self.liste_recherche[i][1]
-        self.auteur = self.liste_recherche[i][2]
-        self.editeur = self.liste_recherche[i][3]
-        self.date_edition = self.liste_recherche[i][4]
-        self.cote = self.liste_recherche[i][5]
-        self.description = self.liste_recherche[i][6]
+        self.isbn.set(self.liste_recherche[i][0])
+        self.titre.set(self.liste_recherche[i][1])
+        self.auteur.set(self.liste_recherche[i][2])
+        self.editeur.set(self.liste_recherche[i][3])
+        self.date_edition.set(self.liste_recherche[i][4])
+        self.cote.set(self.liste_recherche[i][5])
+        self.description_champ.delete(1.0, tk.END)
+        self.description_champ.insert(1.0, self.liste_recherche[i][6])
         print(self.isbn, self.titre, self.auteur, self.editeur, self.date_edition, self.cote, self.description)
+
+    def listing(self):
+        """methode pour afficher le contenu de la rechereche """
+        self.get_liste_BDD()
+        self.set_from_liste()
 
 # -----------Methode API .---------
     def recherche_api(self):
@@ -256,12 +263,4 @@ class Infodoc:
         except NameError as ne:
             msg.showinfo('ERREUR !', str(ne), parent=self.master)
 
-    def listing(self):
-        """methode pour lister le contenu de la rechereche """
-        obj = InfoDocument()
-        """try:
-            obj.get_liste_BDD(lib.EAN13(self.isbn_champ.get()))
-            for i in obj.liste_recherche:
-                print(i)
-        except:
-            pass"""
+
