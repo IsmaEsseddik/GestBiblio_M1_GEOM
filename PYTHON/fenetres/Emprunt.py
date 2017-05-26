@@ -35,6 +35,10 @@ class Emprunt:
         self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')
         self.cadrenumetu = tk.LabelFrame(self.cadre_corp, text="Etudiant", bg='#d8d8d8')
         self.cadrecodebar = tk.LabelFrame(self.cadre_corp, text='Exemplaire', bg='#d8d8d8')
+        self.cadremprunt = tk.LabelFrame(self.cadre_corp, text="Informations", borderwidth=5,
+                                       relief="sunken", bg="#d8d8d8", labelanchor='n')
+        self.scrolling = tk.Scrollbar(self.cadremprunt)
+
         # creation de libellés
         self.welcome_label = tk.Label(self.cadre_entete, text="Emprunt d'exemplaire", bg='#16eff4')
         self.numetu_label = tk.Label(self.cadrenumetu, text="Numero Etudiant: ", bg='#d8d8d8')
@@ -42,7 +46,7 @@ class Emprunt:
         self.prenom_label = tk.Label(self.cadrenumetu, text="Prenom: ", bg='#d8d8d8')
 
         self.codebar_label = tk.Label(self.cadrecodebar, text="Codebar", bg='#d8d8d8')
-        self.ver_label = tk.Label(self.cadre_ppage, text="| Esseddik Ismael, M1 Geomatique ENSG, ©2017",
+        self.ver_label = tk.Label(self.cadre_ppage, text="Esseddik Ismael, M1 Geomatique ENSG, ©2017",
                                   fg='blue', bg='#d8d8d8')
         # creation de champs
         self.numetu_champ = tk.Entry(self.cadrenumetu, textvariable=self.id_lecteur, width=50, justify='center',
@@ -52,8 +56,12 @@ class Emprunt:
         self.prenom_champ = tk.Entry(self.cadrenumetu, textvariable=self.prenom, width=50, justify='center',
                                   state='disabled')
         self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.id_exemplaire, width=50, justify='center')
+        self.logemprunt = tk.Text(self.cadremprunt, bg="#d8d8d8", wrap="word", yscrollcommand=self.scrolling.set,
+                                  state="disabled")
         # creation boutons
-        self.bouton_codebar = tk.Button(self.cadrecodebar, text='emprunt', command=self.enregistrer_emprunt)
+        self.bouton_numetu = tk.Button(self.cadrenumetu, text='Changer lecteur', command=self.get_lecteur)
+        self.bouton_emprunt = tk.Button(self.cadrecodebar, text='Emprunt', command=self.enregistrer_emprunt)
+        self.bouton_prolongement = tk.Button(self.cadrecodebar, text='prolongement', command=self.prolongement)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
@@ -62,7 +70,7 @@ class Emprunt:
         self.cadre_ppage.pack(side="bottom", fill="x", padx=3, pady=10)
         self.cadrenumetu.pack(side='top', fill="both", expand="yes")
         self.cadrecodebar.pack(side='top', fill="both", expand="yes")
-
+        self.cadremprunt.pack(fill="both", expand="yes")
         self.welcome_label.pack(padx=10, pady=10)
         self.numetu_label.pack(side='left')
         self.numetu_champ.pack(side='left')
@@ -70,14 +78,16 @@ class Emprunt:
         self.nom_champ.pack(side='left')
         self.prenom_label.pack(side='left')
         self.prenom_champ.pack(side='left')
+        self.bouton_numetu.pack(side='left')
         self.codebar_label.pack(side='left')
         self.codebar_champ.pack(side='left')
-        self.bouton_codebar.pack(side='right')
+        self.scrolling.pack(side='right', fill='y')
+        self.logemprunt.pack()
+        self.bouton_emprunt.pack(side='right')
+        self.bouton_prolongement.pack(side='right')
 
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side="left")
-        v = msg2.askinteger('Saisie', 'Entrer un numero etudiant', parent=master)
-        self.id_lecteur.set(v)
         self.get_lecteur()
 
     # --------------------Methodes requête de contrôle dans la base de données ----------------------------
@@ -120,6 +130,13 @@ class Emprunt:
         emprunt = lecture(requetesql, param)
         return bool(emprunt[0][0])
 
+    def check_prolongement(self):
+        """Methode qui renvoie l'eat du prolongement du livre."""
+        requetesql = """SELECT prolongement FROM relation WHERE id_exemplaire = ? """
+        param = self.codebar_champ.get(),
+        emprunt = lecture(requetesql, param)
+        return bool(emprunt[0][0])
+
     # -----------Methode pour selectionner un lecteur ---------
     def get_lecteur(self):
         """Methode qui recherche dans la table lecteurs un num_etudiant, l'affecte a l'attribut "id_lecteur"
@@ -127,6 +144,8 @@ class Emprunt:
         le lecteur existe dans la base de données.
         :num_etudiant: numero etudiant a rechercher.
         """
+        v = msg2.askinteger('Saisie', 'Entrer un numero etudiant', parent=self.master)
+        self.id_lecteur.set(v)
         if (self.exist_idLect() != []):
             if (self.idlect_checkSuspension() is not None):
                 msg.showinfo('Information', "Attention, le lecteur est suspendu ", parent=self.master)
@@ -167,6 +186,31 @@ class Emprunt:
                         ecriture(requetesql, param)  # requetesql ajout d'un champ
                         self.liste_d_emprunt = self.idlect_checkemprunt()
                         print('exemplaire emprunté')
+
+                        # _____________________AFFICHAGE APRES AJOUT________________
+                        requetesql = """SELECT * FROM relation WHERE id_exemplaire = ?"""
+                        param = self.codebar_champ.get(),
+                        relat = lecture(requetesql, param)
+                        date_e, date_r, numetu = relat[0][0], relat[0][1], relat[0][2]
+
+                        requetesql = """SELECT nom, prenom FROM lecteurs WHERE num_etudiant = ?"""
+                        param = numetu,
+                        info_lect = lecture(requetesql, param)
+                        nom, prenom = info_lect[0][0], info_lect[0][1]
+
+                        requetesql = """SELECT exemp_isbn FROM exemplaires WHERE codebar = ?"""
+                        param = self.codebar_champ.get(),
+                        isbn_ex = lecture(requetesql, param)
+                        requetesql = """SELECT titre, auteur FROM infos_documents WHERE isbn = ?"""
+                        param = isbn_ex[0][0],
+                        info_exemp = lecture(requetesql, param)
+                        titre, auteur = info_exemp[0][0], info_exemp[0][1]
+                        self.logemprunt.config(state="normal")
+                        self.logemprunt.insert(tk.END,
+                                                "--------\nTitre : " + titre + "| Auteur : " + auteur +
+                                               "| Emprunteur : " + nom + '_' + prenom + "| durée : " + date_e +
+                                               " --> " + date_r + "\nExemplaire emprunté")
+                        self.logemprunt.config(state="disabled")
                     else:
                         msg.showerror('Impossible', "Exemplaire deja emprunté", parent=self.master)
                 else:
@@ -176,3 +220,30 @@ class Emprunt:
                 msg.showerror('Impossible', "Limite d'emprunt atteinte !", parent=self.master)
         else:
             msg.showerror('Impossible', "Lecteur suspendu non autorisé a emprunter!", parent=self.master)
+
+    # -----------Methode pour effectuer un prolongement ---------
+    def prolongement(self):
+        """Methode qui effectue un prolongement de six jour sur l'exemplaire designé
+        """
+        if (self.numetu_champ.get()==''):
+            msg.showinfo('Erreur', "Veuillez specifier un codebar ", parent=self.master)
+            return #problem sur la verif de l'existence de l'emprunt par rapport au lecteur
+
+        if (self.idlect_checkSuspension() is None):  # si le lecteur n'est pas suspendu
+            if (self.idexemp_checkemprunt() is True):  # si l'exemplaire est emprunté
+                if (self.check_prolongement() is False): # si l'exemplaire n'a pas deja été prolongé
+                    requetesql = """UPDATE relation SET prolongement = 1 WHERE id_exemplaire = ? """
+                    param = self.codebar_champ.get(),
+                    ecriture(requetesql, param)  # requetesql pour changement de statut du prolongement
+                    self.date_retour = dt.datetime(int(self.date_retour[0:4]), int(self.date_retour[5:7]),
+                                                         int(self.date_retour[8:10])) + dt.timedelta(6)
+                    # calcul & attribution de la nouvelle date de retour.
+                    requetesql = """UPDATE relation SET date_retour = ? WHERE id_exemplaire = ? """
+                    param = self.date_retour, self.codebar_champ.get(),
+                    ecriture(requetesql, param)  # requetesql ajout d'un champ
+                else:
+                    msg.showerror('Impossible',"un seul prolongement par emprunt autorisé")
+            else:
+                msg.showerror('Impossible',"exemplaire non emprunté")
+        else:
+            msg.showerror('Impossible', "Lecteur suspendu non autorisé a prolonger!")
