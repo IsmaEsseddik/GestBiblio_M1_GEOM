@@ -79,6 +79,7 @@ class Retour():
          a condition qu'il existe dans la base de donnée et qu'il soit l'exemplaire associé soit emprunté.
         :num_etudiant: numero etudiant a rechercher
         """
+
         if (self.exist_idexemp() != []):  # si l'exemplaire existe
             if (self.idexemp_checkemprunt() is True):  # si l'exemplaire n'est pas emprunté
                 # _____________________AFFICHAGE AVANT SUPRESSION________________

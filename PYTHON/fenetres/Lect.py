@@ -149,7 +149,7 @@ class Lect:
             ecriture(requetesql, param)
             print("Le lecteur a été ajouté dans la base de données")
         else:
-            msg.showinfo('Impossible',"Lecteur déjà inscrit", parent=self.master)
+            msg.showinfo('Impossible',"Lecteur déjà inscrit ou id incorrect", parent=self.master)
 
     def supprimer_lect(self):
         """Methode qui supprime une entrée (si elle existe) de la table lecteurs a condition que ce dernier n'ait pas
@@ -229,7 +229,7 @@ class Lect:
         self.date_naissance.set(self.liste_recherche[i][3])
         self.niveau_etude.set(self.liste_recherche[i][4])
         self.num_tel.set(self.liste_recherche[i][5])
-        self.suspension = self.liste_recherche[i][6]
+        self.suspension.set(self.liste_recherche[i][6])
         self.commentaire_champ.delete(1.0, tk.END)
         self.commentaire_champ.insert(1.0, str(self.liste_recherche[i][7]))
 

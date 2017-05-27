@@ -225,13 +225,13 @@ class Emprunt:
     def prolongement(self):
         """Methode qui effectue un prolongement de six jour sur l'exemplaire designé
         """
-        if (self.numetu_champ.get()==''):
+        if (self.codebar_champ.get()==''):
             msg.showinfo('Erreur', "Veuillez specifier un codebar ", parent=self.master)
-            return #problem sur la verif de l'existence de l'emprunt par rapport au lecteur
+            return  # problem sur la verif de l'existence de l'emprunt par rapport au lecteur
 
         if (self.idlect_checkSuspension() is None):  # si le lecteur n'est pas suspendu
             if (self.idexemp_checkemprunt() is True):  # si l'exemplaire est emprunté
-                if (self.check_prolongement() is False): # si l'exemplaire n'a pas deja été prolongé
+                if (self.check_prolongement() is False):  # si l'exemplaire n'a pas deja été prolongé
                     requetesql = """UPDATE relation SET prolongement = 1 WHERE id_exemplaire = ? """
                     param = self.codebar_champ.get(),
                     ecriture(requetesql, param)  # requetesql pour changement de statut du prolongement
@@ -241,9 +241,13 @@ class Emprunt:
                     requetesql = """UPDATE relation SET date_retour = ? WHERE id_exemplaire = ? """
                     param = self.date_retour, self.codebar_champ.get(),
                     ecriture(requetesql, param)  # requetesql ajout d'un champ
+                    elf.logemprunt.config(state="normal")
+                    self.logemprunt.insert(tk.END,
+                                           "--------\nPrologement effectué")
+                    self.logemprunt.config(state="disabled")
                 else:
-                    msg.showerror('Impossible',"un seul prolongement par emprunt autorisé")
+                    msg.showerror('Impossible', "un seul prolongement par emprunt autorisé", parent=self.master)
             else:
-                msg.showerror('Impossible',"exemplaire non emprunté")
+                msg.showerror('Impossible', "exemplaire non emprunté", parent=self.master)
         else:
-            msg.showerror('Impossible', "Lecteur suspendu non autorisé a prolonger!")
+            msg.showerror('Impossible', "Lecteur suspendu non autorisé a prolonger!", parent=self.master)
