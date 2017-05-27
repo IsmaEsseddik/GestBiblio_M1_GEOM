@@ -2,11 +2,10 @@
 # jointure entre document et infodoc via champ ISBN .
 # creation d'une table de jointure "Relation" entre lecteur et documents.
 # type de requete sur la base de données
-import datetime  #  pour les operation sur le temp
+import datetime  # pour les operation sur le temp
 import sqlite3  # importation de la librairie SQLite3
 import re  # importation du package des expression regulieres
 lien = 'bdd/bdd_biblio.db'
-
 
 
 # -----------Creation d'une base de données.---------
@@ -15,7 +14,6 @@ def creation_bdd():
     puis formalise les tables si elle n'existent pas deja.
     :lien: chemin/fichier(.bdd) a specifier pour etablir la connexion
     """
-
     connexion = sqlite3.connect(lien)
     curseur = connexion.cursor()  # creer un objet curseur pour executer des requetes SQL sur cette base de donnée.
     try:

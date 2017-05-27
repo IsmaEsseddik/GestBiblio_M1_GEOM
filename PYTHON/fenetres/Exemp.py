@@ -194,7 +194,7 @@ class Exemp:
         self.codebar.set(self.liste_recherche[i][0])
         self.emprunt.set(self.liste_recherche[i][1])
         self.commentaire_champ.delete(1.0, tk.END)
-        self.commentaire_champ.insert(1.0, self.liste_recherche[i][2])
+        self.commentaire_champ.insert(1.0, str(self.liste_recherche[i][2]))
         self.exemp_isbn.set(self.liste_recherche[i][3])
         print(self.codebar, self.emprunt, self.exemp_commentaire, self.exemp_isbn)
 

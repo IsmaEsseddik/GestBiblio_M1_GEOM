@@ -16,7 +16,7 @@ class Retour():
 
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
-        self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
+        self.master.geometry('800x650+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'bisque'  # pour le background en couleur gris.
         self.master.title("Gest_Biblio - Gestionnaire de lecteurs")  # pour donner un titre a l'application (title bar).

@@ -229,9 +229,9 @@ class Lect:
         self.date_naissance.set(self.liste_recherche[i][3])
         self.niveau_etude.set(self.liste_recherche[i][4])
         self.num_tel.set(self.liste_recherche[i][5])
-        self.suspension.set(self.liste_recherche[i][6])
-        self.commentaire.delete(1.0, tk.END)
-        self.commentaire_champ.insert(1.0,self.liste_recherche[i][7])
+        self.suspension = self.liste_recherche[i][6]
+        self.commentaire_champ.delete(1.0, tk.END)
+        self.commentaire_champ.insert(1.0, str(self.liste_recherche[i][7]))
 
         print(self.num_etudiant, self.nom, self.prenom, self.date_naissance, self.niveau_etude, self.num_tel,
               self.suspension, self.commentaire)
