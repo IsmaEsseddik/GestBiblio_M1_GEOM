@@ -26,9 +26,9 @@ class Menu:
         self.modemploi.insert(1.0,"    Les gestionnaires permettent de gérer les informations concernant les"
                                   " éditions, exemplaires de documents ou lecteurs.\n\n    Pour faire un emprunt,"
                                   " spécifier d'abord un identifiant lecteur puis ensuite celui de l'exemplaire pour"
-                                  " le(s)quel(s) la relation sera établie.\n\n    La durée d'emprunt est fixée à 6 jours,"
-                                  " tout retard sera pénalisée par une suspension d'une durée proportionelle au retard,"
-                                  " plafonnée à 31 jours.")
+                                  " le(s)quel(s) la relation sera établie.\n\n    La durée d'emprunt est fixée à 6"
+                                  " jours, tout retard sera pénalisée par une suspension d'une durée proportionelle au"
+                                  " retard, plafonnée à 31 jours.")
 
         self.modemploi.config(state="disabled")
         # creation boutons
