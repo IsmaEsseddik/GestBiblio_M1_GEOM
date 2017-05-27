@@ -16,7 +16,7 @@ class Lect:
         self.date_naissance = tk.StringVar(master, value='')
         self.niveau_etude = tk.StringVar(master, value='')
         self.num_tel = tk.StringVar(master, value='')
-        self.suspension = None
+        self.suspension = tk.StringVar(master, value='')
         self.commentaire = None
         self.liste_recherche = None
 

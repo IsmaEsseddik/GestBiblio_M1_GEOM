@@ -37,7 +37,7 @@ class Retour():
                                   fg='blue', bg='#d8d8d8')
         # creation de champs
         self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.id_exemplaire, width=50, justify='center')
-        self.logretours = tk.Text(self.cadretour, bg="#d8d8d8", wrap="word", yscrollcommand=self.scrolling.set ,
+        self.logretours = tk.Text(self.cadretour, bg="#d8d8d8", wrap="word", yscrollcommand=self.scrolling.set,
                                   state="disabled")
         # creation boutons
         self.bouton_retour = tk.Button(self.cadrecodebar, text='retour', command=self.supprimer_emprunt)

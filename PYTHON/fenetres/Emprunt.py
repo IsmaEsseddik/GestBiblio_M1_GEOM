@@ -36,7 +36,7 @@ class Emprunt:
         self.cadrenumetu = tk.LabelFrame(self.cadre_corp, text="Etudiant", bg='#d8d8d8')
         self.cadrecodebar = tk.LabelFrame(self.cadre_corp, text='Exemplaire', bg='#d8d8d8')
         self.cadremprunt = tk.LabelFrame(self.cadre_corp, text="Informations", borderwidth=5,
-                                       relief="sunken", bg="#d8d8d8", labelanchor='n')
+                                         relief="sunken", bg="#d8d8d8", labelanchor='n')
         self.scrolling = tk.Scrollbar(self.cadremprunt)
 
         # creation de libellés
@@ -54,14 +54,15 @@ class Emprunt:
         self.nom_champ = tk.Entry(self.cadrenumetu, textvariable=self.nom, width=50, justify='center',
                                   state='disabled')
         self.prenom_champ = tk.Entry(self.cadrenumetu, textvariable=self.prenom, width=50, justify='center',
-                                  state='disabled')
+                                     state='disabled')
         self.codebar_champ = tk.Entry(self.cadrecodebar, textvariable=self.id_exemplaire, width=50, justify='center')
         self.logemprunt = tk.Text(self.cadremprunt, bg="#d8d8d8", wrap="word", yscrollcommand=self.scrolling.set,
                                   state="disabled")
         # creation boutons
         self.bouton_numetu = tk.Button(self.cadrenumetu, text='Changer lecteur', command=self.get_lecteur)
         self.bouton_emprunt = tk.Button(self.cadrecodebar, text='Emprunt', command=self.enregistrer_emprunt)
-        self.bouton_prolongement = tk.Button(self.cadrecodebar, text='prolongement', command=self.prolongement)
+        self.bouton_prolongement = tk.Button(self.cadrecodebar, text='Prolongement', command=self.prolongement)
+        self.bouton_listemprunt = tk.Button(self.cadrenumetu, text="Liste d'Emprunts", command=self.lister_emprunt)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
@@ -78,11 +79,12 @@ class Emprunt:
         self.nom_champ.pack(side='left')
         self.prenom_label.pack(side='left')
         self.prenom_champ.pack(side='left')
-        self.bouton_numetu.pack(side='left')
         self.codebar_label.pack(side='left')
         self.codebar_champ.pack(side='left')
         self.scrolling.pack(side='right', fill='y')
         self.logemprunt.pack()
+        self.bouton_numetu.pack(side='top')
+        self.bouton_listemprunt.pack(side='top')
         self.bouton_emprunt.pack(side='right')
         self.bouton_prolongement.pack(side='right')
 
@@ -206,8 +208,7 @@ class Emprunt:
                         info_exemp = lecture(requetesql, param)
                         titre, auteur = info_exemp[0][0], info_exemp[0][1]
                         self.logemprunt.config(state="normal")
-                        self.logemprunt.insert(tk.END,
-                                                "--------\nTitre : " + titre + "| Auteur : " + auteur +
+                        self.logemprunt.insert(tk.END, "--------\nTitre : " + titre + "| Auteur : " + auteur +
                                                "| Emprunteur : " + nom + '_' + prenom + "| durée : " + date_e +
                                                " --> " + date_r + "\nExemplaire emprunté")
                         self.logemprunt.config(state="disabled")
@@ -225,7 +226,7 @@ class Emprunt:
     def prolongement(self):
         """Methode qui effectue un prolongement de six jour sur l'exemplaire designé
         """
-        if (self.codebar_champ.get()==''):
+        if (self.codebar_champ.get() == ''):
             msg.showinfo('Erreur', "Veuillez specifier un codebar ", parent=self.master)
             return  # problem sur la verif de l'existence de l'emprunt par rapport au lecteur
 
@@ -236,12 +237,12 @@ class Emprunt:
                     param = self.codebar_champ.get(),
                     ecriture(requetesql, param)  # requetesql pour changement de statut du prolongement
                     self.date_retour = dt.datetime(int(self.date_retour[0:4]), int(self.date_retour[5:7]),
-                                                         int(self.date_retour[8:10])) + dt.timedelta(6)
+                                                   int(self.date_retour[8:10])) + dt.timedelta(6)
                     # calcul & attribution de la nouvelle date de retour.
                     requetesql = """UPDATE relation SET date_retour = ? WHERE id_exemplaire = ? """
                     param = self.date_retour, self.codebar_champ.get(),
                     ecriture(requetesql, param)  # requetesql ajout d'un champ
-                    elf.logemprunt.config(state="normal")
+                    self.logemprunt.config(state="normal")
                     self.logemprunt.insert(tk.END,
                                            "--------\nPrologement effectué")
                     self.logemprunt.config(state="disabled")
@@ -251,3 +252,23 @@ class Emprunt:
                 msg.showerror('Impossible', "exemplaire non emprunté", parent=self.master)
         else:
             msg.showerror('Impossible', "Lecteur suspendu non autorisé a prolonger!", parent=self.master)
+
+    def lister_emprunt(self):
+        self.idlect_checkemprunt()  # mise a jour de la liste
+        self.logemprunt.config(state="normal")
+        numero = 1
+        self.logemprunt.insert(tk.END, "----Liste d'emprunt----\n")
+        for i in self.liste_d_emprunt:
+            print(i)
+            requetesql = """SELECT exemp_isbn FROM exemplaires WHERE codebar = ?"""
+            param = i[3],
+            isbn_ex = lecture(requetesql, param)
+            requetesql = """SELECT titre, auteur FROM infos_documents WHERE isbn = ?"""
+            param = isbn_ex[0][0],
+            info_exemp = lecture(requetesql, param)
+            titre, auteur = info_exemp[0][0], info_exemp[0][1]
+            self.logemprunt.insert(tk.END, str(numero)+" - Titre : " + titre + "| Auteur : " + auteur +
+                                   "| durée : " + i[0] + " --> " + i[1] + "\n")
+            numero+=1
+
+        self.logemprunt.config(state="disabled")

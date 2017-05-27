@@ -11,7 +11,7 @@ class Menu:
     def __init__(self, master):
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
-        self.master.geometry('350x500+0+0')  # pour la taille et le positionnement initiale.
+        self.master.geometry('300x650+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'black'  # pour le background en couleur gris.
         self.master.title("Gest_Biblio - Menu")  # pour donner un titre a l'application (title bar).
@@ -32,17 +32,20 @@ class Menu:
 
         self.modemploi.config(state="disabled")
         # creation boutons
-        self.bouton_infodoc = tk.Button(self.cadrelib, text="Gestionnaire d'editions", width=25, command=self.infodoc)
-        self.bouton_exemplaire = tk.Button(self.cadrelib, text="Gestionnaire d'exemplaire", width=25,
+        self.bouton_infodoc = tk.Button(self.cadrelib, text="Gestionnaire d'editions", width=25, command=self.infodoc,
+                                        bg='purple')
+        self.bouton_exemplaire = tk.Button(self.cadrelib, text="Gestionnaire d'exemplaire", width=25, bg='orange',
                                            command=self.exemp)
-        self.bouton_lecteur = tk.Button(self.cadrelib, text='Gestionnaire de lecteur', width=25, command=self.lect)
-        self.bouton_Emprunt = tk.Button(self.cadrelib, text='Faire un emprunt', width=25, command=self.emprunt)
-        self.bouton_Retour = tk.Button(self.cadrelib, text='Faire un retour', width=25, command=self.retour)
+        self.bouton_lecteur = tk.Button(self.cadrelib, text='Gestionnaire de lecteur', width=25, command=self.lect,
+                                        bg='Blue')
+        self.bouton_Emprunt = tk.Button(self.cadrelib, text='Faire un emprunt', width=25, command=self.emprunt,
+                                        bg='#16eff4')
+        self.bouton_Retour = tk.Button(self.cadrelib, text='Faire un retour', width=25, command=self.retour, bg='red')
         self.bouton_quitter = tk.Button(self.contenu, text="Quitter", command=self.master.destroy)
         # affichage
         self.contenu.pack(side="top", expand="y", fill="both", padx=10, pady=10)
-        self.cadrelib.pack(fill="both", expand="yes")
-        self.cadre_me.pack(fill="both", expand="yes")
+        self.cadrelib.pack()
+        self.cadre_me.pack()
         self.modemploi.pack()
         self.bouton_infodoc.pack()
         self.bouton_exemplaire.pack()
