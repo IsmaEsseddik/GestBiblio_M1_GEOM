@@ -1,9 +1,5 @@
 import tkinter as tk
-import isbnlib as lib
-import datetime as dt  # pour les operation sur le temp
 from InitialisationBDD import *
-import sqlite3
-import re
 import tkinter.messagebox as msg
 
 
@@ -86,12 +82,12 @@ class Retour():
                 requetesql = """SELECT * FROM relation WHERE id_exemplaire = ?"""
                 param = self.codebar_champ.get(),
                 relat = lecture(requetesql, param)
-                date_e, date_r, numetu  = relat[0][0], relat[0][1], relat[0][2]
+                date_e, date_r, numetu = relat[0][0], relat[0][1], relat[0][2]
 
                 requetesql = """SELECT nom, prenom FROM lecteurs WHERE num_etudiant = ?"""
                 param = numetu,
                 info_lect = lecture(requetesql, param)
-                nom, prenom  = info_lect[0][0], info_lect[0][1]
+                nom, prenom = info_lect[0][0], info_lect[0][1]
 
                 requetesql = """SELECT exemp_isbn FROM exemplaires WHERE codebar = ?"""
                 param = self.codebar_champ.get(),
@@ -99,10 +95,11 @@ class Retour():
                 requetesql = """SELECT titre, auteur FROM infos_documents WHERE isbn = ?"""
                 param = isbn_ex[0][0],
                 info_exemp = lecture(requetesql, param)
-                titre,auteur = info_exemp[0][0],info_exemp[0][1]
+                titre, auteur = info_exemp[0][0], info_exemp[0][1]
                 self.logretours.config(state="normal")
-                self.logretours.insert(tk.END, "--------\nTitre : "+titre+"| Auteur : "+auteur+"| Emprunté par : "
-                                        +nom+'_'+prenom+"| durée : "+date_e+" --> "+date_r+"\nExemplaire retourné")
+                self.logretours.insert(tk.END, "--------\nTitre : " + titre + "| Auteur : " + auteur +
+                                       "| Emprunté par : " + nom + '_' + prenom + "| durée : " + date_e + " --> " +
+                                       date_r + "\nExemplaire retourné")
                 self.logretours.config(state="disabled")
                 # ______________________SUPPRESSION_____________________________________
                 requetesql = """UPDATE exemplaires SET emprunt = 0 WHERE codebar = ? """
@@ -114,8 +111,8 @@ class Retour():
                 print("La relation a été supprimée de la base de données")
                 self.codebar_champ.delete(0, tk.END)
             else:
-                msg.showinfo('Impossible',"exemplaire non emprunté", parent=self.master)
+                msg.showinfo('Impossible', "exemplaire non emprunté", parent=self.master)
                 self.codebar_champ.delete(0, tk.END)
         else:
-            msg.showinfo('Impossible',"Exemplaire introuvable !", parent=self.master)
+            msg.showinfo('Impossible', "Exemplaire introuvable !", parent=self.master)
             self.codebar_champ.delete(0, tk.END)

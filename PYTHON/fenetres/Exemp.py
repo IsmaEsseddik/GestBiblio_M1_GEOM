@@ -1,7 +1,6 @@
 import tkinter as tk
 import isbnlib as lib
 from InitialisationBDD import *
-import sqlite3
 import re
 import tkinter.messagebox as msg
 
@@ -174,7 +173,7 @@ class Exemp:
         static propre a la class.
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ  par defaut)
         """
-        if (self.codebar_champ.get()==''):
+        if (self.codebar_champ.get() == ''):
             msg.showinfo('Erreur', "Veuillez specifier un codebar ", parent=self.master)
             return
         requetesql = """SELECT * FROM exemplaires WHERE """ + champwhere + """ REGEXP ? """

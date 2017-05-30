@@ -25,7 +25,8 @@ if __name__ == '__main__':
     i = 0
     while i < len(tableauIsbns):
         infodoc.recherche_api(tableauIsbns[i])
-        print(infodoc.isbn, infodoc.titre, infodoc.auteur, infodoc.editeur, infodoc.date_edition, infodoc.cote, infodoc.description)
+        print(infodoc.isbn, infodoc.titre, infodoc.auteur, infodoc.editeur, infodoc.date_edition, infodoc.cote,
+              infodoc.description)
         infodoc.enregistrer_infodoc()
         print('----')
         i += 1
@@ -35,12 +36,12 @@ if __name__ == '__main__':
     infodoc.set_from_liste()
     infodoc.supprimer_infodoc()
     infodoc.set_from_liste(1)
-    infodoc.cote='PIJ 472'
+    infodoc.cote = 'PIJ 472'
     infodoc.description = "pas d'information"
     infodoc.maj_infodoc()
-    print("---------- Creation d'une liste de code bar que l'on veut enregistrer ----------")
+    print("---------- Creation d'une liste de codebar que l'on veut enregistrer ----------")
     tableaucodebar = ('5749275343', '0987654334', '3049586734', '1234567890',
-                    '0987654321', '6789054321', '6543217890','2354435234')
+                      '0987654321', '6789054321', '6543217890', '2354435234')
     print(tableaucodebar)
     print("---------- Creation d'objet Exemplaire ----------")
     exemp = Exemplaire()
@@ -50,7 +51,7 @@ if __name__ == '__main__':
         exemp.codebar = tableaucodebar[i]
         if (i <= 3):
             exemp.exemp_isbn = "9782746037076"  # 4 exemplaire d'ajax
-        else :
+        else:
             exemp.exemp_isbn = "9782100716791"  # 4 exemplaire d'optique
         print(exemp.codebar, exemp.emprunt, exemp.exemp_commentaire, exemp.exemp_isbn)
         exemp.enregistrer_exemp()
@@ -75,7 +76,8 @@ if __name__ == '__main__':
     lecteur.niveau_etude = "M1"
     lecteur.num_tel = "0695306360"
     lecteur.commentaire = "C'est moi"
-    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude, lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
+    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude,
+          lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
     lecteur.enregistrer_lect()
     print('----')
 
@@ -86,7 +88,8 @@ if __name__ == '__main__':
     lecteur.niveau_etude = "L3"
     lecteur.num_tel = ""
     lecteur.commentaire = "ESSAI"
-    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude, lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
+    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude,
+          lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
     lecteur.enregistrer_lect()
     print('----')
 
@@ -97,7 +100,8 @@ if __name__ == '__main__':
     lecteur.niveau_etude = "L2"
     lecteur.num_tel = ""
     lecteur.commentaire = "ESSAI2"
-    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude, lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
+    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude,
+          lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
     lecteur.enregistrer_lect()
     print('----')
 
@@ -108,7 +112,8 @@ if __name__ == '__main__':
     lecteur.niveau_etude = "L1"
     lecteur.num_tel = ""
     lecteur.commentaire = "ESSAI3"
-    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude, lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
+    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude,
+          lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
     lecteur.enregistrer_lect()
     print('----')
     lecteur.num_etudiant = "12321004"
@@ -118,7 +123,8 @@ if __name__ == '__main__':
     lecteur.niveau_etude = ""
     lecteur.num_tel = ""
     lecteur.commentaire = ""
-    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude, lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
+    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude,
+          lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
     lecteur.enregistrer_lect()
     print('----')
 
@@ -129,7 +135,8 @@ if __name__ == '__main__':
     lecteur.niveau_etude = ""
     lecteur.num_tel = ""
     lecteur.commentaire = ""
-    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude, lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
+    print(lecteur.num_etudiant, lecteur.nom, lecteur.prenom, lecteur.date_naissance, lecteur.niveau_etude,
+          lecteur.num_tel, lecteur.suspension, lecteur.commentaire)
     lecteur.enregistrer_lect()
     print('----')
 

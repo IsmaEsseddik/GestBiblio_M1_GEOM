@@ -137,7 +137,8 @@ def maj_suspension():
         # (ou rien si aucun livre n'est en retard)
         if (date_retour_min is not None):  # si il y a une date anterieur
             retardmax = date_du_jour - datetime.datetime(int(date_retour_min[0:4]), int(date_retour_min[5:7]),
-                    int(date_retour_min[8:10]))  # calcul et formattage de la date de retour
+                                                         int(date_retour_min[8:10]))
+            # calcul et formatage de la date de retour
             if (retardmax > datetime.timedelta(31)):  # si le retard  est superieur a un mois
                 retardmax = datetime.timedelta(31)  # on fixe le retard MAX a un mois
             date_suspension_r = date_du_jour + retardmax  # nouvelle date de suspension a remplacer

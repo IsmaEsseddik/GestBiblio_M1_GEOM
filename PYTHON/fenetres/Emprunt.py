@@ -1,9 +1,6 @@
 import tkinter as tk
-import isbnlib as lib
 import datetime as dt  # pour les operation sur le temp
 from InitialisationBDD import *
-import sqlite3
-import re
 import tkinter.messagebox as msg
 import tkinter.simpledialog as msg2
 

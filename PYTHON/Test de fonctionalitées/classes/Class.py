@@ -341,7 +341,6 @@ class Lecteur(object):
         else:
             return lecture(requetesql, param)
 
-
     # -----------Ajout/suppression dans une base de données.---------
     def enregistrer_lect(self):
         """Methode qui ajoute une entrée (si elle n'existe pas deja) dans la table exemplaires en remplissant tout les
@@ -584,7 +583,7 @@ class Relation(object):
         """
         if (self.idlect_checkSuspension() is None):  # si le lecteur n'est pas suspendu
             if (self.idexemp_checkemprunt() is True):  # si l'exemplaire est emprunté
-                if (self.check_prolongement() is False): # si l'exemplaire n'a pas deja été prolongé
+                if (self.check_prolongement() is False):  # si l'exemplaire n'a pas deja été prolongé
                     requetesql = """UPDATE relation SET prolongement = 1 WHERE id_exemplaire = ? """
                     param = self.id_exemplaire,
                     ecriture(requetesql, param)  # requetesql changement du statut du prolongement
@@ -611,4 +610,3 @@ class Relation(object):
         self.id_lecteur = self.liste_d_emprunt[i][2]
         self.id_exemplaire = self.liste_d_emprunt[i][3]
         print(self.date_emprunt, self.date_retour, self.id_lecteur, self.id_exemplaire)
-

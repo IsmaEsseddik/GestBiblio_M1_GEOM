@@ -30,7 +30,7 @@ sqlite3.exit (quitter rapidement sqlite)
 
 ___________Commandes SQLite3_____________
 pour se connecter a une base de donnée : a=sqlite3.connect(lien) ;
-pour placer le curseur sur la base de donnée b=a.cursor() ;
+pour placer le curseur sur la base de donnée b = a.cursor() ;
 pour executer des requete sql b.execute("""requête en SQL """) ;
 pour se deconnecter de la base de donnée: a.close() ;
 
@@ -178,4 +178,4 @@ amelioration de l'apparence
 travaux sur la fonctionalité "prolongement d'emprunt"
 
 -----------------------------Dernieres seances - 29au31Mai2017-------------------------------------------------
-Ecriture du rapport et test de l'application.
+Ecriture du rapport et test de l'application, commentaire corrections de script

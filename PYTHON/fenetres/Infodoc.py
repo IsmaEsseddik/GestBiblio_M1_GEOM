@@ -1,8 +1,6 @@
 import tkinter as tk
 import isbnlib as lib
 from InitialisationBDD import *
-import sqlite3
-import re
 import tkinter.messagebox as msg
 
 
@@ -216,7 +214,7 @@ class Infodoc:
         requetesql = """SELECT * FROM infos_documents WHERE """ + champwhere + """ REGEXP ? """
         param = lib.EAN13(self.isbn_champ.get()),
         fetch = lecture(requetesql, param)
-        if (fetch == [] or fetch is None ):
+        if (fetch == [] or fetch is None):
             msg.showinfo('Resultat', "Aucun resultat(s)", parent=self.master)
             return
         else:
@@ -262,5 +260,3 @@ class Infodoc:
             msg.showinfo("ERREUR !", "ISBN invalide", parent=self.master)
         except NameError as ne:
             msg.showinfo('ERREUR !', str(ne), parent=self.master)
-
-

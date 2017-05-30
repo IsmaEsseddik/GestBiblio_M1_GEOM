@@ -1,8 +1,5 @@
 import tkinter as tk
-import isbnlib as lib
-import datetime as dt # pour les operation sur le temp
 from InitialisationBDD import *
-import sqlite3
 import re
 import tkinter.messagebox as msg
 
@@ -149,7 +146,7 @@ class Lect:
             ecriture(requetesql, param)
             print("Le lecteur a été ajouté dans la base de données")
         else:
-            msg.showinfo('Impossible',"Lecteur déjà inscrit ou id incorrect", parent=self.master)
+            msg.showinfo('Impossible', "Lecteur déjà inscrit ou id incorrect", parent=self.master)
 
     def supprimer_lect(self):
         """Methode qui supprime une entrée (si elle existe) de la table lecteurs a condition que ce dernier n'ait pas
@@ -163,9 +160,9 @@ class Lect:
                 ecriture(requetesql, param)
                 print("Le lecteur a été supprimée de la base de données")
             else:
-                msg.showinfo('Impossible',"un ou plusieurs exemplaire(s) non rendu(s)", parent=self.master)
+                msg.showinfo('Impossible', "un ou plusieurs exemplaire(s) non rendu(s)", parent=self.master)
         else:
-            msg.showinfo('Impossible',"Lecteur inexistant", parent=self.master)
+            msg.showinfo('Impossible', "Lecteur inexistant", parent=self.master)
 
     # -----------Modification dans la base de données.---------
     def maj_lect(self):
@@ -206,7 +203,7 @@ class Lect:
         static propre a la class.
         :champwhere: le champ a specifier dans lequelle la valeur sera recherché(num_etudiant  par defaut)
         """
-        if (self.numetu_champ.get()==''):
+        if (self.numetu_champ.get() == ''):
             msg.showinfo('Erreur', "Veuillez specifier un numero etudiant. ", parent=self.master)
             return
         requetesql = """SELECT * FROM lecteurs WHERE """ + champwhere + """ REGEXP ? """

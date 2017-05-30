@@ -22,6 +22,4 @@ if __name__ == '__main__':
     retour.supprimer_emprunt('0987654321')
     emprunt.get_lecteur('11200232')
     emprunt.enregistrer_emprunt('0987654321')
-    
-    
-    
+
