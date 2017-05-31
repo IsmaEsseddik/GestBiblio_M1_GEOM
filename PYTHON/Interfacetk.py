@@ -1,24 +1,26 @@
 from fenetres.Menu import *
-from InitialisationBDD import *
-import tkinter as tk
+from InitialisationBDD import *  # import des scripts  pour le menu et les requete de lecture et d'ecriture
+import tkinter as tk  # pour creer l'interface graphique
 
 
 class Main:
+    """ Interface graphique de la premiere fenetre """
     def __init__(self, master):
+        """constructeur de l'interface graphique"""
         self.master = master  # creation d'une simple fenêtre.
-        self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
+        self.master.attributes("-fullscreen", False)  # pour metre en pleine écran.
         self.master.geometry('600x350+' + str(int(master.winfo_screenwidth()/4)) + '+'
                              + str(int(master.winfo_screenheight()/4)))
-        # pour la taille et le positionnement initiale de la fenetre (configuré sur le quart de l'ecran).
+            # pour la taille et le positionnement initiale de la fenetre (configuré sur le quart de l'ecran).
         self.master.state('normal')  # pour maximiser la fenetre.
-        self.master['bg'] = 'black'  # pour le background en couleur gris.
+        self.master['bg'] = 'black'  # pour l'arriere plan en couleur gris.
         self.master.title("Gest_Biblio - Ecran d'acceuil")  # pour donner un titre a l'application (title bar).
         # creation du conteneur principale
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
         # creation des cadres
         self.cadre_entete = tk.Frame(self.contenu, borderwidth=3, relief="raised", bg='bisque')
         self.cadre_corp = tk.Frame(self.contenu, bg='#d8d8d8')
-        self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')
+        self.cadre_ppage = tk.Frame(self.contenu, bg='#d8d8d8')  # pied de page
         # creation d'un cadre libellée
         self.cadrelib = tk.LabelFrame(self.cadre_corp, text="Login", padx=20, pady=20, borderwidth=3, relief="sunken",
                                       bg='#d8d8d8')
@@ -33,7 +35,7 @@ class Main:
         # creation de 2 champs pour le login et mot de passe
         self.login_champ = tk.Entry(self.cadrelib, textvariable='login', width=50)
         self.mdp_champ = tk.Entry(self.cadrelib, textvariable='mdp', show='*', width=50)
-        # creation boutons
+        # creation  de boutons
         self.bouton_login = tk.Button(self.cadrelib, text="S'identifier", state='disabled', command=None)
         self.bouton_quitter = tk.Button(self.cadre_ppage, text="Quitter", command=self.master.destroy)
         self.boutoninvite = tk.Button(self.cadre_corp, text='Mode Invité', width=25, command=self.new_window)
@@ -54,6 +56,7 @@ class Main:
         self.boutoninvite.pack()
 
     def new_window(self):
+        """Ouverture du menu depuis le bouton mode invité"""
         self.newWindow = tk.Toplevel(self.master)
         self.app = Menu(self.newWindow)
 

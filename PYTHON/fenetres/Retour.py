@@ -8,8 +8,9 @@ class Retour():
     pour un retour d'exemplaire"""
 
     def __init__(self, master):
+        # ------------------- Atrributs objets -------------------------
         self.id_exemplaire = tk.StringVar(master, value=None)
-
+        # ------------------ Attributs graphiques ----------------------
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
         self.master.geometry('800x650+0+0')  # pour la taille et le positionnement initiale.

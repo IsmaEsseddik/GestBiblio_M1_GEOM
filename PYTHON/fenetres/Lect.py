@@ -7,6 +7,8 @@ class Lect:
     """ constructeur de l'interface graphique relatif a la gestion de la table Lecteur de la base de données """
 
     def __init__(self, master):
+        # ------------------- Atrributs objets -------------------------
+
         self.num_etudiant = tk.StringVar(master, value='')
         self.nom = tk.StringVar(master, value='')
         self.prenom = tk.StringVar(master, value='')
@@ -16,7 +18,7 @@ class Lect:
         self.suspension = tk.StringVar(master, value='')
         self.commentaire = None
         self.liste_recherche = None
-
+        # ------------------ Attributs graphiques -------------------------
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
         self.master.geometry('750x425+0+0')  # pour la taille et le positionnement initiale.

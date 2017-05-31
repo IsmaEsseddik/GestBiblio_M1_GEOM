@@ -1,9 +1,7 @@
-# creation de tables : "lecteurs"(importu2.ensg...trombino); "documents" ;"info_documents".
-# jointure entre document et infodoc via champ ISBN .
-# creation d'une table de jointure "Relation" entre lecteur et documents.
-# type de requete sur la base de données
+"""Ce script contient les fonctions relative au requetes sur la base de données via SQlite3, la creation de la base de 
+données et mise a jour des date de suspension"""
 import datetime  # pour les operation sur le temp
-import sqlite3  # importation de la librairie SQLite3
+import sqlite3  # importation du package SQLite3
 import re  # importation du package des expression regulieres
 lien = 'bdd/bdd_biblio.db'
 
@@ -78,10 +76,10 @@ def regexp(expr, item):  # fonctionalité d'expression reguliere pour les requet
 
 
 def lecture(req, param=None):
-    """  fonction executant une requete sql indiqué en parametre, ne modifie pas la base de données,
-    retourne une liste de tuple de contenant les valeurs de chaque champ
+    """fonction executant une requete sql indiqué en parametre, ne modifie pas la base de données,
+    retourne une liste de tuple de contenant les valeurs de chaque champ ou liste vide
     :req: chaine de caractere.
-    :param: contenu a inserer dans la requete a la place des '?'
+    :param: contenu a inserer dans la requete a la place des '?', (la variable doit etre suivi d'une virgule)
     """
     connexion = sqlite3.connect(lien)
     connexion.create_function("REGEXP", 2, regexp)  # integration de la fonction regexp dans les requetes sql.
@@ -99,8 +97,8 @@ def lecture(req, param=None):
 
 def ecriture(req, param=None):
     """ fonction executant une requete sql indiqué en parametre, modifie le contenu de la base de donnée
-    :req: chaine de caractere.
-    :param: contenu a inserer dans la requete a la place des '?'
+    :req: chaine de caractere. 
+    :param: contenu a inserer dans la requete a la place des '?', (la variable doit etre suivi d'une virgule)
     """
     connexion = sqlite3.connect(lien)
     curseur = connexion.cursor()  # creer un objet curseur pour executer des requetes SQL sur cette base de donnée.
@@ -115,42 +113,50 @@ def ecriture(req, param=None):
 
 
 def maj_suspension():
-    """fonction qui met a jour la date de levée de la suspension de chaque lecteurs"""
+    """Fonction qui met à jour la date de levée de la suspension de chaque lecteurs, cette fonction est lancée a chaque
+    demarage de l'application, elle ne fonctionnera que si les dates sont au bon format ou NULL(gerer par l'application)
+    :explication: pour chaque lecteurs de la table on recupere le retard le plus important, et on calcule la nouvelle
+    date de suspension a remplacer. Si la date de suspension initial est passée ou nul ou inferieur a celle a remplacer
+    dans le cas ou la date de suspension n'est pas encore passée, si elle ne represente pas le retard le plus important.
+    """
     date_du_jour = datetime.datetime.today()  # on utilisera la date du jour
+    # ----------------- Selection de tout le lecteurs ---------------------
     requetesql = """SELECT DISTINCT num_etudiant FROM lecteurs"""
     param = ''
     all_lect = lecture(requetesql, param)
     print(all_lect)
-    for i in all_lect:
+    # on a selectionné distinctement les lecteurs inscrit dans la base de données  mis dans une liste)
+
+    for i in all_lect:  # pour chaque lecteurs
+        # ---------------------Selection de sa date de suspension actuel --------------------------
         requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
         param = i[0],
-        reponse = lecture(requetesql, param)[0][0]
+        reponse = lecture(requetesql, param)[0][0]  # on selectionne la date de levée suspension
         if (reponse is not None):  # formatage de la date de suspension si existante
             suspension = datetime.datetime(int(reponse[0:4]), int(reponse[5:7]), int(reponse[8:10]))
         else:
             suspension = None
-        # on a recupéré la valeur de la suspension(date ou None) du lecteur i
+        # on a recupéré la date de la suspension actuel(date ou None) du lecteur i
+        # ------------- Calcul de son retard max et de sa nouvelle date de suspension a remplacer -------------------
         requetesql = """SELECT MIN(date_retour) FROM relation WHERE id_lecteur = ? AND date('now') > date_retour  """
         param = i[0],
         date_retour_min = lecture(requetesql, param)[0][0]
-        # on a recupere la date de retour la plus anterieur possible a celle d'aujourd'hui
+        # on a recuperé la date limite de retour la plus antérieure à celle d'aujourd'hui(livre le plus en retard)
         # (ou rien si aucun livre n'est en retard)
-        if (date_retour_min is not None):  # si il y a une date anterieur
+        if (date_retour_min is not None):  # si retard existant
             retardmax = date_du_jour - datetime.datetime(int(date_retour_min[0:4]), int(date_retour_min[5:7]),
                                                          int(date_retour_min[8:10]))
             # calcul et formatage de la date de retour
             if (retardmax > datetime.timedelta(31)):  # si le retard  est superieur a un mois
                 retardmax = datetime.timedelta(31)  # on fixe le retard MAX a un mois
             date_suspension_r = date_du_jour + retardmax  # nouvelle date de suspension a remplacer
-        else:
+        else: # sinon pas de nouvelle date de suspension
             date_suspension_r = None
-            # si aucun livre est en retard la valeur a remplacer sera zero(a condition que la date de suspension initial
-            # soit passée et que la nouvelle soit superieur a cette derniere)
-
+        # ------------------- Màj de sa suspension ------------------------
         requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ?"""
         param = date_suspension_r, i[0],
         if (suspension is None or suspension < date_du_jour or date_suspension_r > suspension):
-            # si la date de suspension initial est passé ou nul ou inferieur a celle a remplacer
+            # si la date de suspension initial est passée ou nul ou inferieur a celle a remplacer
             ecriture(requetesql, param)
         elif (date_du_jour < suspension):  # si la date de suspension n'est pas encore passée...
             if(date_suspension_r > suspension or date_suspension_r is None):
@@ -158,4 +164,4 @@ def maj_suspension():
                 ecriture(requetesql, param)
         else:
             pass
-            # fin de la boucle
+    # fin de la boucle sur chaque lecteur

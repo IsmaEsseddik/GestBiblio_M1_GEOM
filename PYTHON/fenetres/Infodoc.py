@@ -8,6 +8,7 @@ class Infodoc:
     """ constructeur de l'interface graphique relatif a la gestion de la la table Infodoc de la base de données, """
 
     def __init__(self, master):
+        # ------------------- Atrributs objets -------------------------
         self.isbn = tk.StringVar(master, value='ISBN 978-2-74603707-6')
         self.titre = tk.StringVar(master, value='')
         self.auteur = tk.StringVar(master, value='')
@@ -16,14 +17,14 @@ class Infodoc:
         self.cote = tk.StringVar(master, value='')
         self.description = None
         self.liste_recherche = None
-
+        # ------------------ Attributs graphiques -------------------------
         self.master = master  # creation d'une simple fenêtre.
-        self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
+        self.master.attributes("-fullscreen", False)  # pour metre en pleine ecran.
         self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('zoomed')  # pour maximiser la fenetre.
-        self.master['bg'] = 'bisque'  # pour le background en couleur gris.
+        self.master['bg'] = 'bisque'  # pour l'arriere plan en couleur bisque.
         self.master.title("Gest_Biblio - Gestionnaire d'edition")  # pour donner un titre a l'application (title bar).
-        # creation du conteneur principale
+        # creation du conteneur principal
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
         # creation des cadres
         self.cadre_entete = tk.Frame(self.contenu, borderwidth=3, relief="raised", bg='purple')
@@ -101,17 +102,15 @@ class Infodoc:
         self.bouton_maj.pack(side='left')
         self.ver_label.pack(side='right')
         self.bouton_quitter.pack(side='left')
-# ______________________________________________________________________________________________
-    # --------------------Methodes pour requête de contrôle dans la base de données ----------------------------
 
+    # --------------------Methodes pour les requêtes de contrôle dans la base de données ----------------------------
     def exist_infodoc(self):
         """Methode qui verifie l'existance d' un isbn dans la table infos_documents,
          retourne une liste de tuple de contenant les valeurs de chaque champ ou NONE si non trouvé.
-        :objet_infodoc: objet dont l'attribut isbn sera recherhé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
-        param = lib.EAN13(self.isbn_champ.get()),
-        if (lecture(requetesql, param) == []):
+        param = lib.EAN13(self.isbn_champ.get()),  # mise au format EAN13
+        if (lecture(requetesql, param) == []):  # si aucun resultat
             return None
         else:
             return lecture(requetesql, param)
@@ -153,7 +152,6 @@ class Infodoc:
     def supprimer_infodoc(self):
         """Methode qui supprime une entrée (si elle existe) de la table info_documents a condition que l'isbn ne soit
         associé à aucun exemplaire.
-        :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
         try:
             if (self.exist_infodoc() is not None):  # si l'isbn existe dans sa table
@@ -174,7 +172,6 @@ class Infodoc:
     def maj_infodoc(self):
         """Methode qui met a jour tout les champ d'une entrée dans la base de données (si l'isbn y existe)
         de la table info_documents.
-        :champ: champ dans lequel sera modifier la valeur
         """
         try:
             if(self.exist_infodoc() is not None):  # si l'isbn existe dans sa table

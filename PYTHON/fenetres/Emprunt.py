@@ -1,15 +1,17 @@
 import tkinter as tk
-import datetime as dt  # pour les operation sur le temp
+import datetime as dt  # pour les operation sur le temps
 from InitialisationBDD import *
-import tkinter.messagebox as msg
-import tkinter.simpledialog as msg2
+import tkinter.messagebox as msg  # pour les messagebox  de notifications
+import tkinter.simpledialog as msg2  # pour les messagebox de saisie
 
 
 class Emprunt:
-    """ constructeur de l'interface graphique relatif a la gestion de la table relation de la base de données
+    """ Interface graphique relative à la gestion de la table relation de la base de données
         pour un emprunt d'exemplaire"""
 
     def __init__(self, master):
+        """constructeur de l'interface graphique"""
+        # ------------------- Atrributs objets -------------------------
         self.id_lecteur = tk.IntVar(master, value='')
         self.nom = tk.StringVar(master, value=None)
         self.prenom = tk.StringVar(master, value=None)
@@ -17,7 +19,7 @@ class Emprunt:
         self.date_emprunt = None
         self.date_retour = None
         self.liste_d_emprunt = []
-
+        # ------------------ Attributs graphiques -------------------------
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
         self.master.geometry('800x600+0+0')  # pour la taille et le positionnement initiale.
@@ -34,6 +36,7 @@ class Emprunt:
         self.cadrecodebar = tk.LabelFrame(self.cadre_corp, text='Exemplaire', bg='#d8d8d8')
         self.cadremprunt = tk.LabelFrame(self.cadre_corp, text="Informations", borderwidth=5,
                                          relief="sunken", bg="#d8d8d8", labelanchor='n')
+        # creation d'une barre de defilement
         self.scrolling = tk.Scrollbar(self.cadremprunt)
 
         # creation de libellés
@@ -95,12 +98,11 @@ class Emprunt:
         contenant les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM lecteurs WHERE num_etudiant = ? """
-        param = self.numetu_champ.get(),
+        param = self.numetu_champ.get(),  # valeur saisie dans le champ de la fenetre
         return lecture(requetesql, param)
 
     def idlect_checkSuspension(self):
-        """Methode qui retourne la valeur de la suspension d'un lecteur.
-        :objet_Lect: objet dont l'attribut codebar sera recherhé.
+        """Methode qui retourne la valeur de la suspension d'un lecteur en booléen.
         """
         requetesql = """SELECT suspension FROM lecteurs WHERE num_etudiant = ? """
         param = self.numetu_champ.get(),
@@ -109,7 +111,6 @@ class Emprunt:
 
     def idlect_checkemprunt(self):
         """Methode qui recherche et renvoie la liste de tout les emprunt du lecteur depuis la table relation
-        :objet_Lect: objet dont l'attribut num_etudiant sera recherhé.
         """
         requetesql = """SELECT * FROM relation WHERE id_lecteur = ? """
         param = self.numetu_champ.get(),
@@ -123,14 +124,14 @@ class Emprunt:
         return lecture(requetesql, param)
 
     def idexemp_checkemprunt(self):
-        """Methode qui renvoie l'etat d'emprunt du livre."""
+        """Methode qui renvoie l'etat d'emprunt du livre en booléen."""
         requetesql = """SELECT emprunt FROM exemplaires WHERE codebar = ? """
         param = self.codebar_champ.get(),
         emprunt = lecture(requetesql, param)
         return bool(emprunt[0][0])
 
     def check_prolongement(self):
-        """Methode qui renvoie l'eat du prolongement du livre."""
+        """Methode qui renvoie l'eat du prolongement du livre en booléen."""
         requetesql = """SELECT prolongement FROM relation WHERE id_exemplaire = ? """
         param = self.codebar_champ.get(),
         emprunt = lecture(requetesql, param)
@@ -138,55 +139,54 @@ class Emprunt:
 
     # -----------Methode pour selectionner un lecteur ---------
     def get_lecteur(self):
-        """Methode qui recherche dans la table lecteurs un num_etudiant, l'affecte a l'attribut "id_lecteur"
-        et affecte la liste des exemplaires qu'il a emprunté en affichant les avertissements, a condition que
+        """Methode qui recherche dans la table lecteurs un numero etudiant, l'affecte a l'attribut "id_lecteur"
+        et la liste des exemplaires qu'il a emprunté en affichant les avertissements, a condition que
         le lecteur existe dans la base de données.
-        :num_etudiant: numero etudiant a rechercher.
         """
         v = msg2.askinteger('Saisie', 'Entrer un numero etudiant', parent=self.master)
-        self.id_lecteur.set(v)
-        if (self.exist_idLect() != []):
-            if (self.idlect_checkSuspension() is not None):
+        # enregistrement de la saisie dans une variable
+        self.id_lecteur.set(v)  # affectation de la saisie a l'attribut
+        if (self.exist_idLect() != []):  # si le lecteur a été trouvé,
+            if (self.idlect_checkSuspension() is not None):  # on affiche des avertissements si necessaire
                 msg.showinfo('Information', "Attention, le lecteur est suspendu ", parent=self.master)
             if (len(self.idlect_checkemprunt()) >= 5):
-                msg.showinfo('Information', "Attention, Limite d'emprunt atteinte ", parent=self.master)
-            self.liste_d_emprunt = self.idlect_checkemprunt()
+                msg.showinfo('Information', "Attention, limite d'emprunt atteinte ", parent=self.master)
+            self.liste_d_emprunt = self.idlect_checkemprunt()  # affectation de la liste des emprunt
             print(self.liste_d_emprunt)
             requetesql = """SELECT nom FROM lecteurs WHERE num_etudiant = ? """
             param = self.numetu_champ.get(),
             self.nom.set(lecture(requetesql, param)[0][0])
             requetesql = """SELECT prenom FROM lecteurs WHERE num_etudiant = ? """
             param = self.numetu_champ.get(),
-            self.prenom.set(lecture(requetesql,param)[0][0])
+            self.prenom.set(lecture(requetesql,param)[0][0])  # affectation des attributs nom prenom
         else:
             msg.showinfo('Information', "Lecteur introuvable !", parent=self.master)
-            self.id_lecteur.set('')
-            self.master.destroy()
+            self.id_lecteur.set('')  # supression du numero etudiant
+            self.master.destroy()  # fermeture de la fenetre
 
     # -----------Methode pour effectuer un emprunt ---------
     def enregistrer_emprunt(self):
-        """Methode qui recherche dans la table exemplaires un codebar et procede a l'emprunt, a condition que le
-        existe dans la base de donnée.
-        :num_etudiant: numero etudiant a rechercher
+        """Methode qui recherche dans la table exemplaires un codebar et procede a l'emprunt, a condition qu'il ne soit 
+        pas emprunté, que le lecteur concerné ne soit pas suspendu et n'ait pas atteint sa limite d'emprunt.
         """
-        if (self.idlect_checkSuspension() is None):
-            if (len(self.idlect_checkemprunt()) < 5):
+        if (self.idlect_checkSuspension() is None):  # si le lecteur n'est pas suspendu
+            if (len(self.idlect_checkemprunt()) < 5):  # si le lecteur n'a pas atteint sa limite d'emprunt
                 if (self.exist_idexemp() != []):  # si l'exemplaire existe
                     if (self.idexemp_checkemprunt() is False):  # si l'exemplaire n'est pas emprunté
                         requetesql = """UPDATE exemplaires SET emprunt = 1 WHERE codebar = ? """
                         param = self.codebar_champ.get(),
-                        ecriture(requetesql, param)  # requetesql changement du statut du livre
+                        ecriture(requetesql, param)  # changement du statut du livre
                         self.date_emprunt = datetime.date.today()  # attribution de la date du jour
                         self.date_retour = datetime.date.today() + datetime.timedelta(6)
                         # calcul attribution de la date de retour
                         requetesql = """INSERT INTO relation(date_emprunt, date_retour, id_lecteur, id_exemplaire) 
                         VALUES(?,?,?,?)"""
                         param = self.date_emprunt, self.date_retour, self.numetu_champ.get(), self.codebar_champ.get(),
-                        ecriture(requetesql, param)  # requetesql ajout d'un champ
-                        self.liste_d_emprunt = self.idlect_checkemprunt()
+                        ecriture(requetesql, param)  # ajout d'une entrée dans la table relation
+                        self.liste_d_emprunt = self.idlect_checkemprunt()  # Màj de l'attribut liste d'emprunt
                         print('exemplaire emprunté')
 
-                        # _____________________AFFICHAGE APRES AJOUT________________
+                        # ---------------- affichage des informations sur l'emprunt ------------------------
                         requetesql = """SELECT * FROM relation WHERE id_exemplaire = ?"""
                         param = self.codebar_champ.get(),
                         relat = lecture(requetesql, param)
@@ -204,16 +204,16 @@ class Emprunt:
                         param = isbn_ex[0][0],
                         info_exemp = lecture(requetesql, param)
                         titre, auteur = info_exemp[0][0], info_exemp[0][1]
-                        self.logemprunt.config(state="normal")
+                        self.logemprunt.config(state="normal")  # on active le log pour pouvoir le modifier
                         self.logemprunt.insert(tk.END, "--------\nTitre : " + titre + "| Auteur : " + auteur +
                                                "| Emprunteur : " + nom + '_' + prenom + "| durée : " + date_e +
                                                " --> " + date_r + "\nExemplaire emprunté")
-                        self.logemprunt.config(state="disabled")
+                        self.logemprunt.config(state="disabled")  # infos inséré : on desactive la modification du log
                     else:
                         msg.showerror('Impossible', "Exemplaire deja emprunté", parent=self.master)
                 else:
                     msg.showerror('Impossible', "Exemplaire introuvable !", parent=self.master)
-                    self.id_exemplaire.set('')
+                    self.id_exemplaire.set('')  # supression du codebar
             else:
                 msg.showerror('Impossible', "Limite d'emprunt atteinte !", parent=self.master)
         else:
@@ -223,7 +223,7 @@ class Emprunt:
     def prolongement(self):
         """Methode qui effectue un prolongement de six jour sur l'exemplaire designé
         """
-        if (self.codebar_champ.get() == ''):
+        if (self.codebar_champ.get() == ''):  # si aucune saisie
             msg.showinfo('Erreur', "Veuillez specifier un codebar ", parent=self.master)
             return  # problem sur la verif de l'existence de l'emprunt par rapport au lecteur
 
@@ -241,7 +241,7 @@ class Emprunt:
                     ecriture(requetesql, param)  # requetesql ajout d'un champ
                     self.logemprunt.config(state="normal")
                     self.logemprunt.insert(tk.END,
-                                           "--------\nPrologement effectué")
+                                           "--------\nProlongement effectué")
                     self.logemprunt.config(state="disabled")
                 else:
                     msg.showerror('Impossible', "un seul prolongement par emprunt autorisé", parent=self.master)
@@ -251,11 +251,12 @@ class Emprunt:
             msg.showerror('Impossible', "Lecteur suspendu non autorisé a prolonger!", parent=self.master)
 
     def lister_emprunt(self):
-        self.idlect_checkemprunt()  # mise a jour de la liste
+        """methode pour afficher la liste des documents """
+        self.liste_d_emprunt = self.idlect_checkemprunt()  # mise a jour de la liste
         self.logemprunt.config(state="normal")
-        numero = 1
-        self.logemprunt.insert(tk.END, "----Liste d'emprunt----\n")
-        for i in self.liste_d_emprunt:
+        numero = 1  # numero du document dans la liste
+        self.logemprunt.insert(tk.END, "----Liste d'emprunt----\n") # insertion de texte en-tête
+        for i in self.liste_d_emprunt:  # pour chaque document de la liste
             print(i)
             requetesql = """SELECT exemp_isbn FROM exemplaires WHERE codebar = ?"""
             param = i[3],
@@ -263,7 +264,7 @@ class Emprunt:
             requetesql = """SELECT titre, auteur FROM infos_documents WHERE isbn = ?"""
             param = isbn_ex[0][0],
             info_exemp = lecture(requetesql, param)
-            titre, auteur = info_exemp[0][0], info_exemp[0][1]
+            titre, auteur = info_exemp[0][0], info_exemp[0][1]  # recuperation des informations et ajout dans le log
             self.logemprunt.insert(tk.END, str(numero)+" - Titre : " + titre + "| Auteur : " + auteur +
                                    "| durée : " + i[0] + " --> " + i[1] + "\n")
             numero+=1

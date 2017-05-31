@@ -1,22 +1,23 @@
 import tkinter as tk
 import isbnlib as lib
 from InitialisationBDD import *
-import re
-import tkinter.messagebox as msg
+import re  # expression reguliere
+import tkinter.messagebox as msg # message popup
 
 
 class Exemp:
-    """ constructeur de l'interface graphique relatif a la gestion de la table Exemplaire de la base de données, """
-
+    """ Interface graphique relative à la gestion de la table exemplaires de la base de données"""
     def __init__(self, master):
+        """ constructeur de l'interface graphique"""
+        # ------------------- Atrributs objets -------------------------
         self.codebar = tk.StringVar(master, value='')
         self.emprunt = tk.StringVar(master, value=bool(False))
         self.exemp_isbn = tk.StringVar(master, value='')
         self.exemp_commentaire = None
         self.liste_recherche = None
-
+        # ------------------ Attributs graphiques -------------------------
         self.master = master  # creation d'une simple fenêtre.
-        self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
+        self.master.attributes("-fullscreen", False)  # pour metre en plein ecran.
         self.master.geometry('650x450+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
         self.master['bg'] = 'bisque'  # pour le background en couleur gris.
@@ -85,8 +86,8 @@ class Exemp:
 
     # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_exemp(self):
-        """Methode qui verifie l'existance d' un codebar dans la base de donnee et retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un codebar dans la base de donnees et retourne une liste de tuple de 
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM exemplaires WHERE codebar = ? """
         param = self.codebar_champ.get(),
@@ -96,11 +97,11 @@ class Exemp:
             return lecture(requetesql, param)
 
     def exist_exempisbn_infodoc(self):
-        """Methode qui verifie l'existance d' un l'isbn dans la table infosDocument et retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
+        """Methode qui verifie l'existance d' un l'isbn dans la table infosDocument et retourne une liste de tuple de
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM infos_documents WHERE isbn = ? """
-        param = lib.EAN13(self.isbn_champ.get()),
+        param = lib.EAN13(self.isbn_champ.get()),  # mise au bon format EAN13
         if (lecture(requetesql, param) == []):
             return None
         else:
@@ -120,14 +121,14 @@ class Exemp:
          champs, à condition que l'isbn soit repertorié dans la table info_documents.
         """
         if (self.exist_exemp() is None and re.match(r"(^[0-9])", self.codebar_champ.get()) is not None):
-            # Si le codebar est une serie de chiffre qui n'existe pas deja dans sa table.
+            # Si le codebar est une serie de chiffre qui n'existe pas déja dans la table exemplaire.
             if (self.exist_exempisbn_infodoc() is not None):
-                # si l'isbn de l'objet infodoc associé existe dans sa table
+                # si l'isbn specifié existe dans la table infodoc
                 requetesql = """INSERT INTO exemplaires(codebar, emprunt, exemp_commentaire, exemp_isbn) 
                 VALUES(?,?,?,?)"""
                 param = self.codebar_champ.get(), 0, self.commentaire_champ.get(1.0, tk.END),\
-                    lib.EAN13(self.isbn_champ.get()),  # 0 en emprunt car il est logiquement impossible
-                # que la nouveauté soit emprunté au moment de l'enregistrement
+                    lib.EAN13(self.isbn_champ.get()),  # 0 en emprunt car il est logiquement impossible que la nouveauté
+                # soit emprunté au moment de l'enregistrement.
                 ecriture(requetesql, param)
                 print("L'exemplaire a été ajouté dans la base de données")
             else:
@@ -138,7 +139,6 @@ class Exemp:
     def supprimer_exemp(self):
         """Methode qui supprime une entrée (si elle existe) de la table exemplaires a condition que ce dernier ne soit
          pas emprunté.
-        :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
         """
         if (self.exist_exemp() is not None):  # si le codebar existe dans sa table
             if (self.exemp_checkemprunt() is False):  # si l'exemplaire n'est pas emprunté
@@ -146,7 +146,6 @@ class Exemp:
                 param = self.codebar_champ.get(),
                 ecriture(requetesql, param)
                 print("L'exemplaire a été supprimée de la base de données")
-
             else:
                 msg.showinfo('Impossible', "exemplaire non rendu", parent=self.master)
         else:
@@ -171,15 +170,15 @@ class Exemp:
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table exemplaires
         la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut
         static propre a la class.
-        :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ  par defaut)
+        :champwhere: le champ a specifier dans lequelle la valeur sera recherché(champ codebar par defaut)
         """
-        if (self.codebar_champ.get() == ''):
+        if (self.codebar_champ.get() == ''):  # si rien n'est specifié dans le champ  de saisie codebar
             msg.showinfo('Erreur', "Veuillez specifier un codebar ", parent=self.master)
             return
         requetesql = """SELECT * FROM exemplaires WHERE """ + champwhere + """ REGEXP ? """
         param = self.codebar_champ.get(),
         fetch = lecture(requetesql, param)
-        if(fetch == [] or fetch is None):
+        if(fetch == [] or fetch is None):  # si la liste est vide
             msg.showinfo('Resultat', "Aucun resultat(s)", parent=self.master)
             return
         else:
