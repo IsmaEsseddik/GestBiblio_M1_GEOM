@@ -5,9 +5,9 @@ import tkinter.messagebox as msg
 
 
 class Infodoc:
-    """ constructeur de l'interface graphique relatif a la gestion de la la table Infodoc de la base de données, """
-
+    """ Interface graphique relatif a la gestion de la table Infodoc de la base de données """
     def __init__(self, master):
+        """Constructeur de l'interface graphique"""
         # ------------------- Atrributs objets -------------------------
         self.isbn = tk.StringVar(master, value='ISBN 978-2-74603707-6')
         self.titre = tk.StringVar(master, value='')

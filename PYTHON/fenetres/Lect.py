@@ -3,12 +3,12 @@ from InitialisationBDD import *
 import re
 import tkinter.messagebox as msg
 
+
 class Lect:
-    """ constructeur de l'interface graphique relatif a la gestion de la table Lecteur de la base de données """
-
+    """ Interface graphique relatif a la gestion de la table Lecteur de la base de données """
     def __init__(self, master):
+        """Constructeur de l'interface graphique"""
         # ------------------- Atrributs objets -------------------------
-
         self.num_etudiant = tk.StringVar(master, value='')
         self.nom = tk.StringVar(master, value='')
         self.prenom = tk.StringVar(master, value='')
@@ -20,10 +20,10 @@ class Lect:
         self.liste_recherche = None
         # ------------------ Attributs graphiques -------------------------
         self.master = master  # creation d'une simple fenêtre.
-        self.master.attributes("-fullscreen", False)  # pour metre en fullscreen.
+        self.master.attributes("-fullscreen", False)  # pour metre en plein ecran.
         self.master.geometry('750x425+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour maximiser la fenetre.
-        self.master['bg'] = 'bisque'  # pour le background en couleur gris.
+        self.master['bg'] = 'bisque'  # pour l'arriere plan en couleur gris.
         self.master.title("Gest_Biblio - Gestionnaire de lecteurs")  # pour donner un titre a l'application (title bar).
         # creation du conteneur principale
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
@@ -62,7 +62,7 @@ class Lect:
         self.suspension_champ = tk.Entry(self.cadreinfoR, textvariable=self.suspension, width=50, state='disabled',
                                          disabledbackground='bisque')
         self.commentaire_champ = tk.Text(self.cadrecom, height=10, width=70, wrap="word", state='normal')
-        # creation boutons
+        # creation des boutons
         self.bouton_recherche = tk.Button(self.cadrenumetu, text="Rechercher un lecteur", command=self.listing)
         self.bouton_ajout = tk.Button(self.cadraction, text="Ajouter ", command=self.enregistrer_lect)
         self.bouton_suppr = tk.Button(self.cadraction, text="Supprimer ", command=self.supprimer_lect)
@@ -110,9 +110,8 @@ class Lect:
 
     # --------------------Methodes requête de contrôle dans la base de données ----------------------------
     def exist_Lect(self):
-        """Methode qui verifie l'existance d' un num_etudiant dans la base de donnee et retourne une liste de tuple de contenant
-        les valeurs de chaque champ ou NONE si non trouvé.
-        :objet_Lect: objet dont l'attribut num_etudiant sera recherhé.
+        """Methode qui verifie l'existance d' un num_etudiant dans la base de donnee et retourne une liste de tuple de 
+        contenant les valeurs de chaque champ ou NONE si non trouvé.
         """
         requetesql = """SELECT * FROM lecteurs WHERE num_etudiant = ? """
         param = self.numetu_champ.get(),
@@ -122,8 +121,7 @@ class Lect:
             return lecture(requetesql, param)
 
     def lect_checkemprunt(self):
-        """Methode qui verifie la presence d'un num_etudiant dans la table relation
-            :objet_Lect: objet dont l'attribut num_etudiant sera recherhé.
+        """Methode qui verifie l'existence d'un numero étudiant dans la table relation
         """
         requetesql = """SELECT * FROM relation WHERE id_lecteur = ? """
         param = self.numetu_champ.get(),
@@ -136,7 +134,6 @@ class Lect:
     def enregistrer_lect(self):
         """Methode qui ajoute une entrée (si elle n'existe pas deja) dans la table exemplaires en remplissant tout les
          champs.
-        :objet_exemp: objet instancé d'un attribut pour chaque champs de sa table.
         """
         if (self.exist_Lect() is None and re.match(r"(^[0-9])", self.numetu_champ.get()) is not None):
             # si le num_etudiant n'existe pas dans sa table ou
@@ -151,9 +148,8 @@ class Lect:
             msg.showinfo('Impossible', "Lecteur déjà inscrit ou id incorrect", parent=self.master)
 
     def supprimer_lect(self):
-        """Methode qui supprime une entrée (si elle existe) de la table lecteurs a condition que ce dernier n'ait pas
-         d'emprunt.
-        :objet_infodoc: objet instancé d'un attribut pour chaque champs de sa table.
+        """Methode qui retire une entrée (si elle existe) de la table lecteurs a condition que ce dernier n'ait pas
+         d'emprunt en cours.
         """
         if (self.exist_Lect() is not None):  # si le lecteur existe dans sa table
             if (self.lect_checkemprunt() is None):  # si le lecteur n'a pas d'emprunt(s) en cours
@@ -170,7 +166,6 @@ class Lect:
     def maj_lect(self):
         """Methode qui met a jour tout les champ d'une entrée dans la base de donnée (si le numero etudiant y existe)
         de la table exemplaire.
-        :champ: champ dans lequel sera modifier la valeur
         """
         if (self.exist_Lect() is not None):  # si le numero etudiant existe dans sa table
             requetesql = """UPDATE lecteurs SET nom = ? WHERE num_etudiant = ? """
@@ -190,7 +185,7 @@ class Lect:
             ecriture(requetesql, param)
             # requetesql = """UPDATE lecteurs SET suspension = ? WHERE num_etudiant = ? """
             # param = self.suspension_champ.get(), self.numetu_champ.get(),
-            # ecriture(requetesql, param)
+            # ecriture(requetesql, param)  !!!Provoque une erreur sur la Maj des suspension!!!
             requetesql = """UPDATE lecteurs SET commentaire = ? WHERE num_etudiant = ? """
             param = self.commentaire_champ.get(1.0, tk.END), self.numetu_champ.get(),
             ecriture(requetesql, param)
@@ -201,9 +196,9 @@ class Lect:
     # -----------Recherche & conditionnement de l'objet---------
     def get_liste_BDD(self, champwhere="num_etudiant"):
         """ Methode qui, selon le champ de recherche specifié en argument, recherche dans la table lecteurs
-        la valeur specifié en argument et stock la reponse sous forme d'une liste de tuple dans un attribut
-        static propre a la class.
-        :champwhere: le champ a specifier dans lequelle la valeur sera recherché(num_etudiant  par defaut)
+        la valeur specifié en argument et stock la réponse sous forme d'une liste de tuple dans un attribut
+        static propre a la classe.
+        :champwhere: le champ a specifier dans lequelle la valeur sera recherché(num_etudiant par defaut)
         """
         if (self.numetu_champ.get() == ''):
             msg.showinfo('Erreur', "Veuillez specifier un numero etudiant. ", parent=self.master)
@@ -219,7 +214,7 @@ class Lect:
             print(self.liste_recherche)
 
     def set_from_liste(self, i=0):
-        """ Methode qui conditionne l'objet a partir d'un tuple de la liste de la derniere recherche
+        """ Methode qui conditionne l'objet a partir d'un tuple de la liste d recherche
         :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
         """
         self.num_etudiant.set(self.liste_recherche[i][0])

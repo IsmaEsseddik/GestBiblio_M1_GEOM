@@ -186,7 +186,7 @@ class Exemp:
             print(self.liste_recherche)
 
     def set_from_liste(self, i=0):
-        """ Methode qui conditionne l'objet a partir d'un tuple de la liste de la derniere recherche
+        """ Methode qui conditionne l'objet a partir d'un tuple de la liste de recherche
         :i: numero du tuple dans la liste de recherche (1er occurence par defaut)
         """
         self.codebar.set(self.liste_recherche[i][0])

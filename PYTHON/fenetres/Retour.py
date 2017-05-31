@@ -4,10 +4,10 @@ import tkinter.messagebox as msg
 
 
 class Retour():
-    """ constructeur de l'interface graphique relatif a la gestion de la table relation de la base de données
-    pour un retour d'exemplaire"""
-
+    """ Constructeur de l'interface graphique relatif a la gestion de la table relation de la base de données pour 
+    effectuer un retour d'exemplaire"""
     def __init__(self, master):
+        """Constructeur de l'interface graphique"""
         # ------------------- Atrributs objets -------------------------
         self.id_exemplaire = tk.StringVar(master, value=None)
         # ------------------ Attributs graphiques ----------------------
@@ -73,7 +73,7 @@ class Retour():
 
     def supprimer_emprunt(self):
         """Methode qui recherche dans la table exemplaires un codebar, affiche les information puis procede au retour,
-         a condition qu'il existe dans la base de donnée et qu'il soit l'exemplaire associé soit emprunté.
+        a condition qu'il existe dans la base de donnée et qu'il soit l'exemplaire associé soit emprunté.
         :num_etudiant: numero etudiant a rechercher
         """
 

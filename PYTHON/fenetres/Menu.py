@@ -7,17 +7,17 @@ from fenetres.Retour import *
 
 
 class Menu:
+    """ Interface graphique du menu principale """
     def __init__(self, master):
+        """Constructeur de l'interface graphique"""
         self.master = master  # creation d'une simple fenêtre.
         self.master.attributes("-fullscreen", False)  # mise en pleine ecran.
         self.master.geometry('300x650+0+0')  # pour la taille et le positionnement initiale.
         self.master.state('normal')  # pour ne pas maximiser la fenetre.
         self.master['bg'] = 'black'  # pour l'arriere plan en couleur noir.
         self.master.title("Gest_Biblio - Menu")  # pour donner un titre a l'application (bar supérieur).
-
         # Creation du conteneur principale
         self.contenu = tk.PanedWindow(self.master, orient="vertical", borderwidth=3, relief="sunken", bg='#d8d8d8')
-
         # Creation des cadres
         self.cadrelib = tk.LabelFrame(self.contenu, text="Fonctionnalités", padx=20, pady=20, borderwidth=3,
                                       relief="sunken", bg='#d8d8d8', labelanchor='n')
@@ -31,7 +31,6 @@ class Menu:
                                    " jours, tout retard sera pénalisée par une suspension d'une durée proportionelle au"
                                    " retard, plafonnée à 31 jours.")
         self.modemploi.config(state="disabled")
-
         # Creation des boutons
         self.bouton_infodoc = tk.Button(self.cadrelib, text="Gestionnaire d'editions", width=25, command=self.infodoc,
                                         bg='purple')
@@ -57,21 +56,26 @@ class Menu:
         self.bouton_quitter.pack()
 
     def infodoc(self):
+        """fonction qui ouvre le gestionnaire d'édition"""
         self.newWindow = tk.Toplevel(self.master)
         self.app = Infodoc(self.newWindow)
 
     def lect(self):
+        """fonction qui ouvre le gestionnaire de lecteurs"""
         self.newWindow = tk.Toplevel(self.master)
         self.app = Lect(self.newWindow)
 
     def exemp(self):
+        """fonction qui ouvre le gestionnaire d'exemplaires"""
         self.newWindow = tk.Toplevel(self.master)
         self.app = Exemp(self.newWindow)
 
     def emprunt(self):
+        """fonction qui ouvre le gestionaire d'emprunt"""
         self.newWindow = tk.Toplevel(self.master)
         self.app = Emprunt(self.newWindow)
 
     def retour(self):
+        """fonction qui ouvre  le gestionaire de retour"""
         self.newWindow = tk.Toplevel(self.master)
         self.app = Retour(self.newWindow)
