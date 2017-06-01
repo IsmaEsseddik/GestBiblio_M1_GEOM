@@ -116,8 +116,9 @@ def maj_suspension():
     """Fonction qui met à jour la date de levée de la suspension de chaque lecteurs, cette fonction est lancée a chaque
     demarage de l'application, elle ne fonctionnera que si les dates sont au bon format ou NULL(gerer par l'application)
     :explication: pour chaque lecteurs de la table on recupere le retard le plus important, et on calcule la nouvelle
-    date de suspension a remplacer. Si la date de suspension initial est passée ou nul ou inferieur a celle a remplacer
-    dans le cas ou la date de suspension n'est pas encore passée, si elle ne represente pas le retard le plus important.
+    date de suspension a remplacer. Si la date de suspension initial est passée ou nul ou inferieur a celle a remplacer:
+    on la remplace.Dans le cas ou la date de suspension n'est pas encore passée, on la remplace seulement si elle ne 
+    represente pas le retard le plus important.
     """
     date_du_jour = datetime.datetime.today()  # on utilisera la date du jour
     # ----------------- Selection de tout le lecteurs ---------------------
